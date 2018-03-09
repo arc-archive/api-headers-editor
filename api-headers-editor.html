@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../api-view-model-transformer/api-view-model-transformer.html">
+<link rel="import" href="../api-headers-form/api-headers-form.html">
+
+<dom-module id="api-headers-editor">
+  <template>
+    <style>
+    :host {
+      display: block;
+    }
+    </style>
+    <api-view-model-transformer amf-model="[[amfHeaders]]" view-model="{{viewModel}}"></api-view-model-transformer>
+    <api-headers-form model="{{viewModel}}"></api-headers-form>
+  </template>
+  <script>
+    /**
+     * `api-headers-editor`
+     * An element to render headers edior based on AMF data model
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ApiHeadersEditor extends Polymer.Element {
+      static get is() { return 'api-headers-editor'; }
+      static get properties() {
+        return {
+          amfHeaders: Array,
+          /**
+           * Headers value.
+           */
+          value: {
+            type: String,
+            notify: true
+          },
+          /**
+           * Generated view model fore the headers from `amfModel`.
+           * This is automatically set when `amfModel` is set.
+           */
+          viewModel: Array
+        };
+      }
+    }
+
+    window.customElements.define(ApiHeadersEditor.is, ApiHeadersEditor);
+  </script>
+</dom-module>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>api-headers-editor demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../api-headers-editor.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <dom-bind id="demo">
+    <template is="dom-bind">
+      <div class="vertical-section-container">
+        <api-headers-editor amf-headers="[[amfModel]]"></api-headers-editor>
+      </div>
+    </template>
+  </dom-bind>
+  <script>
+  (function(scope) {
+    scope._load = function() {
+      fetch('./headers-model.json')
+      .then((response) => response.json())
+      .then((data) => {
+        data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
+        data = data['http://raml.org/vocabularies/http#endpoint'][0];
+        data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
+        data = data['http://www.w3.org/ns/hydra/core#expects'][0];
+        data = data['http://raml.org/vocabularies/http#header'];
+        scope.amfModel = data;
+      });
+    };
+    window.addEventListener('WebComponentsReady', function() {
+      scope._load();
+    });
+  })(document.getElementById('demo'));
+  </script>
+</body>
+</html>
