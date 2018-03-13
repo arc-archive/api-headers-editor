@@ -5,7 +5,14 @@
   "main": "api-headers-editor.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "paper-icon-button": "PolymerElements/paper-icon-button#^2.1.0"
+    "paper-icon-button": "PolymerElements/paper-icon-button#^2.1.0",
+    "api-headers-form": "advanced-rest-client/api-headers-form#2.0.0-preview",
+    "api-view-model-transformer": "advanced-rest-client/api-view-model-transformer#2.0-preview",
+    "arc-icons": "advanced-rest-client/arc-icons#^2.0.0",
+    "code-mirror": "advanced-rest-client/code-mirror#2.0.0-preview",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
+    "code-mirror-hint": "advanced-rest-client/code-mirror-hint#^1.0.0",
+    "headers-parser-behavior": "advanced-rest-client/headers-parser-behavior#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
