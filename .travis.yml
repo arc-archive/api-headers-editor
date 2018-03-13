@@ -1,4 +1,3 @@
-
 language: node_js
 node_js: stable
 sudo: required
@@ -14,7 +13,7 @@ addons:
     - google-chrome-stable
   sauce_connect: true
 script:
-- polymer lint api-property-form-item.html
+- polymer lint api-headers-editor.html
 - xvfb-run polymer test polymer test --plugin local
 - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test --plugin sauce --job-name
   "api-headers-editor:${TRAVIS_BRANCH}" --build-number=${TRAVIS_BUILD_NUMBER}; fi
@@ -23,3 +22,7 @@ cache:
   - node_modules
 after_success:
 - node tasks/ci.js
+env:
+  global:
+  - secure: rxpvaIwVzUpCZBVZYvul3/IOasfvtuf1jBZGtngBbcuUXZam2Pk5+CKHN5qIyOZcRZY/wX+V3sQTM6T3OkNR2JzDwyI7cMkC01St/x+xMZw3W6YbFPTWe1xJC+EX1iFyfZuaIM7qQ3kNL+FPBnrB/4oOTYwc8NTZaMPhJ5vAaAf8HCQblqdN7sj/pKwqi2nXkpytDx3bZ0Mf4LI2NLDxEYKWlmJGSUcfT3x9lWemk10hgSiO+oSAJwkBfrUwif5oRCrtS+I2u7DNzES1Je1VG/d88PKeXSqUVki/QrUskCF5iW/mgGdiHPU6EfbH1A6wrJbliTaWmxzvM+nI2fmoNVPLNNtKQ9up6CJ2cGDv+PJi4ZVaKaKkVcXBFeBoU+JoMZrE7v9CNIAQMQpKFiivF85A59uff/QQ/oe2vXpp4zUbqCAJuW/FATGuhP2dBInbfV20PscE2D6miSScM5rwld14OxMgn4pmSrVjqbYzSUtYAIoX2gdHJ94seEMDLse2IN/qg18WQ9dt5H9BeMe7NZr6JYlDYb4RCicpc42FifAnp2kXQ7lVDI6/wkPI7I4+BsAqgDnZsHnP1jqzHW9DizBWrTdHafFxo4RtkfdvzkFK2zcbbIYhRj7V9WNfdNYQUrdYNli2kHWjc7FJmSupo11N3GI2h6Sz7aumuG8ZPOs=
+  - secure: TuwfDUvq2b0Fbeg7tTlt3F93gpsEn8uNDeBcExsgUzGgk0BWLYqQqVuBByIRCosKI9sVa4pc+87EsIgdAxUH4+3ghfD2y356Ftmd5gCYh2CBRRKTrug9epiuTxEZW+vEiJkfCAFgAIuaP0jLoMXPnNljiKeZA8SQiuLvUy3EGOBJ+lcIRV/Km1pe+K0fEY3ZD0+d5cuY0OF/wqTskcGI0ixCETXi81xvG93I58ZpqmjFSrXlTMGstzMzcLaWx3RoN17/G/h9MQJZ9HwHlld41t+9FD1Ud7TAmbBsMXJsDRSjil7+YLpqqV82wfsLEXEhhj3uwe4Hkp/I/4RbscC4R994IMc4e+2DFW+hAbzugELrIoqJIXa/qnmqiVPy7GeITXwUQ45T8WhlAsTUonn+Elwxuzt3D/MT48QISEcb+O/mYzLhZ0Vox9ngoqPSdbh/S2eVBI/DBIfPs3L9BMfIyMTVS52UDHuZ2qEH95gVTPEI/fRa7sHPlgSFyA5NyOS2vflqEsi66nm4JfIQZAwqauRddR8zKKU7bqEwgyAM2OasilPVOvWZTYMUkUHy0wox9RyZ9IwcZ197Mr/FFy+8qgnvYs7RhuffjgcgGkalLmNADK42UDyA7bJ7kP5WH5kiiOHeiJ44X8AeJYnx9hN5Sdct3r+N/TBmryl862WhdYU=
