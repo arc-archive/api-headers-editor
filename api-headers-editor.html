@@ -133,7 +133,10 @@
           /**
            * If set, custom headers won't be available in form mode.
            */
-          disallowCustom: Boolean,
+          disallowCustom: {
+            type: Boolean,
+            observer: '_disallowCustomChanged'
+          },
           // Events target for tranformer
           _transformerTarget: {
             type: Object,
@@ -341,6 +344,17 @@
           this._updateCmNarrow(narrow);
         } else {
           this._updateFormNarrow(narrow);
+        }
+      }
+      /**
+       * Updates `disallowCustom` on form editor.
+       *
+       * @param {Boolean} state New state of property
+       */
+      _disallowCustomChanged(state) {
+        if (!this.sourceMode) {
+          const editor = this.formEditor();
+          editor.disallowCustom = state;
         }
       }
       /**

@@ -136,6 +136,123 @@
       });
     });
 
+    suite('Switching editors', () => {
+      setup(() => {
+        element = fixture('BasicTestFixture');
+        element.viewModel = [{
+          binding: 'header',
+          name: 'x-test',
+          hasDescription: false,
+          required: true,
+          schema: {
+            enabled: true,
+            type: 'string',
+            inputLabel: 'x-string',
+            isEnum: false,
+            isArray: false,
+            isBool: false,
+            inputType: 'text'
+          },
+          value: ''
+        }];
+      });
+
+      test('Form data is default editor', () => {
+        const editor = element.shadowRoot.querySelector('api-headers-form');
+        assert.ok(editor);
+      });
+
+      test('Code mirror is not in the DOM', () => {
+        const editor = element.shadowRoot.querySelector('code-mirror');
+        assert.notOk(editor);
+      });
+
+      test('Switching to source mode removes form editor', () => {
+        element.sourceMode = true;
+        const editor = element.shadowRoot.querySelector('api-headers-form');
+        assert.notOk(editor);
+      });
+
+      test('Switching to source mode add code mirror', () => {
+        element.sourceMode = true;
+        const editor = element.shadowRoot.querySelector('code-mirror');
+        assert.ok(editor);
+      });
+
+      test('Passes "narrow" attribute to form editor', () => {
+        element.narrow = true;
+        const editor = element.shadowRoot.querySelector('api-headers-form');
+        assert.isTrue(editor.narrow, 'Narrow is set');
+        element.narrow = false;
+        assert.isFalse(editor.narrow, 'Narrow is removed');
+      });
+
+      test('Passes "disallowCustom" attribute to form editor', () => {
+        element.disallowCustom = true;
+        const editor = element.shadowRoot.querySelector('api-headers-form');
+        assert.isTrue(editor.disallowCustom, 'disallowCustom is set');
+        element.disallowCustom = false;
+        assert.isFalse(editor.disallowCustom, 'disallowCustom is removed');
+      });
+
+      test('formEditor() returns editor when form is on', () => {
+        const result = element.formEditor();
+        assert.ok(result);
+      });
+
+      test('formEditor() returns null when form is off', () => {
+        element.sourceMode = true;
+        const result = element.formEditor();
+        assert.equal(result, null);
+      });
+
+      test('codeMirror() returns null when form is on', () => {
+        const result = element.codeMirror();
+        assert.equal(result, null);
+      });
+
+      test('codeMirror() returns element when form is off', () => {
+        element.sourceMode = true;
+        const result = element.codeMirror();
+        assert.ok(result);
+      });
+
+      test('Updates model value after turning back to form mode', () => {
+        element.sourceMode = true;
+        const editor = element.codeMirror();
+        editor.value = 'x-test: test-value';
+        element.sourceMode = false;
+        assert.equal(element.viewModel[0].value, 'test-value');
+      });
+
+      test('Updates editor when in source mode', () => {
+        element.sourceMode = true;
+        const editor = element.codeMirror();
+        editor.value = 'x-test: test-value';
+        assert.equal(element.value, 'x-test: test-value');
+      });
+
+      test('Adds custom header from source mode', () => {
+        element.sourceMode = true;
+        const editor = element.codeMirror();
+        editor.value = 'x-test: test-value\nx-custom: value';
+        element.sourceMode = false;
+        assert.lengthOf(element.viewModel, 2, 'Model has two items');
+        assert.isTrue(element.viewModel[1].isCustom, 'Second item is custom item');
+        assert.equal(element.viewModel[1].name, 'x-custom', 'Name is set');
+        assert.equal(element.viewModel[1].value, 'value', 'Value is set');
+      });
+
+      test('Disables missing headers in source code', () => {
+        element.sourceMode = true;
+        const editor = element.codeMirror();
+        editor.value = 'x-custom: value';
+        element.sourceMode = false;
+        assert.lengthOf(element.viewModel, 2, 'Model has two items');
+        assert.isFalse(element.viewModel[0].schema.enabled, 'Item is not enabled');
+      });
+    });
+
     // test('instantiating the element with default properties works', () => {
     //   const element = fixture('BasicTestFixture');
     //   assert.equal(element.prop1, 'api-headers-editor');
