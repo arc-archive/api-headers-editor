@@ -15,6 +15,13 @@
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
+    h2 {
+      @apply --paper-font-title;
+    }
+    output {
+      white-space: pre-wrap;
+      @apply --paper-font-code1;
+    }
     </style>
   </custom-style>
 </head>
@@ -23,7 +30,9 @@
   <dom-bind id="demo">
     <template is="dom-bind">
       <div class="vertical-section-container">
-        <api-headers-editor amf-headers="[[amfModel]]"></api-headers-editor>
+        <api-headers-editor amf-headers="[[amfModel]]" value="{{value}}"></api-headers-editor>
+        <h2>Output</h2>
+        <output>[[value]]</output>
       </div>
     </template>
   </dom-bind>

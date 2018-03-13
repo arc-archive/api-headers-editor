@@ -1,52 +1,151 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>api-headers-editor test</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-headers-editor test</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../api-headers-editor.html">
+</head>
 
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-
-    <link rel="import" href="../api-headers-editor.html">
-  </head>
-  <body>
-
-    <test-fixture id="BasicTestFixture">
-      <template>
-        <api-headers-editor></api-headers-editor>
-      </template>
-    </test-fixture>
-
-    <test-fixture id="ChangedPropertyTestFixture">
-      <template>
-        <api-headers-editor prop1="new-prop1"></api-headers-editor>
-      </template>
-    </test-fixture>
-
-    <script>
-      suite('api-headers-editor', () => {
-
-        test('instantiating the element with default properties works', () => {
-          const element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'api-headers-editor');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello api-headers-editor!');
-        });
-
-        test('setting a property on the element works', () => {
-          // Create a test fixture
-          const element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
-        });
-
+<body>
+  <test-fixture id="BasicTestFixture">
+    <template>
+      <api-headers-editor></api-headers-editor>
+    </template>
+  </test-fixture>
+  <script>
+  /* global sinon */
+  suite('api-headers-editor', () => {
+    let model;
+    suiteSetup((done) => {
+      const r = new XMLHttpRequest();
+      r.addEventListener('load', () => {
+        let data = r.response;
+        try {
+          data = JSON.parse(data);
+        } catch (e) {
+          done(e);
+          return;
+        }
+        data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
+        data = data['http://raml.org/vocabularies/http#endpoint'][0];
+        data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
+        data = data['http://www.w3.org/ns/hydra/core#expects'][0];
+        data = data['http://raml.org/vocabularies/http#header'];
+        model = data;
+        done();
       });
-    </script>
+      r.open('GET', '../demo/headers-model.json');
+      r.send();
+    });
 
-  </body>
+    let element;
+    suite('Basics', () => {
+      setup(() => {
+        element = fixture('BasicTestFixture');
+      });
+
+      test('value is undefined', () => {
+        assert.isUndefined(element.value);
+      });
+
+      test('viewModel undefined', () => {
+        assert.isUndefined(element.viewModel);
+      });
+
+      test('sourceMode is false', () => {
+        assert.isFalse(element.sourceMode);
+      });
+
+      test('_transformerTarget is set', () => {
+        assert.isTrue(element._transformerTarget === element);
+      });
+
+      test('Detects content type', function() {
+        element.value = 'text:test\ncontent-type:application/test';
+        assert.equal(element.contentType, 'application/test', 'contentType equals application/test');
+      });
+
+      test('Fires content type change event', function() {
+        const spy = sinon.stub();
+        element.addEventListener('content-type-changed', spy);
+        element.value = 'text:test\ncontent-type:application/test';
+        assert.isTrue(spy.calledOnce);
+      });
+      test('Handles request-headers-changed event', function() {
+        var init = {
+          detail: {
+            value: 'Authorization: test'
+          },
+          bubbles: true,
+          cancelable: true
+        };
+        var event = new CustomEvent('request-headers-changed', init);
+        document.dispatchEvent(event);
+        assert.equal(element.value, 'Authorization: test');
+      });
+
+      test('Don\'t handles canceled request-headers-changed event', function() {
+        var init = {
+          detail: {
+            value: 'Authorization: test'
+          },
+          bubbles: true,
+          cancelable: true
+        };
+        document.addEventListener('request-headers-changed', function(e) {
+          e.preventDefault();
+        });
+        var event = new CustomEvent('request-headers-changed', init);
+        document.dispatchEvent(event);
+        assert.equal(element.value, undefined);
+      });
+
+      test('Handles request-header-changed event', function() {
+        var init = {
+          detail: {
+            name: 'Authorization',
+            value: 'test'
+          },
+          bubbles: true,
+          cancelable: true
+        };
+        var event = new CustomEvent('request-header-changed', init);
+        document.dispatchEvent(event);
+        assert.equal(element.value, 'Authorization: test');
+      });
+
+      test('Don\'t handles canceled request-header-changed event', function() {
+        var init = {
+          detail: {
+            name: 'Authorization',
+            value: 'test'
+          },
+          bubbles: true,
+          cancelable: true
+        };
+        document.addEventListener('request-header-changed', function(e) {
+          e.preventDefault();
+        });
+        var event = new CustomEvent('request-header-changed', init);
+        document.dispatchEvent(event);
+        assert.equal(element.value, undefined);
+      });
+    });
+
+    // test('instantiating the element with default properties works', () => {
+    //   const element = fixture('BasicTestFixture');
+    //   assert.equal(element.prop1, 'api-headers-editor');
+    //   const elementShadowRoot = element.shadowRoot;
+    //   const elementHeader = elementShadowRoot.querySelector('h2');
+    //   assert.equal(elementHeader.innerHTML, 'Hello api-headers-editor!');
+    // });
+
+  });
+  </script>
+</body>
+
 </html>

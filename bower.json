@@ -12,12 +12,15 @@
     "code-mirror": "advanced-rest-client/code-mirror#2.0.0-preview",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
     "code-mirror-hint": "advanced-rest-client/code-mirror-hint#^1.0.0",
-    "headers-parser-behavior": "advanced-rest-client/headers-parser-behavior#^2.0.0"
+    "headers-parser-behavior": "advanced-rest-client/headers-parser-behavior#^2.0.0",
+    "events-target-behavior": "advanced-rest-client/events-target-behavior#^2.0.0",
+    "clipboard-copy": "advanced-rest-client/clipboard-copy#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"
