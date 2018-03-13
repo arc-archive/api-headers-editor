@@ -371,14 +371,15 @@
         if (!model || !model.length) {
           return '';
         }
-        const data = model.map((item) => {
+        const data = [];
+        model.forEach((item) => {
           if (!item || (item.schema && item.schema.enabled === false)) {
             return;
           }
-          return {
+          data.push({
             name: item.name,
             value: item.value
-          };
+          });
         });
         return this.headersToString(data);
       }
@@ -436,7 +437,7 @@
           if (i === -1) {
             appendCustom.push(this.createCustom(item));
           } else {
-            tmp[item.value] = true;
+            tmp[item.name] = true;
             if (model[i].value !== item.value) {
               if (model[i].schema.isArray) {
                 this.set(['viewModel', i, 'value'], item.value.split(','));
@@ -486,6 +487,9 @@
         }
         if (!data.schema.type) {
           data.schema.type = 'string';
+        }
+        if (!data.schema.enabled) {
+          data.schema.enabled = true;
         }
         this.$.transformer.buildProperty(data);
         return data;
