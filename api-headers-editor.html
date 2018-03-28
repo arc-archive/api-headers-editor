@@ -7,14 +7,13 @@
 <link rel="import" href="../code-mirror-hint/hint-http-headers.html">
 <link rel="import" href="../arc-icons/arc-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../headers-parser-behavior/headers-parser-behavior.html">
 <link rel="import" href="../events-target-behavior/events-target-behavior.html">
 <link rel="import" href="../clipboard-copy/clipboard-copy.html">
-
+<link rel="import" href="../api-form-mixin/api-form-styles.html">
 <dom-module id="api-headers-editor">
   <template>
-    <style>
+    <style include="api-form-styles">
     :host {
       display: block;
       position: relative;
@@ -32,10 +31,8 @@
     <api-view-model-transformer amf-model="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]"></api-view-model-transformer>
     <div class="content">
       <div class="editor-actions">
-        <paper-icon-button icon="arc:content-copy" id="copyButton" on-tap="_copyToClipboard"></paper-icon-button>
-        <paper-icon-button icon="arc:code" id="editMode" toggles active="{{sourceMode}}"></paper-icon-button>
-        <paper-tooltip for="copyButton">Copy headers value to clipboard</paper-tooltip>
-        <paper-tooltip for="editMode">Toggle source edit mode</paper-tooltip>
+        <paper-icon-button class="action-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
+        <paper-icon-button class="action-icon" icon="arc:code" toggles active="{{sourceMode}}" title="Toggle source edit mode"></paper-icon-button>
         <slot name="content-actions"></slot>
       </div>
       <div id="editor"></div>
