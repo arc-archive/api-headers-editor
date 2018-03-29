@@ -96,6 +96,18 @@
      * < /script>
      * ```
      *
+     * ## Setting value when model is set
+     *
+     * Model values has priority over value set on the editor.
+     * If `amfModel` is set and value has been altered programatically there
+     * are two possible outcomes:
+     *
+     * 1) If `allowDisableParams` is set, model values are automatically
+     * disabled if model item is not in the value
+     * 2) If `allowDisableParams` is not set, model values are always
+     * added to generated values. Or rather new value is added to the existing
+     * model as custom values.
+     *
      * @customElement
      * @memberof ApiElements
      * @demo demo/simple.html Simple headers editor
