@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-headers-editor demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../api-headers-editor.html">
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+    :root {
+
+    }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      @apply --paper-font-headline;
+    }
+
+    h2 {
+      @apply --paper-font-title;
+    }
+
+    output {
+      white-space: pre-wrap;
+      @apply --paper-font-code1;
+    }
+
+    header {
+      padding: 12px 24px;
+      background-color: #C5E1A5;
+    }
+    </style>
+  </custom-style>
+</head>
+<body>
+  <dom-bind id="demo">
+    <template is="dom-bind">
+      <header><h1>api-headers-editor demo</h1></header>
+      <section role="main" class="vertical-section-container centered main">
+        <api-headers-editor amf-headers="[[amfModel]]" value="{{value}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" on-request-headers-changed="_headersChanged"></api-headers-editor>
+        <h2>Headers change event dispatched</h2>
+        <output>Count: [[changeCount]]</output>
+        <h2>Output</h2>
+        <output>[[value]]</output>
+      </section>
+      <section class="vertical-section-container centered">
+        <paper-checkbox checked="{{narrow}}">Render narrow view</paper-checkbox>
+        <paper-checkbox checked="{{allowCustom}}">Allow custom properties</paper-checkbox>
+        <paper-checkbox checked="{{allowHideOptional}}">Allow auto hide optional headers</paper-checkbox>
+        <paper-checkbox checked="{{allowDisableParams}}">Allow disabling parameters</paper-checkbox>
+      </section>
+    </template>
+  </dom-bind>
+  <script>
+  (function(scope) {
+    scope.changeCount = 0;
+    scope._load = function() {
+      fetch('./headers-model.json')
+      .then((response) => response.json())
+      .then((data) => {
+        data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
+        data = data['http://raml.org/vocabularies/http#endpoint'][0];
+        data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
+        data = data['http://www.w3.org/ns/hydra/core#expects'][0];
+        data = data['http://raml.org/vocabularies/http#header'];
+        scope.amfModel = data;
+      });
+    };
+    scope._headersChanged = function() {
+      scope.changeCount++;
+    };
+    window.addEventListener('WebComponentsReady', function() {
+      scope._load();
+    });
+  })(document.getElementById('demo'));
+  </script>
+</body>
+</html>

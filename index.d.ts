@@ -9,4 +9,5 @@
  */
 
 /// <reference path="../webcomponentsjs/webcomponents-loader.d.ts" />
+/// <reference path="../iron-component-page/iron-component-page.d.ts" />
 

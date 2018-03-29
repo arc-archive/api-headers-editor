@@ -1,21 +1,26 @@
-# \<api-headers-editor\>
+[![Build Status](https://travis-ci.org/advanced-rest-client/api-url-data-model.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/api-headers-editor)
 
-An element to render headers edior based on AMF data model
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/api-headers-editor)
 
-## Install the Polymer-CLI
+# api-headers-editor
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+A request editor that builds the UI based on AMF model or presents default empty editor.
 
-## Viewing Your Element
-
+<!---
 ```
-$ polymer serve
+<custom-element-demo>
+  <template>
+    <link rel="import" href="api-headers-editor.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+
+```html
+<api-headers-editor allow-custom allow-disable-params></api-headers-editor>
 ```
 
-## Running Tests
+### API components
 
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+This components is a part of API components ecosystem: https://elements.advancedrestclient.com/

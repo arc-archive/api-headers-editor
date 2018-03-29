@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../api-view-model-transformer/api-view-model-transformer.html">
 <link rel="import" href="../api-headers-form/api-headers-form.html">
 <link rel="import" href="../code-mirror/code-mirror.html">
@@ -32,11 +34,18 @@
     <api-view-model-transformer amf-model="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]"></api-view-model-transformer>
     <div class="content">
       <div class="editor-actions">
-        <paper-icon-button class="action-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
+        <paper-icon-button class="action-icon copy-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
         <paper-icon-button class="action-icon" icon="arc:code" toggles active="{{sourceMode}}" title="Toggle source edit mode"></paper-icon-button>
         <slot name="content-actions"></slot>
       </div>
-      <div id="editor"></div>
+      <div id="editor">
+        <template is="dom-if" if="[[sourceMode]]" restamp="true">
+          <code-mirror mode="http-headers" on-value-changed="_editorValueChanged" data-headers-panel></code-mirror>
+        </template>
+        <template is="dom-if" if="[[!sourceMode]]" restamp="true">
+          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged"></api-headers-form>
+        </template>
+      </div>
     </div>
     <clipboard-copy content="[[value]]"></clipboard-copy>
   </template>
@@ -58,10 +67,13 @@
      * The model is resolved to internal data model by `api-view-model-transformer`
      * element.
      *
+     * If the element is used without AMF model `allowCustom` property must be
+     * set or otherwise user won't be able to add new header to the editor.
+     *
      * ### Example
      *
      * ```html
-     * <api-headers-editor id="editor"></api-headers-editor>
+     * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
      * <script>
      * let data = await getAmfModel();
      * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
@@ -75,9 +87,19 @@
      * < /script>
      * ```
      *
+     * ### Example without AMF
+     *
+     * ```html
+     * <api-headers-editor id="editor" allow-disable-params allow-custom></api-headers-editor>
+     * <script>
+     * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
+     * < /script>
+     * ```
+     *
      * @customElement
      * @memberof ApiElements
-     * @demo demo/index.html
+     * @demo demo/simple.html Simple headers editor
+     * @demo demo/raml.html With AMF model
      * @appliesMixin ArcBehaviors.HeadersParserBehavior
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
      * @appliesMixin ArcBehaviors.ApiFormMixin
@@ -99,10 +121,7 @@
            * Generated view model fore the headers from `amfModel`.
            * This is automatically set when `amfModel` is set.
            */
-          viewModel: {
-            type: Array,
-            observer: '_viewModelChanged'
-          },
+          viewModel: Array,
           /**
            * Value of a Content-Type header.
            * When this value change then editor update the value for the content type. However,
@@ -137,22 +156,22 @@
           }
         };
       }
-
-      static get observers() {
-        return [
-          '_narrowChanged(narrow)',
-          '_allowDisableParamsChanged(allowDisableParams)',
-          '_allowCustomChanged(allowCustom)',
-          '_allowHideOptionalChanged(allowHideOptional)'
-        ];
+      /**
+       * @return {HTMLElement} Currently rendered headers panel.
+       */
+      get currentPanel() {
+        if (!this.shadowRoot) {
+          return;
+        }
+        const selector = '[data-headers-panel]';
+        return this.shadowRoot.querySelector(selector);
       }
       /**
        * @constructor
        */
       constructor() {
         super();
-        this._formValueChanged = this._formValueChanged.bind(this);
-        this._cmValueChanged = this._cmValueChanged.bind(this);
+        this._editorValueChanged = this._editorValueChanged.bind(this);
         this._cmKeysHandler = this._cmKeysHandler.bind(this);
         this._headersChangedHandler = this._headersChangedHandler.bind(this);
         this._headerChangedHandler = this._headerChangedHandler.bind(this);
@@ -175,203 +194,36 @@
         node.removeEventListener('request-header-changed', this._headerChangedHandler);
       }
       /**
-       * Creates a form editor and places it in the local DOM.
-       * This does nothing if the element hasn't been yet initialized
-       */
-      createForm() {
-        if (!this.$) {
-          return;
-        }
-        this.removeForm();
-        this.removeCodeMirror();
-        const e = document.createElement('api-headers-form');
-        e.model = this.viewModel;
-        e.narrow = this.narrow;
-        e.allowDisableParams = this.allowDisableParams;
-        e.allowCustom = this.allowCustom;
-        e.allowHideOptional = this.allowHideOptional;
-        e.addEventListener('value-changed', this._formValueChanged);
-        this.$.editor.appendChild(e);
-      }
-      /**
-       * Searches the DOM for the form editor.
+       * Handler for `sourceMode` change.
        *
-       * @return {ApiHeadersEditor|undefined} Editor or undefined if not set.
-       */
-      formEditor() {
-        return this.$.editor.querySelector('api-headers-form');
-      }
-      /**
-       * Removes references to the form editor.
-       * It removes event listeners and removes the form editor from local DOM.
-       */
-      removeForm() {
-        const e = this.formEditor();
-        if (!e) {
-          return;
-        }
-        e.removeEventListener('value-changed', this._formValueChanged);
-        this.$.editor.removeChild(e);
-      }
-      /**
-       * Updates model data on form element.
+       * Opens desired editr.
        *
-       * @param {Array} model New model
+       * @param {Boolean} isSource
        */
-      _updateFormModel(model) {
-        const e = this.formEditor();
-        if (!e) {
-          return;
+      _sourceModeChanged(isSource) {
+        if (isSource) {
+          Polymer.RenderStatus.afterNextRender(this, () => {
+            const panel = this.currentPanel;
+            panel.setOption('extraKeys', {
+              'Ctrl-Space': this._cmKeysHandler
+            });
+            panel.value = this.modelToValue(this.viewModel);
+          });
+        } else {
+          this._modelFromValue();
         }
-        e.model = model;
       }
       /**
-       * Updates form editor `narrow` property.
+       * Updates the value when current editor's value change.
        *
-       * @param {Boolean} narrow New value
+       * @param {CustomEvent} e
        */
-      _updateFormNarrow(narrow) {
-        const e = this.formEditor();
-        if (!e) {
-          return;
-        }
-        e.narrow = narrow;
-      }
-      /**
-       * Creates a code mirror editor and places it in the local DOM.
-       * This does nothing if the element hasn't been yet initialized
-       */
-      createCodeMirror() {
-        if (!this.$) {
-          return;
-        }
-        this.removeForm();
-        this.removeCodeMirror();
-        const e = document.createElement('code-mirror');
-        e.mode = 'http-headers';
-        e.addEventListener('value-changed', this._cmValueChanged);
-        e.value = this.modelToValue();
-        e.setOption('extraKeys', {
-          'Ctrl-Space': this._cmKeysHandler
-        });
-        this.$.editor.appendChild(e);
-      }
-      /**
-       * Searches the DOM for the CodeMirror editor.
-       *
-       * @return {CodeMirrorElement|undefined} Editor or undefined if not set.
-       */
-      codeMirror() {
-        return this.$.editor.querySelector('code-mirror');
-      }
-      /**
-       * Removes references to the CodeMirror editor.
-       * It removes event listeners and removes the editor from local DOM.
-       */
-      removeCodeMirror() {
-        const e = this.codeMirror();
-        if (!e) {
-          return;
-        }
-        e.removeEventListener('value-changed', this._cmValueChanged);
-        e.setOption('extraKeys', {});
-        this.$.editor.removeChild(e);
-      }
-      /**
-       * Updates model data on the `code-mirror` element.
-       *
-       * @param {Array} model New model
-       */
-      _updateCmModel(model) {
-        const e = this.codeMirror();
-        if (!e) {
-          return;
-        }
-        e.value = this.modelToValue(model);
-      }
-      /**
-       * Updates Code Mirror editor `narrow` property.
-       *
-       * @param {Boolean} narrow New value
-       */
-      _updateCmNarrow(narrow) {
-        const e = this.codeMirror();
-        if (!e) {
-          return;
-        }
-        e.narrow = narrow;
-      }
-      // Updates the value when form data editor's value change
-      _formValueChanged(e) {
+      _editorValueChanged(e) {
         const value = e.detail.value;
         if (value !== this.value) {
+          this._innerEditorValueChanged = true;
           this.set('value', value);
-        }
-      }
-      // Updates the value when CodeMirror editor's value change
-      _cmValueChanged(e) {
-        const value = e.detail.value;
-        if (value !== this.value) {
-          this.set('value', value);
-        }
-      }
-      /**
-       * Handler for `viewModel` change.
-       * Updates currently opened editor.
-       *
-       * @param {Array} model New model
-       */
-      _viewModelChanged(model) {
-        if (this.sourceMode) {
-          this._updateCmModel(model);
-        } else {
-          this._updateFormModel(model);
-        }
-      }
-      /**
-       * Handler for `narrow` change.
-       * Updates currently opened editor.
-       *
-       * @param {Boolean} narrow New value
-       */
-      _narrowChanged(narrow) {
-        if (this.sourceMode) {
-          this._updateCmNarrow(narrow);
-        } else {
-          this._updateFormNarrow(narrow);
-        }
-      }
-      /**
-       * Updates `allowDisableParams` on form editor.
-       *
-       * @param {Boolean} allowDisableParams New state of property
-       */
-      _allowDisableParamsChanged(allowDisableParams) {
-        if (!this.sourceMode) {
-          const editor = this.formEditor();
-          editor.allowDisableParams = allowDisableParams;
-        }
-      }
-      /**
-       * Updates `allowCustom` on form editor.
-       *
-       * @param {Boolean} allowCustom New state of property
-       */
-      _allowCustomChanged(allowCustom) {
-        if (!this.sourceMode) {
-          const editor = this.formEditor();
-          editor.allowCustom = allowCustom;
-        }
-      }
-      /**
-       * Updates `allowHideOptional` on form editor.
-       *
-       * @param {Boolean} allowHideOptional New state of property
-       */
-      _allowHideOptionalChanged(allowHideOptional) {
-        if (!this.sourceMode) {
-          const editor = this.formEditor();
-          editor.allowHideOptional = allowHideOptional;
+          this._innerEditorValueChanged = false;
         }
       }
       /**
@@ -389,8 +241,9 @@
           return '';
         }
         const data = [];
+        const disbleAllowed = this.allowDisableParams;
         model.forEach((item) => {
-          if (!item || (item.schema && item.schema.enabled === false)) {
+          if (!item || (disbleAllowed && item.schema && item.schema.enabled === false)) {
             return;
           }
           data.push({
@@ -409,23 +262,8 @@
       _cmKeysHandler(cm) {
         /* global CodeMirror */
         CodeMirror.showHint(cm, CodeMirror.hint['http-headers'], {
-          container: this.codeMirror()
+          container: this.currentPanel
         });
-      }
-      /**
-       * Handler for `sourceMode` change.
-       *
-       * Opens desired editr.
-       *
-       * @param {Boolean} isSource
-       */
-      _sourceModeChanged(isSource) {
-        if (isSource) {
-          this.createCodeMirror();
-        } else {
-          this._modelFromValue();
-          this.createForm();
-        }
       }
       /**
        * Called when switching from source view to form view.
@@ -441,13 +279,14 @@
         if (value === undefined) {
           return;
         }
-        const model = this.viewModel;
+        let model = this.viewModel;
         if (!model) {
-          return;
+          model = [];
         }
         const parsedValue = this.filterHeaders(this.headersToJSON(value));
         const tmp = {};
         const appendCustom = [];
+        const disbleAllowed = this.allowDisableParams;
         // updates model value
         parsedValue.forEach((item) => {
           const i = this._findModelIndex(model, item.name);
@@ -472,11 +311,14 @@
           if (model[i].name in tmp) {
             continue;
           }
-          if (model[i].isCustom) {
+          if (model[i].schema.isCustom) {
             this.splice('viewModel', i, 1);
-          } else {
+          } else if (disbleAllowed) {
             this.set(['viewModel', i, 'schema', 'enabled'], false);
           }
+        }
+        if (!this.viewModel) {
+          this.viewModel = [];
         }
         appendCustom.forEach((item) => this.push('viewModel', item));
       }
@@ -498,15 +340,18 @@
        */
       createCustom(defaults) {
         const data = Object.assign({}, defaults);
-        data.isCustom = true;
         if (!data.schema) {
           data.schema = {};
         }
+        data.schema.isCustom = true;
         if (!data.schema.type) {
           data.schema.type = 'string';
         }
         if (!data.schema.enabled) {
           data.schema.enabled = true;
+        }
+        if (!data.schema.inputLabel) {
+          data.schema.inputLabel = 'Header value';
         }
         this.$.transformer.buildProperty(data);
         return data;
@@ -528,7 +373,7 @@
        * It updates value for a single header.
        */
       _headerChangedHandler(e) {
-        if (e.defaultPrevented) {
+        if (e.composedPath()[0] === this || e.defaultPrevented) {
           return;
         }
         const name = e.detail.name;
@@ -576,6 +421,7 @@
             this.set('contentType', undefined);
           }
         } else {
+          ctValue = ctValue.trim();
           if (this.contentType !== ctValue) {
             this.set('contentType', ctValue);
           }
@@ -590,15 +436,18 @@
         if (this._cacncelChangeEvent) {
           return;
         }
-        const ev = new CustomEvent('request-headers-changed', {
-          detail: {
-            value: value
-          },
-          cancelable: true,
-          bubbles: true,
-          composed: true
-        });
-        this.dispatchEvent(ev);
+        if (this._innerEditorValueChanged) {
+          this.dispatchEvent(new CustomEvent('request-headers-changed', {
+            detail: {
+              value: value
+            },
+            cancelable: true,
+            bubbles: true,
+            composed: true
+          }));
+        } else {
+          this._modelFromValue(value);
+        }
       }
 
       _onContentTypeChanged(currentCt) {
@@ -630,10 +479,13 @@
             value: currentCt
           });
         }
-
         const headers = this.headersToString(arr);
-        this._setValues(headers);
-        this._notifyContentType(currentCt);
+        if (!this._innerEditorValueChanged) {
+          this._setValues(headers);
+          this._modelFromValue(headers);
+        } else {
+          this._notifyContentType(currentCt);
+        }
       }
 
       _notifyContentType(type) {
@@ -647,26 +499,21 @@
         });
         this.dispatchEvent(ev);
       }
-
+      /**
+       * Updates `value` when new value is computed by the editor.
+       *
+       * @param {String} value A value to set.
+       */
       _setValues(value) {
         this._cacncelChangeEvent = true;
         this.set('value', value);
         this._cacncelChangeEvent = false;
-        if (this.sourceMode) {
-          let editor = this.codeMirror();
-          if (editor) {
-            editor.value = value;
-          }
-        } else {
-          this._modelFromValue();
-        }
       }
-
       /**
        * Coppies current response text value to clipboard.
        */
       _copyToClipboard() {
-        const button = this.$.copyButton;
+        const button = this.shadowRoot.querySelector('.copy-icon');
         const copy = this.shadowRoot.querySelector('clipboard-copy');
         if (copy.copy()) {
           button.icon = 'arc:done';

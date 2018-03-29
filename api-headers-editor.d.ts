@@ -9,6 +9,8 @@
  */
 
 /// <reference path="../polymer/types/polymer-element.d.ts" />
+/// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
+/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
 /// <reference path="../api-view-model-transformer/api-view-model-transformer.d.ts" />
 /// <reference path="../api-headers-form/api-headers-form.d.ts" />
 /// <reference path="../code-mirror/code-mirror.d.ts" />
@@ -17,10 +19,11 @@
 /// <reference path="../code-mirror-hint/hint-http-headers.d.ts" />
 /// <reference path="../arc-icons/arc-icons.d.ts" />
 /// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../paper-tooltip/paper-tooltip.d.ts" />
 /// <reference path="../headers-parser-behavior/headers-parser-behavior.d.ts" />
 /// <reference path="../events-target-behavior/events-target-behavior.d.ts" />
 /// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
+/// <reference path="../api-form-mixin/api-form-styles.d.ts" />
+/// <reference path="../api-form-mixin/api-form-mixin.d.ts" />
 
 declare namespace ApiElements {
 
@@ -41,10 +44,13 @@ declare namespace ApiElements {
    * The model is resolved to internal data model by `api-view-model-transformer`
    * element.
    *
+   * If the element is used without AMF model `allowCustom` property must be
+   * set or otherwise user won't be able to add new header to the editor.
+   *
    * ### Example
    *
    * ```html
-   * <api-headers-editor id="editor"></api-headers-editor>
+   * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
    * <script>
    * let data = await getAmfModel();
    * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
@@ -57,11 +63,22 @@ declare namespace ApiElements {
    * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
    * < /script>
    * ```
+   *
+   * ### Example without AMF
+   *
+   * ```html
+   * <api-headers-editor id="editor" allow-disable-params allow-custom></api-headers-editor>
+   * <script>
+   * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
+   * < /script>
+   * ```
    */
   class ApiHeadersEditor extends
     ArcBehaviors.HeadersParserBehavior(
     ArcBehaviors.EventsTargetBehavior(
-    Polymer.Element)) {
+    ArcBehaviors.ApiFormMixin(
+    Polymer.Element))) {
+    readonly currentPanel: HTMLElement|null;
     amfHeaders: any[]|null|undefined;
 
     /**
@@ -84,19 +101,9 @@ declare namespace ApiElements {
     contentType: Stirng|null;
 
     /**
-     * If set it will renders the view in the narrow layout.
-     */
-    narrow: boolean|null|undefined;
-
-    /**
      * When set to true then the source edit mode is enabled
      */
     sourceMode: boolean|null|undefined;
-
-    /**
-     * If set, custom headers won't be available in form mode.
-     */
-    disallowCustom: boolean|null|undefined;
 
     /**
      * Events target for tranformer
@@ -116,103 +123,16 @@ declare namespace ApiElements {
     ready(): void;
 
     /**
-     * Creates a form editor and places it in the local DOM.
-     * This does nothing if the element hasn't been yet initialized
-     */
-    createForm(): void;
-
-    /**
-     * Searches the DOM for the form editor.
+     * Handler for `sourceMode` change.
      *
-     * @returns Editor or undefined if not set.
+     * Opens desired editr.
      */
-    formEditor(): ApiHeadersEditor|null|undefined;
+    _sourceModeChanged(isSource: Boolean|null): void;
 
     /**
-     * Removes references to the form editor.
-     * It removes event listeners and removes the form editor from local DOM.
+     * Updates the value when current editor's value change.
      */
-    removeForm(): void;
-
-    /**
-     * Updates model data on form element.
-     *
-     * @param model New model
-     */
-    _updateFormModel(model: any[]|null): void;
-
-    /**
-     * Updates form editor `narrow` property.
-     *
-     * @param narrow New value
-     */
-    _updateFormNarrow(narrow: Boolean|null): void;
-
-    /**
-     * Creates a code mirror editor and places it in the local DOM.
-     * This does nothing if the element hasn't been yet initialized
-     */
-    createCodeMirror(): void;
-
-    /**
-     * Searches the DOM for the CodeMirror editor.
-     *
-     * @returns Editor or undefined if not set.
-     */
-    codeMirror(): CodeMirrorElement|null|undefined;
-
-    /**
-     * Removes references to the CodeMirror editor.
-     * It removes event listeners and removes the editor from local DOM.
-     */
-    removeCodeMirror(): void;
-
-    /**
-     * Updates model data on the `code-mirror` element.
-     *
-     * @param model New model
-     */
-    _updateCmModel(model: any[]|null): void;
-
-    /**
-     * Updates Code Mirror editor `narrow` property.
-     *
-     * @param narrow New value
-     */
-    _updateCmNarrow(narrow: Boolean|null): void;
-
-    /**
-     * Updates the value when form data editor's value change
-     */
-    _formValueChanged(e: any): void;
-
-    /**
-     * Updates the value when CodeMirror editor's value change
-     */
-    _cmValueChanged(e: any): void;
-
-    /**
-     * Handler for `viewModel` change.
-     * Updates currently opened editor.
-     *
-     * @param model New model
-     */
-    _viewModelChanged(model: any[]|null): void;
-
-    /**
-     * Handler for `narrow` change.
-     * Updates currently opened editor.
-     *
-     * @param narrow New value
-     */
-    _narrowChanged(narrow: Boolean|null): void;
-
-    /**
-     * Updates `disallowCustom` on form editor.
-     *
-     * @param state New state of property
-     */
-    _disallowCustomChanged(state: Boolean|null): void;
+    _editorValueChanged(e: CustomEvent|null): void;
 
     /**
      * Creates a headers string from a model.
@@ -230,13 +150,6 @@ declare namespace ApiElements {
      * @param cm Code mirror instance.
      */
     _cmKeysHandler(cm: object|null): void;
-
-    /**
-     * Handler for `sourceMode` change.
-     *
-     * Opens desired editr.
-     */
-    _sourceModeChanged(isSource: Boolean|null): void;
 
     /**
      * Called when switching from source view to form view.
@@ -292,7 +205,13 @@ declare namespace ApiElements {
     _valueChanged(value: any): void;
     _onContentTypeChanged(currentCt: any): void;
     _notifyContentType(type: any): void;
-    _setValues(value: any): void;
+
+    /**
+     * Updates `value` when new value is computed by the editor.
+     *
+     * @param value A value to set.
+     */
+    _setValues(value: String|null): void;
 
     /**
      * Coppies current response text value to clipboard.
