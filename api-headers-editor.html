@@ -11,6 +11,7 @@
 <link rel="import" href="../events-target-behavior/events-target-behavior.html">
 <link rel="import" href="../clipboard-copy/clipboard-copy.html">
 <link rel="import" href="../api-form-mixin/api-form-styles.html">
+<link rel="import" href="../api-form-mixin/api-form-mixin.html">
 <dom-module id="api-headers-editor">
   <template>
     <style include="api-form-styles">
@@ -79,8 +80,9 @@
      * @demo demo/index.html
      * @appliesMixin ArcBehaviors.HeadersParserBehavior
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
+     * @appliesMixin ArcBehaviors.ApiFormMixin
      */
-    class ApiHeadersEditor extends ArcBehaviors.EventsTargetBehavior(ArcBehaviors.HeadersParserBehavior(Polymer.Element)) {
+    class ApiHeadersEditor extends ArcBehaviors.ApiFormMixin(ArcBehaviors.EventsTargetBehavior(ArcBehaviors.HeadersParserBehavior(Polymer.Element))) {
       static get is() { return 'api-headers-editor'; }
       static get properties() {
         return {
@@ -114,25 +116,10 @@
             notify: true,
             observer: '_onContentTypeChanged'
           },
-
-          /**
-           * If set it will renders the view in the narrow layout.
-           */
-          narrow: {
-            type: Boolean,
-            observer: '_narrowChanged'
-          },
           // When set to true then the source edit mode is enabled
           sourceMode: {
             type: Boolean,
             observer: '_sourceModeChanged'
-          },
-          /**
-           * If set, custom headers won't be available in form mode.
-           */
-          disallowCustom: {
-            type: Boolean,
-            observer: '_disallowCustomChanged'
           },
           // Events target for tranformer
           _transformerTarget: {
@@ -149,6 +136,15 @@
             }
           }
         };
+      }
+
+      static get observers() {
+        return [
+          '_narrowChanged(narrow)',
+          '_allowDisableParamsChanged(allowDisableParams)',
+          '_allowCustomChanged(allowCustom)',
+          '_allowHideOptionalChanged(allowHideOptional)'
+        ];
       }
       /**
        * @constructor
@@ -191,7 +187,9 @@
         const e = document.createElement('api-headers-form');
         e.model = this.viewModel;
         e.narrow = this.narrow;
-        e.disallowCustom = this.disallowCustom;
+        e.allowDisableParams = this.allowDisableParams;
+        e.allowCustom = this.allowCustom;
+        e.allowHideOptional = this.allowHideOptional;
         e.addEventListener('value-changed', this._formValueChanged);
         this.$.editor.appendChild(e);
       }
@@ -344,14 +342,36 @@
         }
       }
       /**
-       * Updates `disallowCustom` on form editor.
+       * Updates `allowDisableParams` on form editor.
        *
-       * @param {Boolean} state New state of property
+       * @param {Boolean} allowDisableParams New state of property
        */
-      _disallowCustomChanged(state) {
+      _allowDisableParamsChanged(allowDisableParams) {
         if (!this.sourceMode) {
           const editor = this.formEditor();
-          editor.disallowCustom = state;
+          editor.allowDisableParams = allowDisableParams;
+        }
+      }
+      /**
+       * Updates `allowCustom` on form editor.
+       *
+       * @param {Boolean} allowCustom New state of property
+       */
+      _allowCustomChanged(allowCustom) {
+        if (!this.sourceMode) {
+          const editor = this.formEditor();
+          editor.allowCustom = allowCustom;
+        }
+      }
+      /**
+       * Updates `allowHideOptional` on form editor.
+       *
+       * @param {Boolean} allowHideOptional New state of property
+       */
+      _allowHideOptionalChanged(allowHideOptional) {
+        if (!this.sourceMode) {
+          const editor = this.formEditor();
+          editor.allowHideOptional = allowHideOptional;
         }
       }
       /**
@@ -497,10 +517,7 @@
        * Updates the editor value to the value of the event detail object.
        */
       _headersChangedHandler(e) {
-        if (e.target === this) {
-          return;
-        }
-        if (e.defaultPrevented) {
+        if (e.composedPath()[0] === this || e.defaultPrevented) {
           return;
         }
         const value = e.detail.value;
