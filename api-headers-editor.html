@@ -446,6 +446,9 @@
       _valueChanged(value) {
         this._detectContentType(value);
         if (this._cacncelChangeEvent) {
+          if (!this._innerEditorValueChanged) {
+            this._modelFromValue(value);
+          }
           return;
         }
         if (this._innerEditorValueChanged) {
