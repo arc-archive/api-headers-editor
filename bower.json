@@ -35,7 +35,8 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0",
     "iron-component-page": "^3.0.1",
-    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.2"
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.2",
+    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11"
   },
   "repository": {
     "type": "git",
