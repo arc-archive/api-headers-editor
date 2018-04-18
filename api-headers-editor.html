@@ -471,21 +471,15 @@
         }
         const arr = this.headersToJSON(this.value);
         let updated = false;
-        let notChanged = false; //True when values are equal, no change needed.
         for (let i = 0, len = arr.length; i < len; i++) {
           if (arr[i].name.toLowerCase() !== 'content-type') {
             continue;
           }
           updated = true;
-          if (arr[i].value === currentCt) {
-            notChanged = true;
-          } else {
+          if (arr[i].value !== currentCt) {
             arr[i].value = currentCt;
           }
           break;
-        }
-        if (notChanged) {
-          return;
         }
         if (!updated) {
           arr.push({
@@ -497,9 +491,8 @@
         if (!this._innerEditorValueChanged) {
           this._setValues(headers);
           this._modelFromValue(headers);
-        } else {
-          this._notifyContentType(currentCt);
         }
+        this._notifyContentType(currentCt);
       }
 
       _notifyContentType(type) {

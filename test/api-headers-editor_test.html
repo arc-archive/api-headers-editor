@@ -70,11 +70,14 @@
         assert.equal(element.contentType, 'application/test', 'contentType equals application/test');
       });
 
-      test('Fires content type change event', function() {
-        const spy = sinon.stub();
-        element.addEventListener('content-type-changed', spy);
-        element.value = 'text:test\ncontent-type:application/test';
-        assert.isTrue(spy.calledOnce);
+      test('Fires content type change event', function(done) {
+        const ct = 'application/test';
+        element.addEventListener('content-type-changed', function clb(e) {
+          element.removeEventListener('content-type-changed', clb);
+          assert.equal(e.detail.value, ct);
+          done();
+        });
+        element.value = 'text:test\ncontent-type:' + ct;
       });
       test('Handles request-headers-changed event', function() {
         var init = {
