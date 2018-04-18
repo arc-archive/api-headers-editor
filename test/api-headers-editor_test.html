@@ -70,15 +70,7 @@
         assert.equal(element.contentType, 'application/test', 'contentType equals application/test');
       });
 
-      test('Fires content type change event', function(done) {
-        const ct = 'application/test';
-        element.addEventListener('content-type-changed', function clb(e) {
-          element.removeEventListener('content-type-changed', clb);
-          assert.equal(e.detail.value, ct);
-          done();
-        });
-        element.value = 'text:test\ncontent-type:' + ct;
-      });
+
       test('Handles request-headers-changed event', function() {
         var init = {
           detail: {
@@ -252,6 +244,53 @@
     //   assert.equal(elementHeader.innerHTML, 'Hello api-headers-editor!');
     // });
 
+  });
+
+  suite('content-type-changed support', () => {
+    let element;
+    setup(() => {
+      element = fixture('BasicTestFixture');
+    });
+
+    test('Fires content type change event', function(done) {
+      const ct = 'application/test';
+      element.addEventListener('content-type-changed', function clb(e) {
+        element.removeEventListener('content-type-changed', clb);
+        assert.equal(e.detail.value, ct);
+        done();
+      });
+      element.value = 'text:test\ncontent-type:' + ct;
+    });
+
+    function fire(type) {
+      window.dispatchEvent(new CustomEvent('content-type-changed', {
+        detail: {
+          value: type
+        },
+        cancelable: false,
+        bubbles: true,
+        composed: true
+      }));
+    }
+
+    test('Updates content type value from the event', () => {
+      const ct = 'test';
+      fire(ct);
+      assert.equal(element.contentType, ct);
+    });
+
+    test('Adds header to custom list', () => {
+      const ct = 'test';
+      fire(ct);
+      assert.equal(element.viewModel[0].value, ct);
+    });
+
+    test('Does not refire the event', () => {
+      const spy = sinon.spy();
+      document.body.addEventListener('content-type-changed', spy);
+      fire('test');
+      assert.isFalse(spy.called);
+    });
   });
   </script>
 </body>

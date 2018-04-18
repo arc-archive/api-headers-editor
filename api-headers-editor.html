@@ -186,6 +186,7 @@
         this._cmKeysHandler = this._cmKeysHandler.bind(this);
         this._headersChangedHandler = this._headersChangedHandler.bind(this);
         this._headerChangedHandler = this._headerChangedHandler.bind(this);
+        this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(this);
       }
       /**
        * Sets up editor when ready to manipulate DOM.
@@ -198,11 +199,13 @@
       _attachListeners(node) {
         node.addEventListener('request-headers-changed', this._headersChangedHandler);
         node.addEventListener('request-header-changed', this._headerChangedHandler);
+        node.addEventListener('content-type-changed', this._contentTypeChangedHandler);
       }
 
       _detachListeners(node) {
         node.removeEventListener('request-headers-changed', this._headersChangedHandler);
         node.removeEventListener('request-header-changed', this._headerChangedHandler);
+        node.removeEventListener('content-type-changed', this._contentTypeChangedHandler);
       }
       /**
        * Handler for `sourceMode` change.
@@ -411,6 +414,20 @@
         this._setValues(headers);
       }
       /**
+       * Handler for `content-type-changed` event.
+       * Uppdates it's value if from external source.
+       *
+       * @param {CustomEvent} e
+       */
+      _contentTypeChangedHandler(e) {
+        if (e.composedPath()[0] === this || e.defaultPrevented) {
+          return;
+        }
+        this.__cancelContentTypeNotification = true;
+        this.set('contentType', e.detail.value);
+        this.__cancelContentTypeNotification = false;
+      }
+      /**
        * Detects and sets content type value from changed headers value.
        *
        * @param {String} value Headers new value.
@@ -496,6 +513,9 @@
       }
 
       _notifyContentType(type) {
+        if (this.__cancelContentTypeNotification) {
+          return;
+        }
         const ev = new CustomEvent('content-type-changed', {
           detail: {
             value: type
