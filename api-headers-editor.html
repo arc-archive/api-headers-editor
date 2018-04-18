@@ -213,13 +213,13 @@
        */
       _sourceModeChanged(isSource) {
         if (isSource) {
-          Polymer.RenderStatus.afterNextRender(this, () => {
+          setTimeout(() => {
             const panel = this.currentPanel;
             panel.setOption('extraKeys', {
               'Ctrl-Space': this._cmKeysHandler
             });
             panel.value = this.modelToValue(this.viewModel);
-          });
+          }, 50);
         } else {
           this._modelFromValue();
         }

@@ -209,28 +209,29 @@
 
       test('Updates model value after turning back to form mode', (done) => {
         element.sourceMode = true;
-        flush(() => {
+        // Value is set after 50 ms to ensure it's initialized
+        setTimeout(() => {
           const editor = element.currentPanel;
           editor.value = 'x-test: test-value';
           element.sourceMode = false;
           assert.equal(element.viewModel[0].value, 'test-value');
           done();
-        });
+        }, 55);
       });
 
       test('Updates editor when in source mode', (done) => {
         element.sourceMode = true;
-        flush(() => {
+        setTimeout(() => {
           const editor = element.currentPanel;
           editor.value = 'x-test: test-value';
           assert.equal(element.value, 'x-test: test-value');
           done();
-        });
+        }, 55);
       });
 
       test('Adds custom header from source mode', (done) => {
         element.sourceMode = true;
-        flush(() => {
+        setTimeout(() => {
           const editor = element.currentPanel;
           editor.value = 'x-test: test-value\nx-custom: value';
           element.sourceMode = false;
@@ -239,7 +240,7 @@
           assert.equal(element.viewModel[1].name, 'x-custom', 'Name is set');
           assert.equal(element.viewModel[1].value, 'value', 'Value is set');
           done();
-        });
+        }, 55);
       });
     });
 
