@@ -12,6 +12,7 @@
 /// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
 /// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
 /// <reference path="../api-view-model-transformer/api-view-model-transformer.d.ts" />
+/// <reference path="../raml-aware/raml-aware.d.ts" />
 /// <reference path="../api-headers-form/api-headers-form.d.ts" />
 /// <reference path="../code-mirror/code-mirror.d.ts" />
 /// <reference path="../code-mirror-hint/code-mirror-hint.d.ts" />
@@ -72,6 +73,18 @@ declare namespace ApiElements {
    * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
    * < /script>
    * ```
+   *
+   * ## Setting value when model is set
+   *
+   * Model values has priority over value set on the editor.
+   * If `amfModel` is set and value has been altered programatically there
+   * are two possible outcomes:
+   *
+   * 1) If `allowDisableParams` is set, model values are automatically
+   * disabled if model item is not in the value
+   * 2) If `allowDisableParams` is not set, model values are always
+   * added to generated values. Or rather new value is added to the existing
+   * model as custom values.
    */
   class ApiHeadersEditor extends
     ArcBehaviors.HeadersParserBehavior(
@@ -79,6 +92,23 @@ declare namespace ApiElements {
     ArcBehaviors.ApiFormMixin(
     Polymer.Element))) {
     readonly currentPanel: HTMLElement|null;
+
+    /**
+     * `raml-aware` scope property to use.
+     */
+    aware: string|null|undefined;
+
+    /**
+     * Generated AMF json/ld model form the API spec.
+     * The element assumes the object of the first array item to be a
+     * type of `"http://raml.org/vocabularies/document#Document`
+     * on AMF vocabulary.
+     */
+    amfModel: object|any[]|null;
+
+    /**
+     * List of headers defined in AMF model to render.
+     */
     amfHeaders: any[]|null|undefined;
 
     /**
@@ -190,6 +220,12 @@ declare namespace ApiElements {
      * It updates value for a single header.
      */
     _headerChangedHandler(e: any): any;
+
+    /**
+     * Handler for `content-type-changed` event.
+     * Uppdates it's value if from external source.
+     */
+    _contentTypeChangedHandler(e: CustomEvent|null): void;
 
     /**
      * Detects and sets content type value from changed headers value.

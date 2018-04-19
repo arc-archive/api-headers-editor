@@ -2,6 +2,7 @@
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
 <link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../api-view-model-transformer/api-view-model-transformer.html">
+<link rel="import" href="../raml-aware/raml-aware.html">
 <link rel="import" href="../api-headers-form/api-headers-form.html">
 <link rel="import" href="../code-mirror/code-mirror.html">
 <link rel="import" href="../code-mirror-hint/code-mirror-hint.html">
@@ -30,7 +31,10 @@
       @apply --api-headers-editor-panel-button-active;
     }
     </style>
-    <api-view-model-transformer amf-model="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]"></api-view-model-transformer>
+    <template is="dom-if" if="[[aware]]">
+      <raml-aware raml="{{amfModel}}" scope="[[aware]]"></raml-aware>
+    </template>
+    <api-view-model-transformer amf-model="[[amfModel]]" shape="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]"></api-view-model-transformer>
     <div class="content">
       <div class="editor-actions">
         <paper-icon-button class="action-icon copy-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
@@ -119,6 +123,22 @@
       static get is() { return 'api-headers-editor'; }
       static get properties() {
         return {
+          /**
+           * `raml-aware` scope property to use.
+           */
+          aware: String,
+          /**
+           * Generated AMF json/ld model form the API spec.
+           * The element assumes the object of the first array item to be a
+           * type of `"http://raml.org/vocabularies/document#Document`
+           * on AMF vocabulary.
+           *
+           * @type {Object|Array}
+           */
+          amfModel: Object,
+          /**
+           * List of headers defined in AMF model to render.
+           */
           amfHeaders: Array,
           /**
            * Headers value.

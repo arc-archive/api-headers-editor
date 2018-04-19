@@ -271,17 +271,55 @@
           "inheritedFrom": "ArcBehaviors.ApiFormMixin"
         },
         {
-          "name": "amfHeaders",
-          "type": "Array",
-          "description": "",
+          "name": "aware",
+          "type": "string",
+          "description": "`raml-aware` scope property to use.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 122,
+              "line": 128,
               "column": 10
             },
             "end": {
-              "line": 122,
+              "line": 128,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "amfModel",
+          "type": "(Object | Array)",
+          "description": "Generated AMF json/ld model form the API spec.\nThe element assumes the object of the first array item to be a\ntype of `\"http://raml.org/vocabularies/document#Document`\non AMF vocabulary.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 137,
+              "column": 10
+            },
+            "end": {
+              "line": 137,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "amfHeaders",
+          "type": "Array",
+          "description": "List of headers defined in AMF model to render.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 10
+            },
+            "end": {
+              "line": 141,
               "column": 27
             }
           },
@@ -296,11 +334,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 126,
+              "line": 145,
               "column": 10
             },
             "end": {
-              "line": 130,
+              "line": 149,
               "column": 11
             }
           },
@@ -318,11 +356,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 135,
+              "line": 154,
               "column": 10
             },
             "end": {
-              "line": 135,
+              "line": 154,
               "column": 26
             }
           },
@@ -337,11 +375,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 144,
+              "line": 163,
               "column": 10
             },
             "end": {
-              "line": 148,
+              "line": 167,
               "column": 11
             }
           },
@@ -359,11 +397,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 150,
+              "line": 169,
               "column": 10
             },
             "end": {
-              "line": 153,
+              "line": 172,
               "column": 11
             }
           },
@@ -380,11 +418,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 155,
+              "line": 174,
               "column": 10
             },
             "end": {
-              "line": 160,
+              "line": 179,
               "column": 11
             }
           },
@@ -399,11 +437,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 162,
+              "line": 181,
               "column": 10
             },
             "end": {
-              "line": 167,
+              "line": 186,
               "column": 11
             }
           },
@@ -454,7 +492,7 @@
               "column": 4
             },
             "end": {
-              "line": 110,
+              "line": 122,
               "column": 5
             }
           },
@@ -473,46 +511,17 @@
           "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
         },
         {
-          "name": "headerItemToString",
-          "description": "Transforms a header model item to a string.\nArray values are supported.",
-          "privacy": "public",
-          "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
-            "start": {
-              "line": 118,
-              "column": 4
-            },
-            "end": {
-              "line": 132,
-              "column": 5
-            }
-          },
-          "metadata": {},
-          "params": [
-            {
-              "name": "header",
-              "type": "Object",
-              "description": "Object with name and value."
-            }
-          ],
-          "return": {
-            "type": "String",
-            "desc": "Generated headers line"
-          },
-          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
-        },
-        {
           "name": "headersToJSON",
           "description": "Parse HTTP headers input from string to array of objects containing `name` and `value`\nproperties.",
           "privacy": "public",
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 142,
+              "line": 131,
               "column": 4
             },
             "end": {
-              "line": 148,
+              "line": 137,
               "column": 5
             }
           },
@@ -537,11 +546,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 153,
+              "line": 142,
               "column": 4
             },
             "end": {
-              "line": 185,
+              "line": 174,
               "column": 5
             }
           },
@@ -560,11 +569,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 190,
+              "line": 179,
               "column": 4
             },
             "end": {
-              "line": 213,
+              "line": 202,
               "column": 5
             }
           },
@@ -583,11 +592,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 223,
+              "line": 212,
               "column": 4
             },
             "end": {
-              "line": 237,
+              "line": 226,
               "column": 5
             }
           },
@@ -617,11 +626,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 245,
+              "line": 234,
               "column": 4
             },
             "end": {
-              "line": 266,
+              "line": 255,
               "column": 5
             }
           },
@@ -646,11 +655,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 277,
+              "line": 266,
               "column": 4
             },
             "end": {
-              "line": 311,
+              "line": 300,
               "column": 5
             }
           },
@@ -685,11 +694,11 @@
           "sourceRange": {
             "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 317,
+              "line": 306,
               "column": 4
             },
             "end": {
-              "line": 351,
+              "line": 340,
               "column": 5
             }
           },
@@ -776,11 +785,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 198,
+              "line": 218,
               "column": 6
             },
             "end": {
-              "line": 201,
+              "line": 222,
               "column": 7
             }
           },
@@ -797,11 +806,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 203,
+              "line": 224,
               "column": 6
             },
             "end": {
-              "line": 206,
+              "line": 228,
               "column": 7
             }
           },
@@ -1166,11 +1175,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 193,
+              "line": 213,
               "column": 6
             },
             "end": {
-              "line": 196,
+              "line": 216,
               "column": 7
             }
           },
@@ -1183,11 +1192,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 214,
+              "line": 236,
               "column": 6
             },
             "end": {
-              "line": 226,
+              "line": 248,
               "column": 7
             }
           },
@@ -1205,11 +1214,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 232,
+              "line": 254,
               "column": 6
             },
             "end": {
-              "line": 239,
+              "line": 261,
               "column": 7
             }
           },
@@ -1227,11 +1236,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 247,
+              "line": 269,
               "column": 6
             },
             "end": {
-              "line": 266,
+              "line": 288,
               "column": 7
             }
           },
@@ -1254,11 +1263,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 273,
+              "line": 295,
               "column": 6
             },
             "end": {
-              "line": 278,
+              "line": 300,
               "column": 7
             }
           },
@@ -1277,11 +1286,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 310,
               "column": 6
             },
             "end": {
-              "line": 335,
+              "line": 357,
               "column": 7
             }
           },
@@ -1294,11 +1303,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 343,
+              "line": 365,
               "column": 6
             },
             "end": {
-              "line": 345,
+              "line": 367,
               "column": 7
             }
           },
@@ -1326,11 +1335,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 352,
+              "line": 374,
               "column": 6
             },
             "end": {
-              "line": 369,
+              "line": 391,
               "column": 7
             }
           },
@@ -1353,11 +1362,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 375,
+              "line": 397,
               "column": 6
             },
             "end": {
-              "line": 381,
+              "line": 403,
               "column": 7
             }
           },
@@ -1374,11 +1383,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 386,
+              "line": 408,
               "column": 6
             },
             "end": {
-              "line": 412,
+              "line": 434,
               "column": 7
             }
           },
@@ -1390,16 +1399,38 @@
           ]
         },
         {
+          "name": "_contentTypeChangedHandler",
+          "description": "Handler for `content-type-changed` event.\nUppdates it's value if from external source.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 441,
+              "column": 6
+            },
+            "end": {
+              "line": 448,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "CustomEvent"
+            }
+          ]
+        },
+        {
           "name": "_detectContentType",
           "description": "Detects and sets content type value from changed headers value.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 418,
+              "line": 454,
               "column": 6
             },
             "end": {
-              "line": 440,
+              "line": 476,
               "column": 7
             }
           },
@@ -1418,11 +1449,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 445,
+              "line": 481,
               "column": 6
             },
             "end": {
-              "line": 462,
+              "line": 501,
               "column": 7
             }
           },
@@ -1439,11 +1470,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 464,
+              "line": 503,
               "column": 6
             },
             "end": {
-              "line": 500,
+              "line": 532,
               "column": 7
             }
           },
@@ -1460,11 +1491,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 502,
+              "line": 534,
               "column": 6
             },
             "end": {
-              "line": 512,
+              "line": 547,
               "column": 7
             }
           },
@@ -1481,11 +1512,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 518,
+              "line": 553,
               "column": 6
             },
             "end": {
-              "line": 522,
+              "line": 557,
               "column": 7
             }
           },
@@ -1504,11 +1535,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 526,
+              "line": 561,
               "column": 6
             },
             "end": {
-              "line": 537,
+              "line": 572,
               "column": 7
             }
           },
@@ -1521,11 +1552,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 539,
+              "line": 574,
               "column": 6
             },
             "end": {
-              "line": 541,
+              "line": 576,
               "column": 7
             }
           },
@@ -1551,11 +1582,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 118,
+          "line": 121,
           "column": 4
         },
         "end": {
-          "line": 542,
+          "line": 577,
           "column": 5
         }
       },
@@ -1762,15 +1793,47 @@
           "inheritedFrom": "ArcBehaviors.ApiFormMixin"
         },
         {
-          "name": "amf-headers",
-          "description": "",
+          "name": "aware",
+          "description": "`raml-aware` scope property to use.",
           "sourceRange": {
             "start": {
-              "line": 122,
+              "line": 128,
               "column": 10
             },
             "end": {
-              "line": 122,
+              "line": 128,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "amf-model",
+          "description": "Generated AMF json/ld model form the API spec.\nThe element assumes the object of the first array item to be a\ntype of `\"http://raml.org/vocabularies/document#Document`\non AMF vocabulary.",
+          "sourceRange": {
+            "start": {
+              "line": 137,
+              "column": 10
+            },
+            "end": {
+              "line": 137,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "(Object | Array)"
+        },
+        {
+          "name": "amf-headers",
+          "description": "List of headers defined in AMF model to render.",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 10
+            },
+            "end": {
+              "line": 141,
               "column": 27
             }
           },
@@ -1782,11 +1845,11 @@
           "description": "Headers value.",
           "sourceRange": {
             "start": {
-              "line": 126,
+              "line": 145,
               "column": 10
             },
             "end": {
-              "line": 130,
+              "line": 149,
               "column": 11
             }
           },
@@ -1798,11 +1861,11 @@
           "description": "Generated view model fore the headers from `amfModel`.\nThis is automatically set when `amfModel` is set.",
           "sourceRange": {
             "start": {
-              "line": 135,
+              "line": 154,
               "column": 10
             },
             "end": {
-              "line": 135,
+              "line": 154,
               "column": 26
             }
           },
@@ -1814,11 +1877,11 @@
           "description": "Value of a Content-Type header.\nWhen this value change then editor update the value for the content type. However,\nto change a single header value, please, use `request-headers-changed` event with `name`\nand `value` properties set on the detail object.",
           "sourceRange": {
             "start": {
-              "line": 144,
+              "line": 163,
               "column": 10
             },
             "end": {
-              "line": 148,
+              "line": 167,
               "column": 11
             }
           },
@@ -1830,11 +1893,11 @@
           "description": "When set to true then the source edit mode is enabled",
           "sourceRange": {
             "start": {
-              "line": 150,
+              "line": 169,
               "column": 10
             },
             "end": {
-              "line": 153,
+              "line": 172,
               "column": 11
             }
           },
@@ -1867,11 +1930,11 @@
           "range": {
             "file": "api-headers-editor.html",
             "start": {
-              "line": 38,
+              "line": 41,
               "column": 8
             },
             "end": {
-              "line": 38,
+              "line": 41,
               "column": 44
             }
           }
