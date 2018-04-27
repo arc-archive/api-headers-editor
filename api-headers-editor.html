@@ -2,6 +2,7 @@
 <link rel="import" href="../polymer/lib/elements/dom-if.html">
 <link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../api-view-model-transformer/api-view-model-transformer.html">
+<link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
 <link rel="import" href="../raml-aware/raml-aware.html">
 <link rel="import" href="../api-headers-form/api-headers-form.html">
 <link rel="import" href="../code-mirror/code-mirror.html">
@@ -46,7 +47,7 @@
           <code-mirror mode="http-headers" on-value-changed="_editorValueChanged" data-headers-panel></code-mirror>
         </template>
         <template is="dom-if" if="[[!sourceMode]]" restamp="true">
-          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged"></api-headers-form>
+          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}"></api-headers-form>
         </template>
       </div>
     </div>
@@ -118,8 +119,14 @@
      * @appliesMixin ArcBehaviors.HeadersParserBehavior
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
      * @appliesMixin ArcBehaviors.ApiFormMixin
+     * @appliesMixin Polymer.IronValidatableBehavior
      */
-    class ApiHeadersEditor extends ArcBehaviors.ApiFormMixin(ArcBehaviors.EventsTargetBehavior(ArcBehaviors.HeadersParserBehavior(Polymer.Element))) {
+    class ApiHeadersEditor extends
+      Polymer.mixinBehaviors(
+        [Polymer.IronValidatableBehavior],
+        ArcBehaviors.ApiFormMixin(
+          ArcBehaviors.EventsTargetBehavior(
+            ArcBehaviors.HeadersParserBehavior(Polymer.Element)))) {
       static get is() { return 'api-headers-editor'; }
       static get properties() {
         return {
@@ -574,6 +581,16 @@
 
       _resetCopyButtonState(button) {
         button.icon = 'arc:content-copy';
+      }
+
+      // Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
+      // attribute automatically, which should be used for styling.
+      _getValidity() {
+        if (this.sourceMode || !this.shadowRoot) {
+          return true;
+        }
+        const form = this.shadowRoot.querySelector('api-headers-form');
+        return form ? form.validate() : true;
       }
     }
 
