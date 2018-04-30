@@ -5,7 +5,8 @@
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.1.1"
+    "@polymer/gen-typescript-declarations": "^1.1.1",
+    "amf-client-js": "^1.4.0-20"
   },
   "private": false,
   "scripts": {

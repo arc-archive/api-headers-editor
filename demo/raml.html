@@ -64,7 +64,7 @@
   (function(scope) {
     scope.changeCount = 0;
     scope._load = function() {
-      fetch('./headers-model.json')
+      fetch('./demo-api.json')
       .then((response) => response.json())
       .then((data) => {
         data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
