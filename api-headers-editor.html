@@ -43,9 +43,6 @@
         <slot name="content-actions"></slot>
       </div>
       <div id="editor">
-        <template is="dom-if" if="[[sourceMode]]" restamp="true">
-          <code-mirror mode="http-headers" on-value-changed="_editorValueChanged" data-headers-panel></code-mirror>
-        </template>
         <template is="dom-if" if="[[!sourceMode]]" restamp="true">
           <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}"></api-headers-form>
         </template>
@@ -195,15 +192,20 @@
         };
       }
       /**
-       * @return {HTMLElement} Currently rendered headers panel.
+       * Reference to currently rendered headers editor.
+       * @return {HTMLElement}
        */
       get currentPanel() {
         if (!this.shadowRoot) {
           return;
         }
-        const selector = '[data-headers-panel]';
-        return this.shadowRoot.querySelector(selector);
+        const panel = this.shadowRoot.querySelector('code-mirror');
+        if (panel) {
+          return panel;
+        }
+        return this.shadowRoot.querySelector('api-headers-form');
       }
+
       /**
        * @constructor
        */
@@ -214,13 +216,6 @@
         this._headersChangedHandler = this._headersChangedHandler.bind(this);
         this._headerChangedHandler = this._headerChangedHandler.bind(this);
         this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(this);
-      }
-      /**
-       * Sets up editor when ready to manipulate DOM.
-       */
-      ready() {
-        super.ready();
-        this._sourceModeChanged(this.sourceMode);
       }
 
       _attachListeners(node) {
@@ -243,6 +238,7 @@
        */
       _sourceModeChanged(isSource) {
         if (isSource) {
+          this._attachSourceEditor();
           setTimeout(() => {
             const panel = this.currentPanel;
             panel.setOption('extraKeys', {
@@ -251,9 +247,23 @@
             panel.value = this.modelToValue(this.viewModel);
           }, 50);
         } else {
+          const panel = this.currentPanel;
+          if (panel) {
+            panel.removeEventListener('value-changed', this._editorValueChanged);
+            panel.parentNode.removeChild(panel);
+          }
           this._modelFromValue();
         }
       }
+
+      _attachSourceEditor() {
+        const cm =  document.createElement('code-mirror');
+        cm.mode = 'http-headers';
+        cm.setAttribute('data-headers-panel', true);
+        cm.addEventListener('value-changed', this._editorValueChanged);
+        this.$.editor.appendChild(cm);
+      }
+
       /**
        * Updates the value when current editor's value change.
        *
