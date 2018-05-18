@@ -12,6 +12,7 @@
 /// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
 /// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
 /// <reference path="../api-view-model-transformer/api-view-model-transformer.d.ts" />
+/// <reference path="../iron-validatable-behavior/iron-validatable-behavior.d.ts" />
 /// <reference path="../raml-aware/raml-aware.d.ts" />
 /// <reference path="../api-headers-form/api-headers-form.d.ts" />
 /// <reference path="../code-mirror/code-mirror.d.ts" />
@@ -90,7 +91,12 @@ declare namespace ApiElements {
     ArcBehaviors.HeadersParserBehavior(
     ArcBehaviors.EventsTargetBehavior(
     ArcBehaviors.ApiFormMixin(
-    Polymer.Element))) {
+    Polymer.IronValidatableBehavior(
+    Polymer.Element)))) {
+
+    /**
+     * Reference to currently rendered headers editor.
+     */
     readonly currentPanel: HTMLElement|null;
 
     /**
@@ -148,9 +154,9 @@ declare namespace ApiElements {
     _detachListeners(node: any): void;
 
     /**
-     * Sets up editor when ready to manipulate DOM.
+     * attribute automatically, which should be used for styling.
      */
-    ready(): void;
+    _getValidity(): any;
 
     /**
      * Handler for `sourceMode` change.
@@ -158,6 +164,7 @@ declare namespace ApiElements {
      * Opens desired editr.
      */
     _sourceModeChanged(isSource: Boolean|null): void;
+    _attachSourceEditor(): void;
 
     /**
      * Updates the value when current editor's value change.
