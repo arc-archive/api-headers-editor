@@ -1,6 +1,6 @@
 {
   "name": "api-headers-editor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An element to render headers edior based on AMF data model",
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",
@@ -24,7 +24,7 @@
     "code-mirror": "advanced-rest-client/code-mirror#^2.0.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
     "code-mirror-hint": "advanced-rest-client/code-mirror-hint#^1.0.0",
-    "headers-parser-behavior": "advanced-rest-client/headers-parser-behavior#^2.0.0",
+    "headers-parser-behavior": "advanced-rest-client/headers-parser-behavior#^2.0.2",
     "events-target-behavior": "advanced-rest-client/events-target-behavior#^2.0.0",
     "clipboard-copy": "advanced-rest-client/clipboard-copy#^2.0.0",
     "api-form-mixin": "advanced-rest-client/api-form-mixin#^2.0.0",
@@ -47,5 +47,13 @@
   "bugs": {
     "url": "https://github.com/advanced-rest-client/api-headers-editor/issues",
     "email": "arc@mulesoft.com"
-  }
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tasks",
+    "models"
+  ]
 }

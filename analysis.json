@@ -2043,11 +2043,11 @@
           "name": "content-actions",
           "range": {
             "start": {
-              "line": 43,
+              "line": 42,
               "column": 8
             },
             "end": {
-              "line": 43,
+              "line": 42,
               "column": 44
             }
           }
