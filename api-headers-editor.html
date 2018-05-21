@@ -254,6 +254,18 @@
           }
           this._modelFromValue();
         }
+
+        const ev = new CustomEvent('send-analytics', {
+          detail: {
+            type: 'event',
+            category: 'Usage',
+            action: 'Click',
+            label: 'Toggle source mode ' + String(isSource),
+          },
+          bubbles: true,
+          composed: true
+        });
+        this.dispatchEvent(ev);
       }
 
       _attachSourceEditor() {
@@ -587,6 +599,17 @@
         setTimeout(() => {
           this._resetCopyButtonState(button);
         }, 1000);
+        const ev = new CustomEvent('send-analytics', {
+          detail: {
+            type: 'event',
+            category: 'Usage',
+            action: 'Click',
+            label: 'Headers editor clipboard copy',
+          },
+          bubbles: true,
+          composed: true
+        });
+        this.dispatchEvent(ev);
       }
 
       _resetCopyButtonState(button) {
