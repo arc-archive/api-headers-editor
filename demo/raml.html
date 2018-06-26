@@ -69,11 +69,11 @@
       fetch('./demo-api.json')
       .then((response) => response.json())
       .then((data) => {
-        data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
-        data = data['http://raml.org/vocabularies/http#endpoint'][0];
-        data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
-        data = data['http://www.w3.org/ns/hydra/core#expects'][0];
-        data = data['http://raml.org/vocabularies/http#header'];
+        data = data[0][ApiElements.Amf.ns.raml.vocabularies.document + 'encodes'][0];
+        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'endpoint'][0];
+        data = data[ApiElements.Amf.ns.w3.hydra.core + 'supportedOperation'][0];
+        data = data[ApiElements.Amf.ns.w3.hydra.core + 'expects'][0];
+        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'header'];
         scope.amfModel = data;
       });
     };
