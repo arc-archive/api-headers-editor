@@ -6,17 +6,6 @@
 
 A request editor that builds the UI based on AMF model or presents default empty editor.
 
-<!---
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="api-headers-editor.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
-
 ```html
 <api-headers-editor allow-custom allow-disable-params></api-headers-editor>
 ```

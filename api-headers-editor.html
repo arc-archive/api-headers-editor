@@ -35,7 +35,7 @@
     <template is="dom-if" if="[[aware]]">
       <raml-aware raml="{{amfModel}}" scope="[[aware]]"></raml-aware>
     </template>
-    <api-view-model-transformer amf-model="[[amfModel]]" shape="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]"></api-view-model-transformer>
+    <api-view-model-transformer amf-model="[[amfModel]]" shape="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]" no-docs="[[noDocs]]"></api-view-model-transformer>
     <div class="content">
       <div class="editor-actions">
         <paper-icon-button class="action-icon copy-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
@@ -44,7 +44,7 @@
       </div>
       <div id="editor">
         <template is="dom-if" if="[[!sourceMode]]" restamp="true">
-          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}"></api-headers-form>
+          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}" no-docs="[[noDocs]]"></api-headers-form>
         </template>
       </div>
     </div>
@@ -188,7 +188,14 @@
             value: function() {
               return /^[\t\r]*content\-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
             }
-          }
+          },
+          /**
+           * Prohibits rendering of the documentation (the icon and the
+           * description).
+           * Note, Set is separately for `api-view-model-transformer`
+           * component as this only affects "custom" items.
+           */
+          noDocs: Boolean
         };
       }
       /**
