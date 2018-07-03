@@ -296,11 +296,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 197,
+              "line": 204,
               "column": 6
             },
             "end": {
-              "line": 206,
+              "line": 213,
               "column": 7
             }
           },
@@ -503,6 +503,27 @@
               "attributeType": "Object"
             }
           }
+        },
+        {
+          "name": "noDocs",
+          "type": "boolean | null | undefined",
+          "description": "Prohibits rendering of the documentation (the icon and the\ndescription).\nNote, Set is separately for `api-view-model-transformer`\ncomponent as this only affects \"custom\" items.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 197,
+              "column": 10
+            },
+            "end": {
+              "line": 197,
+              "column": 25
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          }
         }
       ],
       "methods": [
@@ -546,7 +567,7 @@
               "column": 4
             },
             "end": {
-              "line": 122,
+              "line": 110,
               "column": 5
             }
           },
@@ -565,17 +586,46 @@
           "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
         },
         {
+          "name": "headerItemToString",
+          "description": "Transforms a header model item to a string.\nArray values are supported.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 118,
+              "column": 4
+            },
+            "end": {
+              "line": 132,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "header",
+              "type": "Object",
+              "description": "Object with name and value."
+            }
+          ],
+          "return": {
+            "type": "String",
+            "desc": "Generated headers line"
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
           "name": "headersToJSON",
           "description": "Parse HTTP headers input from string to array of objects containing `name` and `value`\nproperties.",
           "privacy": "public",
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 131,
+              "line": 142,
               "column": 4
             },
             "end": {
-              "line": 137,
+              "line": 148,
               "column": 5
             }
           },
@@ -600,11 +650,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 142,
+              "line": 153,
               "column": 4
             },
             "end": {
-              "line": 174,
+              "line": 185,
               "column": 5
             }
           },
@@ -623,11 +673,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 179,
+              "line": 190,
               "column": 4
             },
             "end": {
-              "line": 202,
+              "line": 213,
               "column": 5
             }
           },
@@ -646,11 +696,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 212,
+              "line": 223,
               "column": 4
             },
             "end": {
-              "line": 226,
+              "line": 237,
               "column": 5
             }
           },
@@ -680,11 +730,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 234,
+              "line": 245,
               "column": 4
             },
             "end": {
-              "line": 255,
+              "line": 266,
               "column": 5
             }
           },
@@ -709,11 +759,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 266,
+              "line": 277,
               "column": 4
             },
             "end": {
-              "line": 300,
+              "line": 311,
               "column": 5
             }
           },
@@ -748,11 +798,11 @@
           "sourceRange": {
             "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 306,
+              "line": 317,
               "column": 4
             },
             "end": {
-              "line": 340,
+              "line": 351,
               "column": 5
             }
           },
@@ -848,11 +898,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 220,
+              "line": 227,
               "column": 6
             },
             "end": {
-              "line": 224,
+              "line": 231,
               "column": 7
             }
           },
@@ -872,11 +922,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 226,
+              "line": 233,
               "column": 6
             },
             "end": {
-              "line": 230,
+              "line": 237,
               "column": 7
             }
           },
@@ -982,11 +1032,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 597,
+              "line": 627,
               "column": 6
             },
             "end": {
-              "line": 603,
+              "line": 633,
               "column": 7
             }
           },
@@ -1247,11 +1297,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 238,
+              "line": 245,
               "column": 6
             },
             "end": {
-              "line": 256,
+              "line": 275,
               "column": 7
             }
           },
@@ -1272,11 +1322,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 258,
+              "line": 277,
               "column": 6
             },
             "end": {
-              "line": 264,
+              "line": 283,
               "column": 7
             }
           },
@@ -1292,11 +1342,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 271,
+              "line": 290,
               "column": 6
             },
             "end": {
-              "line": 278,
+              "line": 297,
               "column": 7
             }
           },
@@ -1317,11 +1367,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 286,
+              "line": 305,
               "column": 6
             },
             "end": {
-              "line": 305,
+              "line": 324,
               "column": 7
             }
           },
@@ -1344,11 +1394,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 312,
+              "line": 331,
               "column": 6
             },
             "end": {
-              "line": 317,
+              "line": 336,
               "column": 7
             }
           },
@@ -1370,11 +1420,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 327,
+              "line": 346,
               "column": 6
             },
             "end": {
-              "line": 374,
+              "line": 393,
               "column": 7
             }
           },
@@ -1390,11 +1440,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 382,
+              "line": 401,
               "column": 6
             },
             "end": {
-              "line": 384,
+              "line": 403,
               "column": 7
             }
           },
@@ -1422,11 +1472,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 391,
+              "line": 410,
               "column": 6
             },
             "end": {
-              "line": 408,
+              "line": 427,
               "column": 7
             }
           },
@@ -1449,11 +1499,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 414,
+              "line": 433,
               "column": 6
             },
             "end": {
-              "line": 420,
+              "line": 439,
               "column": 7
             }
           },
@@ -1473,11 +1523,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 425,
+              "line": 444,
               "column": 6
             },
             "end": {
-              "line": 451,
+              "line": 470,
               "column": 7
             }
           },
@@ -1494,11 +1544,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 458,
+              "line": 477,
               "column": 6
             },
             "end": {
-              "line": 465,
+              "line": 484,
               "column": 7
             }
           },
@@ -1519,11 +1569,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 471,
+              "line": 490,
               "column": 6
             },
             "end": {
-              "line": 493,
+              "line": 512,
               "column": 7
             }
           },
@@ -1545,11 +1595,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 498,
+              "line": 517,
               "column": 6
             },
             "end": {
-              "line": 518,
+              "line": 537,
               "column": 7
             }
           },
@@ -1569,11 +1619,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 520,
+              "line": 539,
               "column": 6
             },
             "end": {
-              "line": 549,
+              "line": 568,
               "column": 7
             }
           },
@@ -1593,11 +1643,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 551,
+              "line": 570,
               "column": 6
             },
             "end": {
-              "line": 564,
+              "line": 583,
               "column": 7
             }
           },
@@ -1617,11 +1667,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 570,
+              "line": 589,
               "column": 6
             },
             "end": {
-              "line": 574,
+              "line": 593,
               "column": 7
             }
           },
@@ -1643,11 +1693,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 578,
+              "line": 597,
               "column": 6
             },
             "end": {
-              "line": 589,
+              "line": 619,
               "column": 7
             }
           },
@@ -1663,11 +1713,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 591,
+              "line": 621,
               "column": 6
             },
             "end": {
-              "line": 593,
+              "line": 623,
               "column": 7
             }
           },
@@ -1700,7 +1750,7 @@
           "column": 4
         },
         "end": {
-          "line": 604,
+          "line": 634,
           "column": 5
         }
       },
@@ -2013,6 +2063,22 @@
             "end": {
               "line": 176,
               "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "no-docs",
+          "description": "Prohibits rendering of the documentation (the icon and the\ndescription).\nNote, Set is separately for `api-view-model-transformer`\ncomponent as this only affects \"custom\" items.",
+          "sourceRange": {
+            "start": {
+              "line": 197,
+              "column": 10
+            },
+            "end": {
+              "line": 197,
+              "column": 25
             }
           },
           "metadata": {},

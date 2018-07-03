@@ -150,6 +150,14 @@ declare namespace ApiElements {
      * Regexp to search for content type value
      */
     _contentTypeRe: object|null|undefined;
+
+    /**
+     * Prohibits rendering of the documentation (the icon and the
+     * description).
+     * Note, Set is separately for `api-view-model-transformer`
+     * component as this only affects "custom" items.
+     */
+    noDocs: boolean|null|undefined;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
 
