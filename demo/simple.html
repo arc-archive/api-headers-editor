@@ -9,18 +9,27 @@
   <link rel="import" href="../../polymer/lib/elements/custom-style.html">
   <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../../neon-animation/web-animations.html">
+  <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
+  <link rel="import" href="../../arc-electron-default-theme/arc-electron-default-theme.html">
   <link rel="import" href="../api-headers-editor.html">
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
-    :root {
-
-    }
-    html,
-    body {
+    body,
+    html {
+      background-color: #e5e5e5;
+      height: 100vh;
       margin: 0;
       padding: 0;
+    }
+
+    .card {
+      @apply --shadow-elevation-4dp;
+      padding: 20px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      background-color: #fff;
     }
 
     h1 {
@@ -40,30 +49,51 @@
       padding: 12px 24px;
       background-color: #C5E1A5;
     }
+
+    paper-toggle-button {
+      margin-bottom: 12px;
+    }
     </style>
   </custom-style>
 </head>
 <body>
   <dom-bind id="demo">
-    <template is="dom-bind">
+    <template>
       <header><h1>api-headers-editor demo</h1></header>
-      <section role="main" class="vertical-section-container centered main">
-        <api-headers-editor value="{{value}}" narrow="[[narrow]]" allow-custom allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" on-request-headers-changed="_headersChanged"></api-headers-editor>
+
+      <section role="main" class="vertical-section-container centered card">
+        <api-headers-editor
+          value="{{value}}"
+          narrow="[[narrow]]"
+          allow-custom="[[allowCustom]]"
+          allow-disable-params="[[allowDisableParams]]"
+          allow-hide-optional="[[allowHideOptional]]"
+          readonly="[[readonly]]"
+          no-docs="[[noDocs]]"
+          on-request-headers-changed="_headersChanged"></api-headers-editor>
+      </section>
+
+      <section class="vertical-section-container centered card">
         <h2>Headers change event dispatched</h2>
         <output>Count: [[changeCount]]</output>
         <h2>Output</h2>
         <output>[[value]]</output>
       </section>
-      <section class="vertical-section-container centered">
-        <paper-checkbox checked="{{narrow}}">Render narrow view</paper-checkbox>
-        <paper-checkbox checked="{{allowHideOptional}}">Allow auto hide optional headers</paper-checkbox>
-        <paper-checkbox checked="{{allowDisableParams}}">Allow disabling parameters</paper-checkbox>
+
+      <section class="vertical-section-container centered card">
+        <paper-toggle-button checked="{{narrow}}">Render narrow view</paper-toggle-button>
+        <paper-toggle-button checked="{{allowCustom}}">Allow custom properties</paper-toggle-button>
+        <paper-toggle-button checked="{{allowHideOptional}}">Allow auto hide optional headers</paper-toggle-button>
+        <paper-toggle-button checked="{{allowDisableParams}}">Allow disabling parameters</paper-toggle-button>
+        <paper-toggle-button checked="{{readonly}}">Read only mode</paper-toggle-button>
+        <paper-toggle-button checked="{{noDocs}}">Disable inline documentation</paper-toggle-button>
       </section>
     </template>
   </dom-bind>
   <script>
   (function(scope) {
     scope.changeCount = 0;
+    scope.allowCustom = true;
     scope._headersChanged = function() {
       scope.changeCount++;
     };
