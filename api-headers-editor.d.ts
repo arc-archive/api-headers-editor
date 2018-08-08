@@ -158,6 +158,11 @@ declare namespace ApiElements {
      * component as this only affects "custom" items.
      */
     noDocs: boolean|null|undefined;
+
+    /**
+     * When set the editor is in read only mode.
+     */
+    readonly: boolean|null|undefined;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
 
@@ -173,6 +178,11 @@ declare namespace ApiElements {
      */
     _sourceModeChanged(isSource: Boolean|null): void;
     _attachSourceEditor(): void;
+
+    /**
+     * Sets current value of `readonly` on the source editor.
+     */
+    _readonlyChanged(value: Boolean|null): void;
 
     /**
      * Updates the value when current editor's value change.
