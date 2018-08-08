@@ -44,7 +44,7 @@
       </div>
       <div id="editor">
         <template is="dom-if" if="[[!sourceMode]]" restamp="true">
-          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}" no-docs="[[noDocs]]"></api-headers-form>
+          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel on-value-changed="_editorValueChanged" invalid="{{invalid}}" no-docs="[[noDocs]]" readonly="[[readonly]]"></api-headers-form>
         </template>
       </div>
     </div>
@@ -124,7 +124,7 @@
         ArcBehaviors.ApiFormMixin(
           ArcBehaviors.EventsTargetBehavior(
             ArcBehaviors.HeadersParserBehavior(Polymer.Element)))) {
-      static get is() { return 'api-headers-editor'; }
+      static get is() {return 'api-headers-editor';}
       static get properties() {
         return {
           /**
@@ -195,7 +195,14 @@
            * Note, Set is separately for `api-view-model-transformer`
            * component as this only affects "custom" items.
            */
-          noDocs: Boolean
+          noDocs: Boolean,
+          /**
+           * When set the editor is in read only mode.
+           */
+          readonly: {
+            type: Boolean,
+            observer: '_readonlyChanged'
+          }
         };
       }
       /**
@@ -276,11 +283,28 @@
       }
 
       _attachSourceEditor() {
-        const cm =  document.createElement('code-mirror');
+        const cm = document.createElement('code-mirror');
         cm.mode = 'http-headers';
         cm.setAttribute('data-headers-panel', true);
         cm.addEventListener('value-changed', this._editorValueChanged);
+        if (this.readonly) {
+          cm.readOnly = true;
+        }
         this.$.editor.appendChild(cm);
+      }
+      /**
+       * Sets current value of `readonly` on the source editor.
+       * @param {Boolean} value
+       */
+      _readonlyChanged(value) {
+        if (!this.sourceMode) {
+          return;
+        }
+        const panel = this.currentPanel;
+        if (!panel) {
+          return;
+        }
+        panel.readOnly = value;
       }
 
       /**

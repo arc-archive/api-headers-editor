@@ -12,4 +12,4 @@ A request editor that builds the UI based on AMF model or presents default empty
 
 ### API components
 
-This components is a part of API components ecosystem: https://elements.advancedrestclient.com/
+This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)

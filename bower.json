@@ -1,6 +1,6 @@
 {
   "name": "api-headers-editor",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "An element to render headers edior based on AMF data model",
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",
@@ -37,8 +37,10 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0",
     "iron-component-page": "^3.0.1",
-    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.2",
-    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11"
+    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11",
+    "web-animations-js": "web-animations/web-animations-js#^2.3",
+    "arc-electron-default-theme": "advanced-rest-client/arc-electron-default-theme#2.0.0-preview",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
   },
   "repository": {
     "type": "git",
