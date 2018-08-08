@@ -1,3 +1,36 @@
+<a name="2.0.4"></a>
+## 2.0.4 (2018-08-08)
+
+
+### Breaking
+
+* Updating component to work with new AMF model. ([575f95ee7e5c4944f49fcdd9979eea43f52b3b76](https://github.com/advanced-rest-client/api-headers-editor/commit/575f95ee7e5c4944f49fcdd9979eea43f52b3b76))
+
+### Docs
+
+* Updated docs for moxing model and setting value ([f4c9030c3021ec51c802b620dd98381c217b195e](https://github.com/advanced-rest-client/api-headers-editor/commit/f4c9030c3021ec51c802b620dd98381c217b195e))
+* Updating documentation ([229dfb9c0bdfe942df6fbe45e2dbadd3397296c9](https://github.com/advanced-rest-client/api-headers-editor/commit/229dfb9c0bdfe942df6fbe45e2dbadd3397296c9))
+* Updating documentation ([3d0b8a698802e0790fda349c9186d7459c1ba1fb](https://github.com/advanced-rest-client/api-headers-editor/commit/3d0b8a698802e0790fda349c9186d7459c1ba1fb))
+
+### Fix
+
+* Fixing CodeMirror in FireFox. ([870d6f968d6bf6701b69c0fdaa6c0593a32a77e0](https://github.com/advanced-rest-client/api-headers-editor/commit/870d6f968d6bf6701b69c0fdaa6c0593a32a77e0))
+* Fixing panel is null error ([2f2fecc69ed45553397bd6f4c300ad41b1feb537](https://github.com/advanced-rest-client/api-headers-editor/commit/2f2fecc69ed45553397bd6f4c300ad41b1feb537))
+* Fixing tests for new model ([81128e08a46ff4f9d57589faf2cee23f62c15371](https://github.com/advanced-rest-client/api-headers-editor/commit/81128e08a46ff4f9d57589faf2cee23f62c15371))
+* Fixing veriable name ([9e06ed2f10702588a20fcfb971216803985ee269](https://github.com/advanced-rest-client/api-headers-editor/commit/9e06ed2f10702588a20fcfb971216803985ee269))
+
+### New
+
+* Adding `noDocs` attribute support ([d65713d55e19aca54132445294c081de26363f3b](https://github.com/advanced-rest-client/api-headers-editor/commit/d65713d55e19aca54132445294c081de26363f3b))
+* Adding `readonly` attribute ([ccf0ae7c00556b3548cd08301646b55aa2781a2d](https://github.com/advanced-rest-client/api-headers-editor/commit/ccf0ae7c00556b3548cd08301646b55aa2781a2d))
+
+### Update
+
+* Updated Travis configuration to connect to Sauce Labs. ([8be0500d5d8d4e58c9810dc817f87ed4d5406e64](https://github.com/advanced-rest-client/api-headers-editor/commit/8be0500d5d8d4e58c9810dc817f87ed4d5406e64))
+* Updating demo page ([9ac65cef27dc692e9d92e11edbd5ddcdc58b87f5](https://github.com/advanced-rest-client/api-headers-editor/commit/9ac65cef27dc692e9d92e11edbd5ddcdc58b87f5))
+
+
+
 <a name="2.0.3"></a>
 ## 2.0.3 (2018-07-03)
 
