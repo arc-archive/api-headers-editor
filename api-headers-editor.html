@@ -230,18 +230,21 @@
         this._headersChangedHandler = this._headersChangedHandler.bind(this);
         this._headerChangedHandler = this._headerChangedHandler.bind(this);
         this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(this);
+        this._headerDeletedHandler = this._headerDeletedHandler.bind(this);
       }
 
       _attachListeners(node) {
         node.addEventListener('request-headers-changed', this._headersChangedHandler);
         node.addEventListener('request-header-changed', this._headerChangedHandler);
         node.addEventListener('content-type-changed', this._contentTypeChangedHandler);
+        node.addEventListener('request-header-deleted', this._headerDeletedHandler);
       }
 
       _detachListeners(node) {
         node.removeEventListener('request-headers-changed', this._headersChangedHandler);
         node.removeEventListener('request-header-changed', this._headerChangedHandler);
         node.removeEventListener('content-type-changed', this._contentTypeChangedHandler);
+        node.removeEventListener('request-header-deleted', this._headerDeletedHandler);
       }
       /**
        * Handler for `sourceMode` change.
@@ -507,6 +510,35 @@
         this.__cancelContentTypeNotification = true;
         this.set('contentType', e.detail.value);
         this.__cancelContentTypeNotification = false;
+      }
+      /**
+       * Handler for `request-header-deleted` custom event.
+       * Deletes header from the editor.
+       * @param {CustomEvent} e
+       */
+      _headerDeletedHandler(e) {
+        if (e.defaultPrevented) {
+          return;
+        }
+        const name = e.detail.name;
+        if (!name) {
+          console.warn('request-header-deleted fired without the name.');
+          return;
+        }
+        const arr = this.headersToJSON(this.value);
+        let updated = false;
+        for (let i = arr.length - 1; i >= 0; i--) {
+          if (arr[i].name.toLowerCase() === name.toLowerCase()) {
+            arr.splice(i, 1);
+            updated = true;
+            break;
+          }
+        }
+        if (!updated) {
+          return;
+        }
+        const headers = this.headersToString(arr);
+        this._setValues(headers);
       }
       /**
        * Detects and sets content type value from changed headers value.
