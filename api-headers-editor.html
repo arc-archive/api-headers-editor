@@ -371,6 +371,7 @@
       _modelFromValue() {
         const value = this.value;
         if (value === undefined) {
+          this.viewModel = [];
           return;
         }
         let model = this.viewModel;
