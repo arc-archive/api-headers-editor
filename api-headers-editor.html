@@ -458,6 +458,7 @@
       /**
        * Handler tor the `request-headers-changed` event.
        * Updates the editor value to the value of the event detail object.
+       * @param {CustomEvent} e
        */
       _headersChangedHandler(e) {
         if (e.composedPath()[0] === this || e.defaultPrevented) {
@@ -469,6 +470,7 @@
       /**
        * Handler for the `request-header-changed` event.
        * It updates value for a single header.
+       * @param {CustomEvent} e
        */
       _headerChangedHandler(e) {
         if (e.composedPath()[0] === this || e.defaultPrevented) {
@@ -476,7 +478,8 @@
         }
         const name = e.detail.name;
         if (!name) {
-          return console.warn('request-header-changed fired without the name.');
+          console.warn('request-header-changed fired without the name.');
+          return;
         }
         const value = e.detail.value;
         const arr = this.headersToJSON(this.value);
@@ -571,6 +574,7 @@
       /**
        * Called by CodeMirror editor.
        * When something change n the headers list, detect content type header.
+       * @param {String} value
        */
       _valueChanged(value) {
         this._detectContentType(value);
