@@ -370,9 +370,11 @@
        * Otherwise headers will be disabled.
        *
        * It does nothing if `value` or `viewModel` is not defined.
+       *
+       * @param {?String} value
        */
-      _modelFromValue() {
-        const value = this.value;
+      _modelFromValue(value) {
+        value = value || this.value;
         if (value === undefined) {
           this.viewModel = [];
           return;
