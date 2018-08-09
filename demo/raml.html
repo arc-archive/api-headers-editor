@@ -63,7 +63,8 @@
 
       <section role="main" class="vertical-section-container centered card">
         <api-headers-editor
-          amf-headers="[[amfModel]]"
+          amf-model="[[amfModel]]"
+          amf-headers="[[amfHeaders]]"
           value="{{value}}"
           narrow="[[narrow]]"
           allow-custom="[[allowCustom]]"
@@ -95,12 +96,13 @@
       fetch('./demo-api.json')
       .then((response) => response.json())
       .then((data) => {
+        scope.amfModel = data;
         data = data[0][ApiElements.Amf.ns.raml.vocabularies.document + 'encodes'][0];
         data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'endpoint'][0];
         data = data[ApiElements.Amf.ns.w3.hydra.core + 'supportedOperation'][0];
         data = data[ApiElements.Amf.ns.w3.hydra.core + 'expects'][0];
         data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'header'];
-        scope.amfModel = data;
+        scope.amfHeaders = data;
       });
     };
     scope._headersChanged = function() {
