@@ -77,13 +77,14 @@
      * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
      * <script>
      * let data = await getAmfModel();
+     * editor.amfModel = data;
      * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
      * data = data['http://raml.org/vocabularies/http#endpoint'][0];
      * data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
      * data = data['http://www.w3.org/ns/hydra/core#expects'][0];
      * data = data['http://raml.org/vocabularies/http#header'];
      * (first endpoint, first method, headers array)
-     * editor.amfModel = data;
+     * editor.amfHeaders = data;
      * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
      * < /script>
      * ```

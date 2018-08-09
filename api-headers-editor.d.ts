@@ -55,13 +55,14 @@ declare namespace ApiElements {
    * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
    * <script>
    * let data = await getAmfModel();
+   * editor.amfModel = data;
    * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
    * data = data['http://raml.org/vocabularies/http#endpoint'][0];
    * data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
    * data = data['http://www.w3.org/ns/hydra/core#expects'][0];
    * data = data['http://raml.org/vocabularies/http#header'];
    * (first endpoint, first method, headers array)
-   * editor.amfModel = data;
+   * editor.amfHeaders = data;
    * editor.addEventListener('value-changed', (e) => console.log(e.detail.value));
    * < /script>
    * ```
@@ -215,7 +216,7 @@ declare namespace ApiElements {
      *
      * It does nothing if `value` or `viewModel` is not defined.
      */
-    _modelFromValue(): void;
+    _modelFromValue(value: String|null): void;
 
     /**
      * Finds item position in model by name.
@@ -238,19 +239,25 @@ declare namespace ApiElements {
      * Handler tor the `request-headers-changed` event.
      * Updates the editor value to the value of the event detail object.
      */
-    _headersChangedHandler(e: any): void;
+    _headersChangedHandler(e: CustomEvent|null): void;
 
     /**
      * Handler for the `request-header-changed` event.
      * It updates value for a single header.
      */
-    _headerChangedHandler(e: any): any;
+    _headerChangedHandler(e: CustomEvent|null): void;
 
     /**
      * Handler for `content-type-changed` event.
      * Uppdates it's value if from external source.
      */
     _contentTypeChangedHandler(e: CustomEvent|null): void;
+
+    /**
+     * Handler for `request-header-deleted` custom event.
+     * Deletes header from the editor.
+     */
+    _headerDeletedHandler(e: CustomEvent|null): void;
 
     /**
      * Detects and sets content type value from changed headers value.
@@ -263,7 +270,7 @@ declare namespace ApiElements {
      * Called by CodeMirror editor.
      * When something change n the headers list, detect content type header.
      */
-    _valueChanged(value: any): void;
+    _valueChanged(value: String|null): void;
     _onContentTypeChanged(currentCt: any): void;
     _notifyContentType(type: any): void;
 

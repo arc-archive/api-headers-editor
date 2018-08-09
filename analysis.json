@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "elements": [
     {
-      "description": "`api-headers-editor`\nAn element to render headers edior based on AMF data model.\n\nBy default it renders headers form. The user has an option to switch to\nsource editing mode. `code-mirror` element is used in the later case.\n\n## AMF data model\n\nThis element renders pre-configured form of headers based on\n[AMF's](https://github.com/mulesoft/amf) json/ld data model.\nFrom the model select `http://raml.org/vocabularies/http#header`\nnode which contains list of headers defined for current object\n(it can be method, trait, security scheme etc).\nThe model is resolved to internal data model by `api-view-model-transformer`\nelement.\n\nIf the element is used without AMF model `allowCustom` property must be\nset or otherwise user won't be able to add new header to the editor.\n\n### Example\n\n```html\n<api-headers-editor id=\"editor\" allow-disable-params></api-headers-editor>\n<script>\nlet data = await getAmfModel();\ndata = data[0]['http://raml.org/vocabularies/document#encodes'][0];\ndata = data['http://raml.org/vocabularies/http#endpoint'][0];\ndata = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];\ndata = data['http://www.w3.org/ns/hydra/core#expects'][0];\ndata = data['http://raml.org/vocabularies/http#header'];\n(first endpoint, first method, headers array)\neditor.amfModel = data;\neditor.addEventListener('value-changed', (e) => console.log(e.detail.value));\n< /script>\n```\n\n### Example without AMF\n\n```html\n<api-headers-editor id=\"editor\" allow-disable-params allow-custom></api-headers-editor>\n<script>\neditor.addEventListener('value-changed', (e) => console.log(e.detail.value));\n< /script>\n```\n\n## Setting value when model is set\n\nModel values has priority over value set on the editor.\nIf `amfModel` is set and value has been altered programatically there\nare two possible outcomes:\n\n1) If `allowDisableParams` is set, model values are automatically\ndisabled if model item is not in the value\n2) If `allowDisableParams` is not set, model values are always\nadded to generated values. Or rather new value is added to the existing\nmodel as custom values.",
+      "description": "`api-headers-editor`\nAn element to render headers edior based on AMF data model.\n\nBy default it renders headers form. The user has an option to switch to\nsource editing mode. `code-mirror` element is used in the later case.\n\n## AMF data model\n\nThis element renders pre-configured form of headers based on\n[AMF's](https://github.com/mulesoft/amf) json/ld data model.\nFrom the model select `http://raml.org/vocabularies/http#header`\nnode which contains list of headers defined for current object\n(it can be method, trait, security scheme etc).\nThe model is resolved to internal data model by `api-view-model-transformer`\nelement.\n\nIf the element is used without AMF model `allowCustom` property must be\nset or otherwise user won't be able to add new header to the editor.\n\n### Example\n\n```html\n<api-headers-editor id=\"editor\" allow-disable-params></api-headers-editor>\n<script>\nlet data = await getAmfModel();\neditor.amfModel = data;\ndata = data[0]['http://raml.org/vocabularies/document#encodes'][0];\ndata = data['http://raml.org/vocabularies/http#endpoint'][0];\ndata = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];\ndata = data['http://www.w3.org/ns/hydra/core#expects'][0];\ndata = data['http://raml.org/vocabularies/http#header'];\n(first endpoint, first method, headers array)\neditor.amfHeaders = data;\neditor.addEventListener('value-changed', (e) => console.log(e.detail.value));\n< /script>\n```\n\n### Example without AMF\n\n```html\n<api-headers-editor id=\"editor\" allow-disable-params allow-custom></api-headers-editor>\n<script>\neditor.addEventListener('value-changed', (e) => console.log(e.detail.value));\n< /script>\n```\n\n## Setting value when model is set\n\nModel values has priority over value set on the editor.\nIf `amfModel` is set and value has been altered programatically there\nare two possible outcomes:\n\n1) If `allowDisableParams` is set, model values are automatically\ndisabled if model item is not in the value\n2) If `allowDisableParams` is not set, model values are always\nadded to generated values. Or rather new value is added to the existing\nmodel as custom values.",
       "summary": "",
       "path": "api-headers-editor.html",
       "properties": [
@@ -296,11 +296,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 211,
+              "line": 212,
               "column": 6
             },
             "end": {
-              "line": 220,
+              "line": 221,
               "column": 7
             }
           },
@@ -317,11 +317,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 132,
+              "line": 133,
               "column": 10
             },
             "end": {
-              "line": 132,
+              "line": 133,
               "column": 23
             }
           },
@@ -338,11 +338,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 142,
               "column": 10
             },
             "end": {
-              "line": 141,
+              "line": 142,
               "column": 26
             }
           },
@@ -359,11 +359,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 145,
+              "line": 146,
               "column": 10
             },
             "end": {
-              "line": 145,
+              "line": 146,
               "column": 27
             }
           },
@@ -380,11 +380,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 149,
+              "line": 150,
               "column": 10
             },
             "end": {
-              "line": 153,
+              "line": 154,
               "column": 11
             }
           },
@@ -403,11 +403,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 158,
+              "line": 159,
               "column": 10
             },
             "end": {
-              "line": 158,
+              "line": 159,
               "column": 26
             }
           },
@@ -424,11 +424,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 167,
+              "line": 168,
               "column": 10
             },
             "end": {
-              "line": 171,
+              "line": 172,
               "column": 11
             }
           },
@@ -447,11 +447,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 174,
               "column": 10
             },
             "end": {
-              "line": 176,
+              "line": 177,
               "column": 11
             }
           },
@@ -469,11 +469,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 178,
+              "line": 179,
               "column": 10
             },
             "end": {
-              "line": 183,
+              "line": 184,
               "column": 11
             }
           },
@@ -490,11 +490,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 185,
+              "line": 186,
               "column": 10
             },
             "end": {
-              "line": 190,
+              "line": 191,
               "column": 11
             }
           },
@@ -511,11 +511,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 197,
+              "line": 198,
               "column": 10
             },
             "end": {
-              "line": 197,
+              "line": 198,
               "column": 25
             }
           },
@@ -532,11 +532,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 201,
+              "line": 202,
               "column": 10
             },
             "end": {
-              "line": 204,
+              "line": 205,
               "column": 11
             }
           },
@@ -920,11 +920,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 234,
+              "line": 236,
               "column": 6
             },
             "end": {
-              "line": 238,
+              "line": 241,
               "column": 7
             }
           },
@@ -944,11 +944,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 240,
+              "line": 243,
               "column": 6
             },
             "end": {
-              "line": 244,
+              "line": 248,
               "column": 7
             }
           },
@@ -1054,11 +1054,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 651,
+              "line": 691,
               "column": 6
             },
             "end": {
-              "line": 657,
+              "line": 697,
               "column": 7
             }
           },
@@ -1319,11 +1319,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 252,
+              "line": 256,
               "column": 6
             },
             "end": {
-              "line": 282,
+              "line": 286,
               "column": 7
             }
           },
@@ -1344,11 +1344,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 284,
+              "line": 288,
               "column": 6
             },
             "end": {
-              "line": 293,
+              "line": 297,
               "column": 7
             }
           },
@@ -1364,11 +1364,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 298,
+              "line": 302,
               "column": 6
             },
             "end": {
-              "line": 307,
+              "line": 311,
               "column": 7
             }
           },
@@ -1389,11 +1389,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 314,
+              "line": 318,
               "column": 6
             },
             "end": {
-              "line": 321,
+              "line": 325,
               "column": 7
             }
           },
@@ -1414,11 +1414,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 329,
+              "line": 333,
               "column": 6
             },
             "end": {
-              "line": 348,
+              "line": 352,
               "column": 7
             }
           },
@@ -1441,11 +1441,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 355,
+              "line": 359,
               "column": 6
             },
             "end": {
-              "line": 360,
+              "line": 364,
               "column": 7
             }
           },
@@ -1467,16 +1467,21 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 370,
+              "line": 376,
               "column": 6
             },
             "end": {
-              "line": 417,
+              "line": 424,
               "column": 7
             }
           },
           "metadata": {},
-          "params": [],
+          "params": [
+            {
+              "name": "value",
+              "type": "?String"
+            }
+          ],
           "return": {
             "type": "void"
           }
@@ -1487,11 +1492,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 425,
+              "line": 432,
               "column": 6
             },
             "end": {
-              "line": 427,
+              "line": 434,
               "column": 7
             }
           },
@@ -1519,11 +1524,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 434,
+              "line": 441,
               "column": 6
             },
             "end": {
-              "line": 451,
+              "line": 458,
               "column": 7
             }
           },
@@ -1546,18 +1551,19 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 457,
+              "line": 465,
               "column": 6
             },
             "end": {
-              "line": 463,
+              "line": 471,
               "column": 7
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "e"
+              "name": "e",
+              "type": "CustomEvent"
             }
           ],
           "return": {
@@ -1570,20 +1576,24 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 468,
+              "line": 477,
               "column": 6
             },
             "end": {
-              "line": 494,
+              "line": 504,
               "column": 7
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "e"
+              "name": "e",
+              "type": "CustomEvent"
             }
-          ]
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_contentTypeChangedHandler",
@@ -1591,11 +1601,36 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 501,
+              "line": 511,
               "column": 6
             },
             "end": {
-              "line": 508,
+              "line": 518,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "CustomEvent"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_headerDeletedHandler",
+          "description": "Handler for `request-header-deleted` custom event.\nDeletes header from the editor.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 524,
+              "column": 6
+            },
+            "end": {
+              "line": 547,
               "column": 7
             }
           },
@@ -1616,11 +1651,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 514,
+              "line": 553,
               "column": 6
             },
             "end": {
-              "line": 536,
+              "line": 575,
               "column": 7
             }
           },
@@ -1642,18 +1677,19 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 541,
+              "line": 581,
               "column": 6
             },
             "end": {
-              "line": 561,
+              "line": 601,
               "column": 7
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "value"
+              "name": "value",
+              "type": "String"
             }
           ],
           "return": {
@@ -1666,11 +1702,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 563,
+              "line": 603,
               "column": 6
             },
             "end": {
-              "line": 592,
+              "line": 632,
               "column": 7
             }
           },
@@ -1690,11 +1726,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 594,
+              "line": 634,
               "column": 6
             },
             "end": {
-              "line": 607,
+              "line": 647,
               "column": 7
             }
           },
@@ -1714,11 +1750,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 613,
+              "line": 653,
               "column": 6
             },
             "end": {
-              "line": 617,
+              "line": 657,
               "column": 7
             }
           },
@@ -1740,11 +1776,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 621,
+              "line": 661,
               "column": 6
             },
             "end": {
-              "line": 643,
+              "line": 683,
               "column": 7
             }
           },
@@ -1760,11 +1796,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 645,
+              "line": 685,
               "column": 6
             },
             "end": {
-              "line": 647,
+              "line": 687,
               "column": 7
             }
           },
@@ -1793,11 +1829,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 120,
+          "line": 121,
           "column": 4
         },
         "end": {
-          "line": 658,
+          "line": 698,
           "column": 5
         }
       },
@@ -2008,11 +2044,11 @@
           "description": "`raml-aware` scope property to use.",
           "sourceRange": {
             "start": {
-              "line": 132,
+              "line": 133,
               "column": 10
             },
             "end": {
-              "line": 132,
+              "line": 133,
               "column": 23
             }
           },
@@ -2024,11 +2060,11 @@
           "description": "Generated AMF json/ld model form the API spec.\nThe element assumes the object of the first array item to be a\ntype of `\"http://raml.org/vocabularies/document#Document`\non AMF vocabulary.",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 142,
               "column": 10
             },
             "end": {
-              "line": 141,
+              "line": 142,
               "column": 26
             }
           },
@@ -2040,11 +2076,11 @@
           "description": "List of headers defined in AMF model to render.",
           "sourceRange": {
             "start": {
-              "line": 145,
+              "line": 146,
               "column": 10
             },
             "end": {
-              "line": 145,
+              "line": 146,
               "column": 27
             }
           },
@@ -2056,11 +2092,11 @@
           "description": "Headers value.",
           "sourceRange": {
             "start": {
-              "line": 149,
+              "line": 150,
               "column": 10
             },
             "end": {
-              "line": 153,
+              "line": 154,
               "column": 11
             }
           },
@@ -2072,11 +2108,11 @@
           "description": "Generated view model fore the headers from `amfModel`.\nThis is automatically set when `amfModel` is set.",
           "sourceRange": {
             "start": {
-              "line": 158,
+              "line": 159,
               "column": 10
             },
             "end": {
-              "line": 158,
+              "line": 159,
               "column": 26
             }
           },
@@ -2088,11 +2124,11 @@
           "description": "Value of a Content-Type header.\nWhen this value change then editor update the value for the content type. However,\nto change a single header value, please, use `request-headers-changed` event with `name`\nand `value` properties set on the detail object.",
           "sourceRange": {
             "start": {
-              "line": 167,
+              "line": 168,
               "column": 10
             },
             "end": {
-              "line": 171,
+              "line": 172,
               "column": 11
             }
           },
@@ -2104,11 +2140,11 @@
           "description": "When set to true then the source edit mode is enabled",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 174,
               "column": 10
             },
             "end": {
-              "line": 176,
+              "line": 177,
               "column": 11
             }
           },
@@ -2120,11 +2156,11 @@
           "description": "Prohibits rendering of the documentation (the icon and the\ndescription).\nNote, Set is separately for `api-view-model-transformer`\ncomponent as this only affects \"custom\" items.",
           "sourceRange": {
             "start": {
-              "line": 197,
+              "line": 198,
               "column": 10
             },
             "end": {
-              "line": 197,
+              "line": 198,
               "column": 25
             }
           },
@@ -2136,11 +2172,11 @@
           "description": "When set the editor is in read only mode.",
           "sourceRange": {
             "start": {
-              "line": 201,
+              "line": 202,
               "column": 10
             },
             "end": {
-              "line": 204,
+              "line": 205,
               "column": 11
             }
           },
