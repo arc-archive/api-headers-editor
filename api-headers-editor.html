@@ -389,24 +389,25 @@
         const appendCustom = [];
         const disbleAllowed = this.allowDisableParams;
         // updates model value
-        parsedValue.forEach((item) => {
-          const i = this._findModelIndex(model, item.name);
-          if (i === -1) {
+        for (let i = 0, len = parsedValue.length; i < len; i++) {
+          const item = parsedValue[i];
+          const index = this._findModelIndex(model, item.name);
+          if (index === -1) {
             appendCustom.push(this.createCustom(item));
           } else {
             tmp[item.name] = true;
-            if (model[i].value !== item.value) {
-              if (model[i].schema.isArray) {
-                this.set(['viewModel', i, 'value'], item.value.split(','));
+            if (model[index].value !== item.value) {
+              if (model[index].schema.isArray) {
+                this.set(['viewModel', index, 'value'], item.value.split(','));
               } else {
-                this.set(['viewModel', i, 'value'], item.value);
+                this.set(['viewModel', index, 'value'], item.value);
               }
             }
-            if (!model[i].schema.enabled) {
-              this.set(['viewModel', i, 'schema', 'enabled'], true);
+            if (!model[index].schema.enabled) {
+              this.set(['viewModel', index, 'schema', 'enabled'], true);
             }
           }
-        });
+        }
         // Disables / removes not existing values.
         for (let i = model.length - 1; i >= 0; i--) {
           if (model[i].name in tmp) {
@@ -418,10 +419,11 @@
             this.set(['viewModel', i, 'schema', 'enabled'], false);
           }
         }
-        if (!this.viewModel) {
-          this.viewModel = [];
+        if (!this.viewModel || !this.viewModel.length) {
+          this.viewModel = appendCustom;
+        } else {
+          appendCustom.forEach((item) => this.push('viewModel', item));
         }
-        appendCustom.forEach((item) => this.push('viewModel', item));
       }
       /**
        * Finds item position in model by name.
@@ -431,7 +433,12 @@
        * @return {Number} Items position or `-1` if not found.
        */
       _findModelIndex(model, name) {
-        return model.findIndex((item) => item.name === name);
+        for (let i = 0, len = model.length; i < len; i++) {
+          if (model[i].name === name) {
+            return i;
+          }
+        }
+        return -1;
       }
       /**
        * Creates a custom header model item.
@@ -588,6 +595,9 @@
           return;
         }
         if (this._innerEditorValueChanged) {
+          if (this.readonly) {
+            return;
+          }
           this.dispatchEvent(new CustomEvent('request-headers-changed', {
             detail: {
               value: value
@@ -602,6 +612,9 @@
       }
 
       _onContentTypeChanged(currentCt) {
+        if (this.readonly) {
+          return;
+        }
         if (!currentCt) {
           this._notifyContentType('');
           return;
