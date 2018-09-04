@@ -1,6 +1,6 @@
 {
   "name": "api-headers-editor",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "An element to render headers edior based on AMF data model",
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",
@@ -28,6 +28,7 @@
     "events-target-behavior": "advanced-rest-client/events-target-behavior#^2.0.0",
     "clipboard-copy": "advanced-rest-client/clipboard-copy#^2.0.0",
     "api-form-mixin": "advanced-rest-client/api-form-mixin#^2.0.0",
+    "amf-helper-mixin": "advanced-rest-client/amf-helper-mixin#^2.0.1",
     "raml-aware": "advanced-rest-client/raml-aware#^2.0.0",
     "iron-validatable-behavior": "PolymerElements/iron-validatable-behavior#^2.1.0"
   },
@@ -40,7 +41,12 @@
     "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11",
     "web-animations-js": "web-animations/web-animations-js#^2.3",
     "arc-electron-default-theme": "advanced-rest-client/arc-electron-default-theme#2.0.0-preview",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "api-navigation": "advanced-rest-client/api-navigation#^2.0.0",
+    "web-animations-js": "web-animations/web-animations-js#^2.3",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.3",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
+    "paper-item": "PolymerElements/paper-item#^2.1.0"
   },
   "repository": {
     "type": "git",
