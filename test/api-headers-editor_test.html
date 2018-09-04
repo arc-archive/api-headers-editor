@@ -18,23 +18,7 @@
     </template>
   </test-fixture>
   <script>
-  /* global AmfLoader */
   suite('api-headers-editor', () => {
-    let amfModel;
-    let amfShape;
-    suiteSetup(() => {
-      return AmfLoader.load()
-      .then((data) => {
-        amfModel = data;
-        data = data[0][ApiElements.Amf.ns.raml.vocabularies.document + 'encodes'][0];
-        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'endpoint'][0];
-        data = data[ApiElements.Amf.ns.w3.hydra.core + 'supportedOperation'][0];
-        data = data[ApiElements.Amf.ns.w3.hydra.core + 'expects'][0];
-        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'header'];
-        amfShape = data;
-      });
-    });
-
     let element;
     suite('Basics', () => {
       setup(() => {
@@ -236,52 +220,6 @@
     //   const elementHeader = elementShadowRoot.querySelector('h2');
     //   assert.equal(elementHeader.innerHTML, 'Hello api-headers-editor!');
     // });
-
-    suite('AMF data model', () => {
-      let element;
-      setup((done) => {
-        element = fixture('BasicTestFixture');
-        element.addEventListener('value-changed', function f(e) {
-          if (!e.detail.value) {
-            return;
-          }
-          element.removeEventListener('value-changed', f);
-          flush(() => done());
-        });
-        element.amfModel = amfModel;
-        element.amfHeaders = amfShape;
-      });
-
-      test('Generates view model from AMF shape', () => {
-        assert.typeOf(element.viewModel, 'array');
-        assert.lengthOf(element.viewModel, 19);
-      });
-
-      test('Model respects default values', () => {
-        const xRequired = element.viewModel[4];
-        assert.equal(xRequired.value, 'required header');
-      });
-
-      test('Generates value from the model', (done) => {
-        setTimeout(() => {
-          const value = element.value;
-          assert.notEqual(value.indexOf('ETag'), -1);
-          assert.notEqual(value.indexOf('Cache-Control'), -1);
-          assert.notEqual(value.indexOf('x-string'), -1);
-          assert.notEqual(value.indexOf('x-optional'), -1);
-          done();
-        }, 250);
-      });
-
-      test('Clears AMF model when value is cleared', (done) => {
-        element.value = undefined;
-        flush(() => {
-          assert.typeOf(element.viewModel, 'array');
-          assert.lengthOf(element.viewModel, 0);
-          done();
-        });
-      });
-    });
   });
 
   suite('content-type-changed support', () => {

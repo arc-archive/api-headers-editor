@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-headers-editor test</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
+  <link rel="import" href="../api-headers-editor.html">
+  <script src="amf-loader.js"></script>
+</head>
+
+<body>
+  <test-fixture id="BasicTestFixture">
+    <template>
+      <api-headers-editor></api-headers-editor>
+    </template>
+  </test-fixture>
+  <script>
+  /* global AmfLoader */
+  suite('AMF model tests', () => {
+    function getHeadersModel(element, amfModel) {
+      const webApi = element._computeWebApi(amfModel);
+      const method = element._computeMethodModel(webApi, 'amf://id#13');
+      const expects = element._computeExpects(method);
+      const hKey = element._getAmfKey(ApiElements.Amf.ns.raml.vocabularies.http + 'header');
+      return element._ensureArray(expects[hKey]);
+    }
+
+    [
+      ['Full model', false],
+      ['Compact model', true]
+    ].forEach((item) => {
+      suite(item[0], () => {
+        let amfModel;
+        suiteSetup(() => {
+          return AmfLoader.load(item[1])
+          .then((data) => {
+            amfModel = data;
+          });
+        });
+
+        let element;
+        setup((done) => {
+          element = fixture('BasicTestFixture');
+          element.addEventListener('value-changed', function f(e) {
+            if (!e.detail.value) {
+              return;
+            }
+            element.removeEventListener('value-changed', f);
+            flush(() => done());
+          });
+          element.amfModel = amfModel;
+          element.amfHeaders = getHeadersModel(element, amfModel);
+        });
+
+        test('Generates view model from AMF shape', () => {
+          assert.typeOf(element.viewModel, 'array');
+          assert.lengthOf(element.viewModel, 19);
+        });
+
+        test('Model respects default values', () => {
+          const xRequired = element.viewModel[4];
+          assert.equal(xRequired.value, 'required header');
+        });
+
+        test('Generates value from the model', (done) => {
+          setTimeout(() => {
+            const value = element.value;
+            assert.notEqual(value.indexOf('ETag'), -1);
+            assert.notEqual(value.indexOf('Cache-Control'), -1);
+            assert.notEqual(value.indexOf('x-string'), -1);
+            assert.notEqual(value.indexOf('x-optional'), -1);
+            done();
+          }, 250);
+        });
+
+        test('Clears AMF model when value is cleared', (done) => {
+          element.value = undefined;
+          flush(() => {
+            assert.typeOf(element.viewModel, 'array');
+            assert.lengthOf(element.viewModel, 0);
+            done();
+          });
+        });
+      });
+    });
+  });
+  </script>
+</body>
+
+</html>

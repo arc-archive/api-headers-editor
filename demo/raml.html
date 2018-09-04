@@ -12,6 +12,12 @@
   <link rel="import" href="../../neon-animation/web-animations.html">
   <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../../arc-electron-default-theme/arc-electron-default-theme.html">
+  <link rel="import" href="../../api-navigation/api-navigation.html">
+  <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+  <link rel="import" href="../../paper-item/paper-item.html">
+  <link rel="import" href="../../paper-listbox/paper-listbox.html">
+  <link rel="import" href="../../neon-animation/web-animations.html">
+  <link rel="import" href="../../api-navigation/api-navigation.html">
   <link rel="import" href="../api-headers-editor.html">
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -23,6 +29,12 @@
       padding: 0;
     }
 
+    [role="main"] {
+      max-width: 1100px;
+      @apply --layout-horizontal;
+      @apply --layout-start;
+    }
+
     .card {
       @apply --shadow-elevation-4dp;
       padding: 20px;
@@ -30,6 +42,14 @@
       margin-bottom: 20px;
       box-sizing: border-box;
       background-color: #fff;
+    }
+
+    api-headers-editor {
+      @apply --layout-flex;
+    }
+
+    api-navigation {
+      width: 256px;
     }
 
     h1 {
@@ -48,6 +68,26 @@
     header {
       padding: 12px 24px;
       background-color: #C5E1A5;
+      @apply --layout-horizontal;
+      @apply --layout-center;
+      --iron-icon-fill-color: #3E2723;
+      --paper-input-container-focus-color: #33691E;
+      --paper-input-container-label: {
+        color: #3E2723;
+      };
+    }
+
+    .spacer {
+      @apply --layout-flex;
+    }
+
+    .options {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+    }
+
+    .options > * {
+      margin-left: 8px;
     }
 
     paper-toggle-button {
@@ -59,9 +99,18 @@
 <body>
   <dom-bind id="demo">
     <template is="dom-bind">
-      <header><h1>api-headers-editor demo</h1></header>
+      <header>
+        <paper-dropdown-menu label="Select demo endpoint">
+          <paper-listbox slot="dropdown-content" id="apisList" on-selected-changed="_apiChanged">
+            <paper-item data-src="demo-api.json">Demo api</paper-item>
+            <paper-item data-src="demo-api-compact.json">Demo api - compact model</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <div class="spacer"></div>
+      </header>
 
-      <section role="main" class="vertical-section-container centered card">
+      <section role="main" class="centered card">
+        <api-navigation amf-model="[[amfModel]]" endpoints-opened></api-navigation>
         <api-headers-editor
           amf-model="[[amfModel]]"
           amf-headers="[[amfHeaders]]"
@@ -73,6 +122,9 @@
           readonly="[[readonly]]"
           no-docs="[[noDocs]]"
           on-request-headers-changed="_headersChanged"></api-headers-editor>
+      </section>
+
+      <section class="vertical-section-container centered card">
         <h2>Headers change event dispatched</h2>
         <output>Count: [[changeCount]]</output>
         <h2>Output</h2>
@@ -87,30 +139,55 @@
         <paper-toggle-button checked="{{readonly}}">Read only mode</paper-toggle-button>
         <paper-toggle-button checked="{{noDocs}}">Disable inline documentation</paper-toggle-button>
       </section>
+
+      <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
     </template>
   </dom-bind>
   <script>
   (function(scope) {
+    class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
+    window.customElements.define('demo-element', DemoElement);
     scope.changeCount = 0;
     scope._load = function() {
-      fetch('./demo-api.json')
+      document.getElementById('apisList').selected = 0;
+    };
+
+    scope._loadFile = function(file) {
+      fetch('./' + file)
       .then((response) => response.json())
       .then((data) => {
         scope.amfModel = data;
-        data = data[0][ApiElements.Amf.ns.raml.vocabularies.document + 'encodes'][0];
-        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'endpoint'][0];
-        data = data[ApiElements.Amf.ns.w3.hydra.core + 'supportedOperation'][0];
-        data = data[ApiElements.Amf.ns.w3.hydra.core + 'expects'][0];
-        data = data[ApiElements.Amf.ns.raml.vocabularies.http + 'header'];
-        scope.amfHeaders = data;
       });
+    };
+
+    scope._apiChanged = function(e) {
+      const file = e.target.selectedItem.dataset.src;
+      scope._loadFile(file);
+    };
+
+    scope._navChanged = function(e) {
+      const type = e.detail.type;
+      if (type === 'method') {
+        scope.setData(e.detail.selected);
+        scope.hasData = true;
+      } else {
+        scope.hasData = false;
+      }
+    };
+
+    scope.setData = function(selected) {
+      const webApi = scope.$.helper._computeWebApi(scope.amfModel);
+      const method = scope.$.helper._computeMethodModel(webApi, selected);
+      const expects = scope.$.helper._computeExpects(method);
+      const hKey = scope.$.helper._getAmfKey(ApiElements.Amf.ns.raml.vocabularies.http + 'header');
+      const headers = scope.$.helper._ensureArray(expects[hKey]);
+      scope.amfHeaders = headers;
     };
     scope._headersChanged = function() {
       scope.changeCount++;
     };
-    window.addEventListener('WebComponentsReady', function() {
-      scope._load();
-    });
+    window.addEventListener('WebComponentsReady', scope._load);
+    window.addEventListener('api-navigation-selection-changed', scope._navChanged);
   })(document.getElementById('demo'));
   </script>
 </body>

@@ -16,6 +16,7 @@
 <link rel="import" href="../clipboard-copy/clipboard-copy.html">
 <link rel="import" href="../api-form-mixin/api-form-styles.html">
 <link rel="import" href="../api-form-mixin/api-form-mixin.html">
+<link rel="import" href="../amf-helper-mixin/amf-helper-mixin.html">
 <dom-module id="api-headers-editor">
   <template>
     <style include="api-form-styles">
@@ -118,13 +119,15 @@
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
      * @appliesMixin ArcBehaviors.ApiFormMixin
      * @appliesMixin Polymer.IronValidatableBehavior
+     * @appliesMixin ApiElements.AmfHelperMixin
      */
     class ApiHeadersEditor extends
       Polymer.mixinBehaviors(
         [Polymer.IronValidatableBehavior],
         ArcBehaviors.ApiFormMixin(
           ArcBehaviors.EventsTargetBehavior(
-            ArcBehaviors.HeadersParserBehavior(Polymer.Element)))) {
+            ArcBehaviors.HeadersParserBehavior(
+              ApiElements.AmfHelperMixin(Polymer.Element))))) {
       static get is() {return 'api-headers-editor';}
       static get properties() {
         return {

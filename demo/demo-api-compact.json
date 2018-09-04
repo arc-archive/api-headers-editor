@@ -1,0 +1,1060 @@
+{
+  "@context": {
+    "raml-http": "http://a.ml/vocabularies/http#",
+    "shacl": "http://www.w3.org/ns/shacl#",
+    "raml-shapes": "http://a.ml/vocabularies/shapes#",
+    "security": "http://a.ml/vocabularies/security#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "data": "http://a.ml/vocabularies/data#",
+    "doc": "http://a.ml/vocabularies/document#",
+    "schema-org": "http://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "hydra": "http://www.w3.org/ns/hydra/core#"
+  },
+  "@id": "amf://id",
+  "@type": [
+    "doc:Document",
+    "doc:Fragment",
+    "doc:Module",
+    "doc:Unit"
+  ],
+  "doc:declares": [
+    {
+      "@id": "amf://id#1",
+      "@type": [
+        "shacl:NodeShape",
+        "shacl:Shape",
+        "raml-shapes:Shape",
+        "doc:DomainElement"
+      ],
+      "schema-org:name": "My example type",
+      "shacl:closed": false,
+      "shacl:name": "ExampleType",
+      "shacl:property": [
+        {
+          "@id": "amf://id#3",
+          "@type": [
+            "shacl:PropertyShape",
+            "shacl:Shape",
+            "raml-shapes:Shape"
+          ],
+          "raml-shapes:range": {
+            "@id": "amf://id#4",
+            "@type": [
+              "raml-shapes:ScalarShape",
+              "shacl:Shape",
+              "raml-shapes:Shape",
+              "doc:DomainElement"
+            ],
+            "shacl:datatype": {
+              "@id": "raml-shapes:number"
+            },
+            "shacl:name": "exampleType1"
+          },
+          "shacl:minCount": 1,
+          "shacl:name": "exampleType1",
+          "shacl:path": {
+            "@id": "data:exampleType1"
+          }
+        },
+        {
+          "@id": "amf://id#5",
+          "@type": [
+            "shacl:PropertyShape",
+            "shacl:Shape",
+            "raml-shapes:Shape"
+          ],
+          "raml-shapes:range": {
+            "@id": "amf://id#6",
+            "@type": [
+              "raml-shapes:ScalarShape",
+              "shacl:Shape",
+              "raml-shapes:Shape",
+              "doc:DomainElement"
+            ],
+            "shacl:datatype": {
+              "@id": "xsd:string"
+            },
+            "shacl:name": "exampleType2"
+          },
+          "shacl:minCount": 1,
+          "shacl:name": "exampleType2",
+          "shacl:path": {
+            "@id": "data:exampleType2"
+          }
+        }
+      ]
+    },
+    {
+      "@id": "amf://id#2",
+      "@type": [
+        "doc:Trait",
+        "doc:AbstractDeclaration",
+        "doc:DomainElement"
+      ],
+      "doc:dataNode": {
+        "@id": "amf://id#9",
+        "@type": "data:Object",
+        "data:headers": {
+          "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2",
+          "@type": "data:Object",
+          "data:x-complex": {
+            "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2/scalar_4",
+            "@type": "data:Scalar",
+            "data:value": {
+              "@type": "xsd:string",
+              "@value": "ExampleType"
+            }
+          },
+          "data:x-trait-header": {
+            "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2/scalar_3",
+            "@type": "data:Scalar",
+            "data:value": {
+              "@type": "xsd:string",
+              "@value": "string"
+            }
+          }
+        }
+      },
+      "schema-org:name": "Headerable"
+    },
+    {
+      "@id": "amf://id#45",
+      "@type": [
+        "raml-shapes:ArrayShape",
+        "shacl:Shape",
+        "raml-shapes:Shape",
+        "doc:DomainElement"
+      ],
+      "raml-shapes:items": {
+        "@id": "amf://id#46",
+        "@type": [
+          "raml-shapes:ScalarShape",
+          "shacl:Shape",
+          "raml-shapes:Shape",
+          "doc:DomainElement"
+        ],
+        "shacl:datatype": {
+          "@id": "xsd:string"
+        }
+      },
+      "shacl:name": "amf_inline_type_1"
+    }
+  ],
+  "doc:encodes": {
+    "@id": "amf://id#11",
+    "@type": [
+      "schema-org:WebAPI",
+      "doc:RootDomainElement",
+      "doc:DomainElement"
+    ],
+    "raml-http:endpoint": {
+      "@id": "amf://id#12",
+      "@type": [
+        "raml-http:EndPoint",
+        "doc:DomainElement"
+      ],
+      "raml-http:path": "/endpoint",
+      "hydra:supportedOperation": {
+        "@id": "amf://id#13",
+        "@type": [
+          "hydra:Operation",
+          "doc:DomainElement"
+        ],
+        "doc:extends": {
+          "@id": "amf://id#14",
+          "@type": [
+            "doc:ParametrizedTrait",
+            "doc:ParametrizedDeclaration",
+            "doc:DomainElement"
+          ],
+          "doc:target": {
+            "@id": "amf://id#2",
+            "@type": [
+              "doc:Trait",
+              "doc:AbstractDeclaration",
+              "doc:DomainElement"
+            ],
+            "doc:dataNode": {
+              "@id": "amf://id#9",
+              "@type": "data:Object",
+              "data:headers": {
+                "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2",
+                "@type": "data:Object",
+                "data:x-complex": {
+                  "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2/scalar_4",
+                  "@type": "data:Scalar",
+                  "data:value": {
+                    "@type": "xsd:string",
+                    "@value": "ExampleType"
+                  }
+                },
+                "data:x-trait-header": {
+                  "@id": "file://demo/demo-api/demo-api.raml#/declarations/traits/Headerable/object_1/object_2/scalar_3",
+                  "@type": "data:Scalar",
+                  "data:value": {
+                    "@type": "xsd:string",
+                    "@value": "string"
+                  }
+                }
+              }
+            },
+            "schema-org:name": "Headerable"
+          },
+          "schema-org:name": "Headerable"
+        },
+        "hydra:expects": {
+          "@id": "amf://id#15",
+          "@type": [
+            "raml-http:Request",
+            "doc:DomainElement"
+          ],
+          "raml-http:header": [
+            {
+              "@id": "amf://id#16",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "ETag",
+              "raml-http:schema": {
+                "@id": "amf://id#17",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "schema-org:description": "An etag of the resource\n",
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:description": "An etag of the resource\n",
+              "schema-org:name": "ETag",
+              "hydra:required": false
+            },
+            {
+              "@id": "amf://id#18",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "Cache-Control",
+              "raml-http:schema": {
+                "@id": "amf://id#19",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "Cache-Control",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#20",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-string",
+              "raml-http:schema": {
+                "@id": "amf://id#21",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-string",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#22",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-optional",
+              "raml-http:schema": {
+                "@id": "amf://id#23",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:examples": {
+                  "@id": "amf://id#25",
+                  "@type": [
+                    "doc:Example",
+                    "doc:DomainElement"
+                  ],
+                  "doc:strict": true,
+                  "doc:structuredValue": {
+                    "@id": "amf://id#26",
+                    "@type": "data:Scalar",
+                    "data:value": {
+                      "@type": "xsd:string",
+                      "@value": "x-optional: someHeader"
+                    }
+                  },
+                  "http://a.ml/vocabularies/document-source-maps#sources": {
+                    "@id": "amf://id#25/source-map",
+                    "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                    "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                      "http://a.ml/vocabularies/document-source-maps#element": "amf://id#25",
+                      "http://a.ml/vocabularies/document-source-maps#value": "amf://id#22"
+                    }
+                  },
+                  "shacl:raw": "x-optional: someHeader"
+                },
+                "schema-org:name": "XOptimal",
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:defaultValue": {
+                  "@id": "amf://id#24",
+                  "@type": "data:Scalar",
+                  "data:value": {
+                    "@type": "xsd:string",
+                    "@value": "defaultValue"
+                  }
+                },
+                "shacl:defaultValueStr": "defaultValue",
+                "shacl:maxLength": 30,
+                "shacl:minLength": 4,
+                "shacl:name": "schema",
+                "shacl:pattern": "^[a-zA-Z\\W\\:]+$"
+              },
+              "schema-org:name": "x-optional",
+              "hydra:required": false
+            },
+            {
+              "@id": "amf://id#27",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-required",
+              "raml-http:schema": {
+                "@id": "amf://id#28",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:examples": {
+                  "@id": "amf://id#30",
+                  "@type": [
+                    "doc:Example",
+                    "doc:DomainElement"
+                  ],
+                  "doc:strict": true,
+                  "doc:structuredValue": {
+                    "@id": "amf://id#31",
+                    "@type": "data:Scalar",
+                    "data:value": {
+                      "@type": "xsd:string",
+                      "@value": "required header"
+                    }
+                  },
+                  "http://a.ml/vocabularies/document-source-maps#sources": {
+                    "@id": "amf://id#30/source-map",
+                    "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                    "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                      "http://a.ml/vocabularies/document-source-maps#element": "amf://id#30",
+                      "http://a.ml/vocabularies/document-source-maps#value": "amf://id#27"
+                    }
+                  },
+                  "shacl:raw": "required header"
+                },
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:defaultValue": {
+                  "@id": "amf://id#29",
+                  "@type": "data:Scalar",
+                  "data:value": {
+                    "@type": "xsd:string",
+                    "@value": "devault required value"
+                  }
+                },
+                "shacl:defaultValueStr": "devault required value",
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-required",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#32",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-boolean",
+              "raml-http:schema": {
+                "@id": "amf://id#33",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:boolean"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-boolean",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#34",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-date-only",
+              "raml-http:schema": {
+                "@id": "amf://id#35",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:date"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-date-only",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#36",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-time-only",
+              "raml-http:schema": {
+                "@id": "amf://id#37",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:time"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-time-only",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#38",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-datetime-only",
+              "raml-http:schema": {
+                "@id": "amf://id#39",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "raml-shapes:dateTimeOnly"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-datetime-only",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#40",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-datetime",
+              "raml-http:schema": {
+                "@id": "amf://id#41",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:dateTime"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-datetime",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#42",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-integer",
+              "raml-http:schema": {
+                "@id": "amf://id#43",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:integer"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-integer",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#44",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-array",
+              "raml-http:schema": {
+                "@id": "amf://id#45/linked_1",
+                "@type": [
+                  "raml-shapes:ArrayShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:link-label": "amf_inline_type_1",
+                "doc:link-target": {
+                  "@id": "amf://id#45"
+                }
+              },
+              "schema-org:name": "x-array",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#47",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-object",
+              "raml-http:schema": {
+                "@id": "amf://id#48",
+                "@type": [
+                  "shacl:NodeShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:closed": false,
+                "shacl:name": "schema",
+                "shacl:property": [
+                  {
+                    "@id": "amf://id#49",
+                    "@type": [
+                      "shacl:PropertyShape",
+                      "shacl:Shape",
+                      "raml-shapes:Shape"
+                    ],
+                    "raml-shapes:range": {
+                      "@id": "amf://id#50",
+                      "@type": [
+                        "raml-shapes:ScalarShape",
+                        "shacl:Shape",
+                        "raml-shapes:Shape",
+                        "doc:DomainElement"
+                      ],
+                      "shacl:datatype": {
+                        "@id": "xsd:string"
+                      },
+                      "shacl:name": "prop-string"
+                    },
+                    "shacl:minCount": 1,
+                    "shacl:name": "prop-string",
+                    "shacl:path": {
+                      "@id": "data:prop-string"
+                    }
+                  },
+                  {
+                    "@id": "amf://id#51",
+                    "@type": [
+                      "shacl:PropertyShape",
+                      "shacl:Shape",
+                      "raml-shapes:Shape"
+                    ],
+                    "raml-shapes:range": {
+                      "@id": "amf://id#52",
+                      "@type": [
+                        "raml-shapes:ScalarShape",
+                        "shacl:Shape",
+                        "raml-shapes:Shape",
+                        "doc:DomainElement"
+                      ],
+                      "shacl:datatype": {
+                        "@id": "xsd:integer"
+                      },
+                      "shacl:name": "prop-int"
+                    },
+                    "shacl:minCount": 1,
+                    "shacl:name": "prop-int",
+                    "shacl:path": {
+                      "@id": "data:prop-int"
+                    }
+                  }
+                ]
+              },
+              "schema-org:name": "x-object",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#53",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-type",
+              "raml-http:schema": {
+                "@id": "amf://id#1/linked_3",
+                "@type": [
+                  "shacl:NodeShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:link-label": "ExampleType",
+                "doc:link-target": {
+                  "@id": "amf://id#1"
+                }
+              },
+              "schema-org:name": "x-type",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#54",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-enum",
+              "raml-http:schema": {
+                "@id": "amf://id#55",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:in": {
+                  "@id": "amf://id#55/list",
+                  "@type": "rdfs:Seq",
+                  "rdfs:_1": {
+                    "@id": "amf://id#56",
+                    "@type": "data:Scalar",
+                    "data:value": {
+                      "@type": "xsd:string",
+                      "@value": "one"
+                    }
+                  },
+                  "rdfs:_2": {
+                    "@id": "amf://id#57",
+                    "@type": "data:Scalar",
+                    "data:value": {
+                      "@type": "xsd:string",
+                      "@value": "two"
+                    }
+                  },
+                  "rdfs:_3": {
+                    "@id": "amf://id#58",
+                    "@type": "data:Scalar",
+                    "data:value": {
+                      "@type": "xsd:string",
+                      "@value": "three"
+                    }
+                  }
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-enum",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#59",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-number",
+              "raml-http:schema": {
+                "@id": "amf://id#60",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:examples": [
+                  {
+                    "@id": "amf://id#62",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#63",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:integer",
+                        "@value": "10"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#62/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#62",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#59"
+                      }
+                    },
+                    "schema-org:name": "minimum",
+                    "shacl:raw": "10"
+                  },
+                  {
+                    "@id": "amf://id#64",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#65",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:integer",
+                        "@value": "30"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#64/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#64",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#59"
+                      }
+                    },
+                    "schema-org:name": "optimal",
+                    "shacl:raw": "30"
+                  },
+                  {
+                    "@id": "amf://id#66",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#67",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:integer",
+                        "@value": "60"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#66/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#66",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#59"
+                      }
+                    },
+                    "schema-org:name": "wide",
+                    "shacl:raw": "60"
+                  },
+                  {
+                    "@id": "amf://id#68",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#69",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:integer",
+                        "@value": "100"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#68/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#68",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#59"
+                      }
+                    },
+                    "schema-org:name": "full",
+                    "shacl:raw": "100"
+                  }
+                ],
+                "raml-shapes:multipleOf": 10,
+                "schema-org:description": "MY number header\n",
+                "schema-org:name": "XNumber",
+                "shacl:datatype": {
+                  "@id": "raml-shapes:number"
+                },
+                "shacl:defaultValue": {
+                  "@id": "amf://id#61",
+                  "@type": "data:Scalar",
+                  "data:value": {
+                    "@type": "xsd:integer",
+                    "@value": "30"
+                  }
+                },
+                "shacl:defaultValueStr": "30",
+                "shacl:maxInclusive": 100,
+                "shacl:minInclusive": 10,
+                "shacl:name": "schema"
+              },
+              "schema-org:description": "MY number header\n",
+              "schema-org:name": "x-number",
+              "hydra:required": false
+            },
+            {
+              "@id": "amf://id#70",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-union",
+              "raml-http:schema": {
+                "@id": "amf://id#71",
+                "@type": [
+                  "raml-shapes:UnionShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape"
+                ],
+                "doc:examples": [
+                  {
+                    "@id": "amf://id#72",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#73",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:string",
+                        "@value": "Hello union"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#72/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#72",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#70"
+                      }
+                    },
+                    "schema-org:name": "stringExample",
+                    "shacl:raw": "Hello union"
+                  },
+                  {
+                    "@id": "amf://id#74",
+                    "@type": [
+                      "doc:Example",
+                      "doc:DomainElement"
+                    ],
+                    "doc:strict": true,
+                    "doc:structuredValue": {
+                      "@id": "amf://id#75",
+                      "@type": "data:Scalar",
+                      "data:value": {
+                        "@type": "xsd:integer",
+                        "@value": "25"
+                      }
+                    },
+                    "http://a.ml/vocabularies/document-source-maps#sources": {
+                      "@id": "amf://id#74/source-map",
+                      "@type": "http://a.ml/vocabularies/document-source-maps#SourceMap",
+                      "http://a.ml/vocabularies/document-source-maps#tracked-element": {
+                        "http://a.ml/vocabularies/document-source-maps#element": "amf://id#74",
+                        "http://a.ml/vocabularies/document-source-maps#value": "amf://id#70"
+                      }
+                    },
+                    "schema-org:name": "numberExample",
+                    "shacl:raw": "25"
+                  }
+                ],
+                "raml-shapes:anyOf": [
+                  {
+                    "@id": "amf://id#76",
+                    "@type": [
+                      "raml-shapes:ScalarShape",
+                      "shacl:Shape",
+                      "raml-shapes:Shape",
+                      "doc:DomainElement"
+                    ],
+                    "shacl:datatype": {
+                      "@id": "xsd:string"
+                    }
+                  },
+                  {
+                    "@id": "amf://id#77",
+                    "@type": [
+                      "raml-shapes:ScalarShape",
+                      "shacl:Shape",
+                      "raml-shapes:Shape",
+                      "doc:DomainElement"
+                    ],
+                    "shacl:datatype": {
+                      "@id": "xsd:integer"
+                    }
+                  }
+                ],
+                "schema-org:name": "Union type",
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-union",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#79",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-trait-header",
+              "raml-http:schema": {
+                "@id": "amf://id#80",
+                "@type": [
+                  "raml-shapes:ScalarShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "shacl:datatype": {
+                  "@id": "xsd:string"
+                },
+                "shacl:name": "schema"
+              },
+              "schema-org:name": "x-trait-header",
+              "hydra:required": true
+            },
+            {
+              "@id": "amf://id#81",
+              "@type": [
+                "raml-http:Parameter",
+                "doc:DomainElement"
+              ],
+              "raml-http:binding": "header",
+              "raml-http:paramName": "x-complex",
+              "raml-http:schema": {
+                "@id": "amf://id#1/linked_4",
+                "@type": [
+                  "shacl:NodeShape",
+                  "shacl:Shape",
+                  "raml-shapes:Shape",
+                  "doc:DomainElement"
+                ],
+                "doc:link-label": "ExampleType",
+                "doc:link-target": {
+                  "@id": "amf://id#1"
+                }
+              },
+              "schema-org:name": "x-complex",
+              "hydra:required": true
+            }
+          ]
+        },
+        "hydra:method": "get"
+      }
+    },
+    "raml-http:server": {
+      "@id": "amf://id#82",
+      "@type": [
+        "raml-http:Server",
+        "doc:DomainElement"
+      ],
+      "raml-http:url": "http://domain.api.domain.com/{version}/",
+      "raml-http:variable": {
+        "@id": "amf://id#83",
+        "@type": [
+          "raml-http:Parameter",
+          "doc:DomainElement"
+        ],
+        "raml-http:binding": "path",
+        "raml-http:schema": {
+          "@id": "amf://id#84",
+          "@type": [
+            "raml-shapes:ScalarShape",
+            "shacl:Shape",
+            "raml-shapes:Shape",
+            "doc:DomainElement"
+          ],
+          "shacl:datatype": {
+            "@id": "xsd:string"
+          },
+          "shacl:name": "version"
+        },
+        "schema-org:name": "version",
+        "hydra:required": true
+      }
+    },
+    "schema-org:name": "Headers example",
+    "schema-org:version": "v1"
+  }
+}
