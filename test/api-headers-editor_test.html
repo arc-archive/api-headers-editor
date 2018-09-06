@@ -29,11 +29,6 @@
         assert.isUndefined(element.value);
       });
 
-      test('viewModel is empty', () => {
-        assert.typeOf(element.viewModel, 'array');
-        assert.lengthOf(element.viewModel, 0);
-      });
-
       test('sourceMode is false', () => {
         assert.isFalse(element.sourceMode);
       });

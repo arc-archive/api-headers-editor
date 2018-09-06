@@ -43,6 +43,8 @@
 
         let element;
         setup((done) => {
+          const transformer = document.createElement('api-view-model-transformer');
+          transformer.clearCache();
           element = fixture('BasicTestFixture');
           element.addEventListener('value-changed', function f(e) {
             if (!e.detail.value) {
@@ -76,11 +78,13 @@
           }, 250);
         });
 
-        test('Clears AMF model when value is cleared', (done) => {
-          element.value = undefined;
+        test('Clears AMF values when value is cleared', (done) => {
+          element.value = '';
           flush(() => {
-            assert.typeOf(element.viewModel, 'array');
-            assert.lengthOf(element.viewModel, 0);
+            const vm = element.viewModel;
+            assert.typeOf(vm, 'array');
+            assert.lengthOf(vm, 19);
+            assert.equal(vm[4].value, '');
             done();
           });
         });
