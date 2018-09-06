@@ -1,6 +1,6 @@
 {
   "name": "@api-components/api-headers-editor",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "HTTP headers form build from AMF json/ld model",
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",

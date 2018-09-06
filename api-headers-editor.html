@@ -379,14 +379,17 @@
       _modelFromValue(value) {
         value = value || this.value;
         if (value === undefined) {
-          this.viewModel = [];
-          return;
+          if (!this.model) {
+            return;
+          } else {
+            value = '';
+          }
         }
         let model = this.viewModel;
         if (!model) {
           model = [];
         }
-        const parsedValue = this.filterHeaders(this.headersToJSON(value));
+        const parsedValue = this.filterHeaders(this.headersToJSON(String(value)));
         const tmp = {};
         const appendCustom = [];
         const disbleAllowed = this.allowDisableParams;
@@ -419,6 +422,12 @@
             this.splice('viewModel', i, 1);
           } else if (disbleAllowed) {
             this.set(['viewModel', i, 'schema', 'enabled'], false);
+          } else {
+            if (model[i].schema.isArray) {
+              this.set(['viewModel', i, 'value'], []);
+            } else {
+              this.set(['viewModel', i, 'value'], '');
+            }
           }
         }
         if (!this.viewModel || !this.viewModel.length) {
