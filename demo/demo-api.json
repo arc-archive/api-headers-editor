@@ -465,7 +465,7 @@
                                 ],
                                 "http://a.ml/vocabularies/data#value": [
                                   {
-                                    "@value": "devault required value",
+                                    "@value": "default required value",
                                     "@type": "http://www.w3.org/2001/XMLSchema#string"
                                   }
                                 ]
@@ -473,7 +473,7 @@
                             ],
                             "http://www.w3.org/ns/shacl#defaultValueStr": [
                               {
-                                "@value": "devault required value"
+                                "@value": "default required value"
                               }
                             ],
                             "http://a.ml/vocabularies/document#examples": [

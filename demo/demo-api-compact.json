@@ -395,10 +395,10 @@
                   "@type": "data:Scalar",
                   "data:value": {
                     "@type": "xsd:string",
-                    "@value": "devault required value"
+                    "@value": "default required value"
                   }
                 },
-                "shacl:defaultValueStr": "devault required value",
+                "shacl:defaultValueStr": "default required value",
                 "shacl:name": "schema"
               },
               "schema-org:name": "x-required",
