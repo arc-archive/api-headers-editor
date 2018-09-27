@@ -166,6 +166,12 @@ declare namespace ApiElements {
      * When set the editor is in read only mode.
      */
     readonly: boolean|null|undefined;
+
+    /**
+     * Automatically validates headers agains AMF model when value change.
+     * Note, it only works with form editor.
+     */
+    autoValidate: boolean|null|undefined;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
 
