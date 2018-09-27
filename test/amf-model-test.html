@@ -67,6 +67,11 @@
           assert.equal(xRequired.value, 'required header');
         });
 
+        test('Validates the editor', () => {
+          const result = element.validate();
+          assert.isFalse(result);
+        });
+
         test('Generates value from the model', (done) => {
           setTimeout(() => {
             const value = element.value;
