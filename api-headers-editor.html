@@ -205,7 +205,12 @@
           readonly: {
             type: Boolean,
             observer: '_readonlyChanged'
-          }
+          },
+          /**
+           * Automatically validates headers agains AMF model when value change.
+           * Note, it only works with form editor.
+           */
+          autoValidate: Boolean
         };
       }
       /**
@@ -598,6 +603,9 @@
        * @param {String} value
        */
       _valueChanged(value) {
+        if (this.autoValidate) {
+          this.validate();
+        }
         this._detectContentType(value);
         if (this._cacncelChangeEvent) {
           if (!this._innerEditorValueChanged) {

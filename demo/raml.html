@@ -46,6 +46,11 @@
 
     api-headers-editor {
       @apply --layout-flex;
+      border: 1px transparent dashed;
+    }
+
+    api-headers-editor[invalid] {
+      border-color: red;
     }
 
     api-navigation {
@@ -121,7 +126,8 @@
           allow-hide-optional="[[allowHideOptional]]"
           readonly="[[readonly]]"
           no-docs="[[noDocs]]"
-          on-request-headers-changed="_headersChanged"></api-headers-editor>
+          on-request-headers-changed="_headersChanged"
+          auto-validate></api-headers-editor>
       </section>
 
       <section class="vertical-section-container centered card">
