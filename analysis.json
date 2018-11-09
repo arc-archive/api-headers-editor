@@ -2646,28 +2646,36 @@
         },
         {
           "name": "_computeReferenceType",
-          "description": "",
+          "description": "Computes a type model from a reference (library for example).",
           "privacy": "protected",
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 782,
+              "line": 788,
               "column": 4
             },
             "end": {
-              "line": 788,
+              "line": 803,
               "column": 5
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "reference"
+              "name": "reference",
+              "type": "(Object | Array)",
+              "description": "AMF model for a reference to extract the data from"
             },
             {
-              "name": "selected"
+              "name": "selected",
+              "type": "String",
+              "description": "Node ID to look for"
             }
           ],
+          "return": {
+            "type": "(Object | undefined)",
+            "desc": "Type definition or undefined if not found."
+          },
           "inheritedFrom": "ApiElements.AmfHelperMixin"
         },
         {
@@ -2677,11 +2685,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 796,
+              "line": 811,
               "column": 4
             },
             "end": {
-              "line": 801,
+              "line": 816,
               "column": 5
             }
           },
@@ -2711,11 +2719,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 809,
+              "line": 824,
               "column": 4
             },
             "end": {
-              "line": 816,
+              "line": 831,
               "column": 5
             }
           },
@@ -2745,11 +2753,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 823,
+              "line": 838,
               "column": 4
             },
             "end": {
-              "line": 872,
+              "line": 887,
               "column": 5
             }
           },
@@ -2774,11 +2782,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 874,
+              "line": 889,
               "column": 4
             },
             "end": {
-              "line": 896,
+              "line": 911,
               "column": 5
             }
           },
@@ -2800,11 +2808,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 898,
+              "line": 913,
               "column": 4
             },
             "end": {
-              "line": 917,
+              "line": 932,
               "column": 5
             }
           },
@@ -2826,11 +2834,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 919,
+              "line": 934,
               "column": 4
             },
             "end": {
-              "line": 930,
+              "line": 945,
               "column": 5
             }
           },
@@ -2852,11 +2860,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 939,
+              "line": 954,
               "column": 4
             },
             "end": {
-              "line": 952,
+              "line": 967,
               "column": 5
             }
           },
@@ -2885,11 +2893,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 959,
+              "line": 974,
               "column": 4
             },
             "end": {
-              "line": 980,
+              "line": 995,
               "column": 5
             }
           },
@@ -2914,11 +2922,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 986,
+              "line": 1001,
               "column": 4
             },
             "end": {
-              "line": 1012,
+              "line": 1027,
               "column": 5
             }
           },
