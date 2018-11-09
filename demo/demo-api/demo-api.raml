@@ -80,3 +80,19 @@ traits:
         examples:
           stringExample: Hello union
           numberExample: 25
+  post:
+    headers:
+      Accept:
+        example: application/json
+        required: false
+      x-required:
+        required: true
+      x-required-with-value:
+        required: true
+        default: Default value
+      x-required-with-example:
+        required: true
+        example: Header example
+      x-not-required-with-example:
+        required: fale
+        example: Header example

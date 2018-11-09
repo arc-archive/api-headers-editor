@@ -18,7 +18,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#^2.1.0",
-    "api-headers-form": "advanced-rest-client/api-headers-form#^2.0.0",
+    "api-headers-form": "advanced-rest-client/api-headers-form#^2.0.4",
     "api-view-model-transformer": "advanced-rest-client/api-view-model-transformer#^2.0.0",
     "arc-icons": "advanced-rest-client/arc-icons#^2.0.0",
     "code-mirror": "advanced-rest-client/code-mirror#^2.0.0",
