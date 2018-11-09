@@ -22,8 +22,10 @@
   suite('AMF model tests', () => {
     function getHeadersModel(element, amfModel) {
       const webApi = element._computeWebApi(amfModel);
-      const method = element._computeMethodModel(webApi, 'amf://id#13');
-      const expects = element._computeExpects(method);
+      const endpoint = element._computeEndpointByPath(webApi, '/endpoint');
+      const opKey = element._getAmfKey(ApiElements.Amf.ns.w3.hydra.supportedOperation);
+      const ops = element._ensureArray(endpoint[opKey]);
+      const expects = element._computeExpects(ops[0]);
       const hKey = element._getAmfKey(ApiElements.Amf.ns.raml.vocabularies.http + 'header');
       return element._ensureArray(expects[hKey]);
     }
@@ -75,10 +77,13 @@
         test('Generates value from the model', (done) => {
           setTimeout(() => {
             const value = element.value;
-            assert.notEqual(value.indexOf('ETag'), -1);
-            assert.notEqual(value.indexOf('Cache-Control'), -1);
-            assert.notEqual(value.indexOf('x-string'), -1);
-            assert.notEqual(value.indexOf('x-optional'), -1);
+            assert.equal(value.indexOf('ETag'), -1, 'Etag is not present (optional)');
+            assert.notEqual(value.indexOf('Cache-Control'), -1, 'Cache-Control is present');
+            assert.notEqual(value.indexOf('x-string'), -1, 'x-string is present');
+            assert.equal(value.indexOf('x-optional'), -1, 'x-optional is not present (optional)');
+            assert.notEqual(value.indexOf('x-required: default required value'), -1,
+              'x-required is present (dafault value)');
+            assert.notEqual(value.indexOf('x-union: Hello union'), -1, 'x-union is present (value from example)');
             done();
           }, 250);
         });

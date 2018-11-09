@@ -17,7 +17,6 @@
   <link rel="import" href="../../paper-item/paper-item.html">
   <link rel="import" href="../../paper-listbox/paper-listbox.html">
   <link rel="import" href="../../neon-animation/web-animations.html">
-  <link rel="import" href="../../api-navigation/api-navigation.html">
   <link rel="import" href="../api-headers-editor.html">
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -151,10 +150,10 @@
   </dom-bind>
   <script>
   (function(scope) {
-    class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
-    window.customElements.define('demo-element', DemoElement);
     scope.changeCount = 0;
     scope._load = function() {
+      class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
+      window.customElements.define('demo-element', DemoElement);
       document.getElementById('apisList').selected = 0;
     };
 
