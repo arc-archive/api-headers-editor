@@ -687,6 +687,12 @@
         this._cacncelChangeEvent = true;
         this.set('value', value);
         this._cacncelChangeEvent = false;
+        if (!this._innerEditorValueChanged && this.sourceMode) {
+          const panel = this.currentPanel;
+          if (panel) {
+            panel.value = value;
+          }
+        }
       }
       /**
        * Coppies current response text value to clipboard.

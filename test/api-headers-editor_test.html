@@ -262,6 +262,22 @@
       fire('test');
       assert.isFalse(spy.called);
     });
+
+    test('Updates value in source mode', (done) => {
+      element.sourceMode = true;
+      flush(() => {
+        const ct = 'test';
+        fire(ct);
+        assert.equal(element.currentPanel.value, 'Content-Type: test');
+        done();
+      });
+    });
+
+    test('Updates the value on the editor', () => {
+      const ct = 'test';
+      fire(ct);
+      assert.equal(element.value, 'Content-Type: test');
+    });
   });
   </script>
 </body>
