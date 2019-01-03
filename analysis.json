@@ -3456,6 +3456,26 @@
           "return": {
             "type": "void"
           }
+        },
+        {
+          "name": "refresh",
+          "description": "Refreshes the CodeMirror editor when in `sourceMode`.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 739,
+              "column": 6
+            },
+            "end": {
+              "line": 745,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
         }
       ],
       "staticMethods": [],
@@ -3476,7 +3496,7 @@
           "column": 4
         },
         "end": {
-          "line": 736,
+          "line": 746,
           "column": 5
         }
       },
