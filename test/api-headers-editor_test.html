@@ -585,6 +585,28 @@
       assert.equal(element.value, defaultValue);
     });
   });
+
+  suite('refresh()', () => {
+    test('Does nothing when not is source mode', (done) => {
+      const element = fixture('BasicTestFixture');
+      flush(() => {
+        element.refresh();
+        // no error
+        done();
+      });
+    });
+
+    test('Updates code editor', (done) => {
+      const element = fixture('SourceMode');
+      flush(() => {
+        const panel = element.currentPanel;
+        const spy = sinon.spy(panel.editor, 'refresh');
+        element.refresh();
+        assert.isTrue(spy.called);
+        done();
+      });
+    });
+  });
   </script>
 </body>
 

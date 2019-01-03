@@ -734,6 +734,16 @@
         const form = this.shadowRoot.querySelector('api-headers-form');
         return form ? form.validate() : true;
       }
+      /**
+       * Refreshes the CodeMirror editor when in `sourceMode`.
+       */
+      refresh() {
+        if (!this.sourceMode) {
+          return;
+        }
+        const panel = this.currentPanel;
+        panel.editor.refresh();
+      }
     }
 
     window.customElements.define(ApiHeadersEditor.is, ApiHeadersEditor);

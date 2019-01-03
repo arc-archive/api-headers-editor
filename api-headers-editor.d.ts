@@ -298,6 +298,11 @@ declare namespace ApiElements {
      */
     _copyToClipboard(): void;
     _resetCopyButtonState(button: any): void;
+
+    /**
+     * Refreshes the CodeMirror editor when in `sourceMode`.
+     */
+    refresh(): void;
   }
 }
 
