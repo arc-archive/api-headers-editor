@@ -5,7 +5,7 @@
   "main": "api-headers-editor.html",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@api-components/api-model-generator": "^0.1.5",
+    "@api-components/api-model-generator": "^0.1.8",
     "@polymer/gen-typescript-declarations": "^1.6.0"
   },
   "private": false,
