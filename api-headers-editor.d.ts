@@ -5,32 +5,28 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-headers-editor.html
+ *   api-headers-editor.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
-/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../api-view-model-transformer/api-view-model-transformer.d.ts" />
-/// <reference path="../iron-validatable-behavior/iron-validatable-behavior.d.ts" />
-/// <reference path="../raml-aware/raml-aware.d.ts" />
-/// <reference path="../api-headers-form/api-headers-form.d.ts" />
-/// <reference path="../code-mirror/code-mirror.d.ts" />
-/// <reference path="../code-mirror-hint/code-mirror-hint.d.ts" />
-/// <reference path="../code-mirror-hint/headers-addon.d.ts" />
-/// <reference path="../code-mirror-hint/hint-http-headers.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../headers-parser-behavior/headers-parser-behavior.d.ts" />
-/// <reference path="../events-target-behavior/events-target-behavior.d.ts" />
-/// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
-/// <reference path="../api-form-mixin/api-form-styles.d.ts" />
-/// <reference path="../api-form-mixin/api-form-mixin.d.ts" />
-/// <reference path="../amf-helper-mixin/amf-helper-mixin.d.ts" />
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import {IronValidatableBehavior} from '@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
+
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+
+import {ApiFormMixin} from '@api-components/api-form-mixin/api-form-mixin.js';
+
+import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+
+import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 
 declare namespace ApiElements {
 
@@ -95,11 +91,10 @@ declare namespace ApiElements {
    */
   class ApiHeadersEditor extends
     ArcBehaviors.HeadersParserBehavior(
-    ArcBehaviors.EventsTargetBehavior(
-    ArcBehaviors.ApiFormMixin(
-    Polymer.IronValidatableBehavior(
-    ApiElements.AmfHelperMixin(
-    Object))))) {
+    ApiFormMixin(
+    ApiFormMixin(
+    AmfHelperMixin(
+    Object)))) {
 
     /**
      * Generated AMF json/ld model form the API spec.
@@ -176,13 +171,13 @@ declare namespace ApiElements {
      * Note, it only works with form editor.
      */
     autoValidate: boolean|null|undefined;
-    _attachListeners(node: any): void;
-    _detachListeners(node: any): void;
 
     /**
      * attribute automatically, which should be used for styling.
      */
     _getValidity(): any;
+    _attachListeners(node: any): void;
+    _detachListeners(node: any): void;
 
     /**
      * Handler for `sourceMode` change.
@@ -306,6 +301,9 @@ declare namespace ApiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-headers-editor": ApiElements.ApiHeadersEditor;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-headers-editor": ApiElements.ApiHeadersEditor;
+  }
 }

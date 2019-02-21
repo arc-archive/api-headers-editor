@@ -4,20 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
   <title>api-headers-editor demo</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <link rel="import" href="../../shadycss/apply-shim.html">
-  <link rel="import" href="../../polymer/lib/elements/custom-style.html">
-  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../neon-animation/web-animations.html">
-  <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
-  <link rel="import" href="../../arc-electron-default-theme/arc-electron-default-theme.html">
-  <link rel="import" href="../../api-navigation/api-navigation.html">
-  <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
-  <link rel="import" href="../../paper-item/paper-item.html">
-  <link rel="import" href="../../paper-listbox/paper-listbox.html">
-  <link rel="import" href="../../neon-animation/web-animations.html">
-  <link rel="import" href="../api-headers-editor.html">
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../../web-animations-js/web-animations-next.min.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '@polymer/iron-demo-helpers/demo-snippet.js';
+    import '@polymer/polymer/lib/elements/dom-bind.js';
+    import '@polymer/paper-styles/paper-styles.js';
+    import '@polymer/paper-toggle-button/paper-toggle-button.js';
+    import '@advanced-rest-client/arc-electron-default-theme/arc-electron-default-theme.js';
+    import '@api-components/api-navigation/api-navigation.js';
+    import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+    import '@polymer/paper-item/paper-item.js';
+    import '@polymer/paper-listbox/paper-listbox.js';
+    import '../api-headers-editor.js';
+  </script>
+  <!--
+  With HTML imports this was relatively easy task to perform inside web component.
+  With module imports it's all get very messy with legacy scripts (using webpack or whatever).
+  This scripts cannot be loaded inside the the module as it wont be added to the window object.
+  CodeMirror uses `this` instead of `window` or `self` and do not exports any instance.
+  Therefore the CM scripts has to be loaded outside the componet.
+  -->
+  <script src="../../../codemirror/lib/codemirror.js"></script>
+  <script src="../../../codemirror/addon/mode/loadmode.js"></script>
+  <script src="../../../codemirror/mode/meta.js"></script>
+  <script src="../../../@advanced-rest-client/code-mirror-hint/headers-addon.js"></script>
+  <script src="../../../@advanced-rest-client/code-mirror-hint/show-hint.js"></script>
+  <script src="../../../@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script>
+
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     body,
@@ -114,19 +131,8 @@
       </header>
 
       <section role="main" class="centered card">
-        <api-navigation amf-model="[[amfModel]]" endpoints-opened></api-navigation>
-        <api-headers-editor
-          amf-model="[[amfModel]]"
-          amf-headers="[[amfHeaders]]"
-          value="{{value}}"
-          narrow="[[narrow]]"
-          allow-custom="[[allowCustom]]"
-          allow-disable-params="[[allowDisableParams]]"
-          allow-hide-optional="[[allowHideOptional]]"
-          readonly="[[readonly]]"
-          no-docs="[[noDocs]]"
-          on-request-headers-changed="_headersChanged"
-          auto-validate></api-headers-editor>
+        <api-navigation amf-model="[[amfModel]]" endpoints-opened=""></api-navigation>
+        <api-headers-editor amf-model="[[amfModel]]" amf-headers="[[amfHeaders]]" value="{{value}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" readonly="[[readonly]]" no-docs="[[noDocs]]" on-request-headers-changed="_headersChanged" auto-validate=""></api-headers-editor>
       </section>
 
       <section class="vertical-section-container centered card">
@@ -148,12 +154,15 @@
       <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
     </template>
   </dom-bind>
-  <script>
+  <script type="module">
+  import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+  import {AmfHelperMixin, ns} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+
+  class DemoElement extends AmfHelperMixin(PolymerElement) {}
+  window.customElements.define('demo-element', DemoElement);
   (function(scope) {
     scope.changeCount = 0;
     scope._load = function() {
-      class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
-      window.customElements.define('demo-element', DemoElement);
       document.getElementById('apisList').selected = 0;
     };
 
@@ -184,7 +193,7 @@
       const webApi = scope.$.helper._computeWebApi(scope.amfModel);
       const method = scope.$.helper._computeMethodModel(webApi, selected);
       const expects = scope.$.helper._computeExpects(method);
-      const hKey = scope.$.helper._getAmfKey(ApiElements.Amf.ns.raml.vocabularies.http + 'header');
+      const hKey = scope.$.helper._getAmfKey(ns.raml.vocabularies.http + 'header');
       const headers = scope.$.helper._ensureArray(expects[hKey]);
       scope.amfHeaders = headers;
     };
