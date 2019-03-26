@@ -15,7 +15,7 @@ import '@advanced-rest-client/code-mirror/code-mirror.js';
 import '@advanced-rest-client/code-mirror-hint/code-mirror-hint.js';
 import '@advanced-rest-client/arc-icons/arc-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@api-components/clipboard-copy/clipboard-copy.js';
+import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@api-components/api-form-mixin/api-form-styles.js';
 /**
  * `api-headers-editor`
