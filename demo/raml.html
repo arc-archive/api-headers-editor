@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
   <title>api-headers-editor demo</title>
 
-  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../../../web-animations-js/web-animations-next.min.js"></script>
 
   <script type="module">
-    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    import '@polymer/iron-demo-helpers/demo-snippet.js';
-    import '@polymer/polymer/lib/elements/dom-bind.js';
-    import '@polymer/paper-styles/paper-styles.js';
-    import '@polymer/paper-toggle-button/paper-toggle-button.js';
-    import '@advanced-rest-client/arc-electron-default-theme/arc-electron-default-theme.js';
-    import '@api-components/api-navigation/api-navigation.js';
-    import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-    import '@polymer/paper-item/paper-item.js';
-    import '@polymer/paper-listbox/paper-listbox.js';
+    import '../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '../../../@polymer/iron-demo-helpers/demo-snippet.js';
+    import '../../../@polymer/polymer/lib/elements/dom-bind.js';
+    import '../../../@polymer/paper-styles/paper-styles.js';
+    import '../../../@polymer/paper-toggle-button/paper-toggle-button.js';
+    import '../../../@advanced-rest-client/arc-electron-default-theme/arc-electron-default-theme.js';
+    import '../../../@api-components/api-navigation/api-navigation.js';
+    import '../../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+    import '../../../@polymer/paper-item/paper-item.js';
+    import '../../../@polymer/paper-listbox/paper-listbox.js';
     import '../api-headers-editor.js';
   </script>
   <!--
@@ -155,8 +155,8 @@
     </template>
   </dom-bind>
   <script type="module">
-  import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-  import {AmfHelperMixin, ns} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+  import {PolymerElement} from '../../../@polymer/polymer/polymer-element.js';
+  import {AmfHelperMixin, ns} from '../../../@api-components/amf-helper-mixin/amf-helper-mixin.js';
 
   class DemoElement extends AmfHelperMixin(PolymerElement) {}
   window.customElements.define('demo-element', DemoElement);

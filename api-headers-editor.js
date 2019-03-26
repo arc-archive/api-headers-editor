@@ -1,22 +1,21 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {IronValidatableBehavior} from '@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
-import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import {ApiFormMixin} from '@api-components/api-form-mixin/api-form-mixin.js';
-import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '@polymer/polymer/lib/elements/dom-if.js';
-import '@polymer/polymer/lib/utils/render-status.js';
-import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
-import '@api-components/raml-aware/raml-aware.js';
-import '@api-components/api-headers-form/api-headers-form.js';
-import '@advanced-rest-client/code-mirror/code-mirror.js';
-import '@advanced-rest-client/code-mirror-hint/code-mirror-hint.js';
-import '@advanced-rest-client/arc-icons/arc-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
-import '@api-components/api-form-mixin/api-form-styles.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {IronValidatableBehavior} from '../../@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
+import {EventsTargetMixin} from '../../@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import {ApiFormMixin} from '../../@api-components/api-form-mixin/api-form-mixin.js';
+import {HeadersParserMixin} from '../../@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {mixinBehaviors} from '../../@polymer/polymer/lib/legacy/class.js';
+import {AmfHelperMixin} from '../../@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import '../../@polymer/polymer/lib/utils/render-status.js';
+import '../../@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import '../../@api-components/raml-aware/raml-aware.js';
+import '../../@api-components/api-headers-form/api-headers-form.js';
+import '../../@advanced-rest-client/code-mirror/code-mirror.js';
+import '../../@advanced-rest-client/code-mirror-hint/code-mirror-hint.js';
+import '../../@advanced-rest-client/arc-icons/arc-icons.js';
+import '../../@polymer/paper-icon-button/paper-icon-button.js';
+import '../../@advanced-rest-client/clipboard-copy/clipboard-copy.js';
+import '../../@api-components/api-form-mixin/api-form-styles.js';
 /**
  * `api-headers-editor`
  * An element to render headers edior based on AMF data model.
