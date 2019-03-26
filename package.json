@@ -16,12 +16,12 @@
   "main": "api-headers-editor.js",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@advanced-rest-client/arc-electron-default-theme": "^3.0.0-preview.1",
+    "@advanced-rest-client/arc-electron-default-theme": "^3.0.0-preview.2",
     "@api-components/api-model-generator": "^0.1.10",
-    "@api-components/api-navigation": "^3.0.0-preview.1",
+    "@api-components/api-navigation": "^3.0.0-preview.2",
     "@polymer/gen-typescript-declarations": "^1.6.0",
     "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.0.0",
+    "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/iron-test-helpers": "^3.0.0",
     "@polymer/paper-dropdown-menu": "^3.0.0",
     "@polymer/paper-item": "^3.0.0",
@@ -31,7 +31,7 @@
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "sinon": "^7.2.3",
+    "sinon": "^7.3.0",
     "wct-mocha": "^1.0.0",
     "web-animations-js": "^2.3.1"
   },
@@ -50,10 +50,10 @@
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "dependencies": {
-    "@advanced-rest-client/arc-icons": "^3.0.0-preview.1",
+    "@advanced-rest-client/arc-icons": "^3.0.0-preview.2",
     "@advanced-rest-client/code-mirror": "^3.0.0-preview.1",
     "@advanced-rest-client/code-mirror-hint": "^3.0.0-preview.1",
-    "@advanced-rest-client/events-target-mixin": "^3.0.0-preview.1",
+    "@advanced-rest-client/events-target-mixin": "^3.0.0-preview.2",
     "@advanced-rest-client/headers-parser-mixin": "^3.0.0-preview.2",
     "@api-components/amf-helper-mixin": "^3.0.0-preview.1",
     "@api-components/api-form-mixin": "^3.0.0-preview.1",
@@ -64,6 +64,6 @@
     "@polymer/iron-flex-layout": "^3.0.0",
     "@polymer/iron-validatable-behavior": "^3.0.0",
     "@polymer/paper-icon-button": "^3.0.0",
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/polymer": "^3.2.0"
   }
 }
