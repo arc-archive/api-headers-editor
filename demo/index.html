@@ -5,21 +5,89 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
   <title>api-headers-editor demo</title>
 
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <!--
+  With HTML imports this was relatively easy task to perform inside web component.
+  With module imports it's all get very messy with legacy scripts (using webpack or whatever).
+  This scripts cannot be loaded inside the the module as it wont be added to the window object.
+  CodeMirror uses `this` instead of `window` or `self` and do not exports any instance.
+  Therefore the CM scripts has to be loaded outside the componet.
+  -->
+  <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/headers-addon.js"></script> -->
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/show-hint.js"></script> -->
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script> -->
 
-  <script type="module">
-    import '../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-  </script>
+  <style>
+  [role="main"].centered {
+    max-width: 1440px;
+  }
 
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
-  </custom-style>
+  output {
+    background-color: #FFF3E0;
+    white-space: pre-wrap;
+    margin-top: 40px;
+  }
+
+  api-headers-editor[invalid] {
+    border-color: red;
+  }
+
+  body.styled.dark output {
+    background-color: #263238;
+  }
+
+  body.styled {
+    --arc-font-code-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+    --link-color: #00A1DF;
+  }
+
+  body.styled.dark {
+    --secondary-text-color: #616161;
+    --primary-background-color: #424242;
+
+    --anypoint-input-legacy-label-color: #F5F5F5;
+    --arc-interactive-demo-options-color: #F5F5F5;
+    --anypoint-checkbox-label-color:  #F5F5F5;
+    --anypoint-input-background-color: #494949;
+    --anypoint-input-label-color: #fff;
+    --anypoint-input-input-color: #fff;
+    --anypoint-input-border-bottom-color: #fff;
+    --anypoint-input-focused-border-bottom-color: #fff;
+    --anypoint-input-label-background-color: rgb(66, 66, 66);
+    --anypoint-input-legacy-focus-background-color: #3a3b3c;
+    --anypoint-input-legacy-focus-border-color: #178bea;
+    --anypoint-input-info-message-color: #fff;
+
+    --inline-documentation-background-color: #263238;
+
+    --anypoint-dropdown-menu-background-color: #494949;
+    --anypoint-dropdown-menu-label-background-color: var(--primary-background-color);
+    --anypoint-listbox-background-color: #494949;
+    --anypoint-dropdown-menu-focus-background-color: #9E9E9E;
+    --anypoint-dropdown-menu-label-color: #fff;
+    --anypoint-dropdown-menu-info-message-color: #fff;
+    --anypoint-item-hover-background-color: #9E9E9E;
+
+    --from-row-action-icon-color: #fff;
+    --icon-button-color: #fff;
+    --api-form-action-icon-color: #fff;
+    --api-form-action-button-color: #fff;
+    --anypoint-icon-button-emphasis-low-color: #fff;
+
+    --anypoiont-autocomplete-background-color: #494949;
+
+    --code-mirror-background-color: #37474F;
+    --code-mirror-string-color: #C3E88D;
+    --code-mirror-punctuation-color: #EEFFFF;
+    --code-mirror-atom-color: #F07178;
+    --code-mirror-number-color: #F78C6A;
+    --code-mirror-cursor-color: #009688;
+  }
+  </style>
 </head>
 <body>
-  <ul>
-    <li><a href="simple.html">Simple headers editor</a></li>
-    <li><a href="raml.html">With RAML spec via AMF model</a></li>
-  </ul>
+  <div id="demo"></div>
+
+  <script type="module" src="index.js"></script>
 </body>
 </html>

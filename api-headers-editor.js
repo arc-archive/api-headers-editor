@@ -1,21 +1,19 @@
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {IronValidatableBehavior} from '../../@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
-import {EventsTargetMixin} from '../../@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import {ApiFormMixin} from '../../@api-components/api-form-mixin/api-form-mixin.js';
-import {HeadersParserMixin} from '../../@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
-import {mixinBehaviors} from '../../@polymer/polymer/lib/legacy/class.js';
-import {AmfHelperMixin} from '../../@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '../../@polymer/polymer/lib/utils/render-status.js';
-import '../../@api-components/api-view-model-transformer/api-view-model-transformer.js';
-import '../../@api-components/raml-aware/raml-aware.js';
-import '../../@api-components/api-headers-form/api-headers-form.js';
-import '../../@advanced-rest-client/code-mirror/code-mirror.js';
-import '../../@advanced-rest-client/code-mirror-hint/code-mirror-hint.js';
-import '../../@advanced-rest-client/arc-icons/arc-icons.js';
-import '../../@polymer/paper-icon-button/paper-icon-button.js';
-import '../../@advanced-rest-client/clipboard-copy/clipboard-copy.js';
-import '../../@api-components/api-form-mixin/api-form-styles.js';
+import { html, css, LitElement } from 'lit-element';
+import { ValidatableMixin } from '@anypoint-web-components/validatable-mixin/validatable-mixin.js';
+import { ApiFormMixin } from '@api-components/api-form-mixin/api-form-mixin.js';
+import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import formStyles from '@api-components/api-form-mixin/api-form-styles.js';
+import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import '@api-components/raml-aware/raml-aware.js';
+import '@api-components/api-headers-form/api-headers-form.js';
+import '@advanced-rest-client/code-mirror/code-mirror.js';
+import '@anypoint-web-components/anypoint-button/anypoint-button.js';
+import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
+import '@advanced-rest-client/code-mirror-hint/code-mirror-headers-hint.js';
+
+const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
 /**
  * `api-headers-editor`
  * An element to render headers edior based on AMF data model.
@@ -41,8 +39,8 @@ import '../../@api-components/api-form-mixin/api-form-styles.js';
  * ```html
  * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
  * <script>
- * let data = await getAmfModel();
- * editor.amfModel = data;
+ * let data = await getamf();
+ * editor.amf = data;
  * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
  * data = data['http://raml.org/vocabularies/http#endpoint'][0];
  * data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
@@ -66,7 +64,7 @@ import '../../@api-components/api-form-mixin/api-form-styles.js';
  * ## Setting value when model is set
  *
  * Model values has priority over value set on the editor.
- * If `amfModel` is set and value has been altered programatically there
+ * If `amf` is set and value has been altered programatically there
  * are two possible outcomes:
  *
  * 1) If `allowDisableParams` is set, model values are automatically
@@ -81,83 +79,118 @@ import '../../@api-components/api-form-mixin/api-form-styles.js';
  * @demo demo/raml.html With AMF model
  * @appliesMixin ArcBehaviors.HeadersParserBehavior
  * @appliesMixin ApiFormMixin
- * @appliesMixin ApiFormMixin
- * @polymerBehavior Polymer.IronValidatableBehavior
+ * @appliesMixin ValidatableMixin
  * @appliesMixin AmfHelperMixin
  */
-class ApiHeadersEditor extends mixinBehaviors(
-    [IronValidatableBehavior],
-    ApiFormMixin(EventsTargetMixin(
-      HeadersParserMixin(AmfHelperMixin(PolymerElement))))) {
-  static get template() {
-    return html`
-    <style include="api-form-styles">
-    :host {
-      display: block;
-      position: relative;
-      @apply --api-headers-editor;
-    }
+class ApiHeadersEditor extends
+    ValidatableMixin(ApiFormMixin(EventsTargetMixin(
+      HeadersParserMixin(AmfHelperMixin(LitElement))))) {
 
-    paper-icon-button[active] {
-      background-color: var(--api-headers-editor-panel-button-active-background-color, var(--raml-body-editor-panel-button-active-background-color, #e0e0e0));
-      border-radius: 50%;
-      @apply --raml-body-editor-panel-button-active;
-      @apply --api-headers-editor-panel-button-active;
-    }
-    </style>
-    <template is="dom-if" if="[[aware]]">
-      <raml-aware raml="{{amfModel}}" scope="[[aware]]"></raml-aware>
-    </template>
-    <api-view-model-transformer amf-model="[[amfModel]]" shape="[[amfHeaders]]" view-model="{{viewModel}}" id="transformer" events-target="[[_transformerTarget]]" no-docs="[[noDocs]]"></api-view-model-transformer>
+  static get styles() {
+    return [
+      formStyles,
+      css`
+      :host {
+        display: block;
+        position: relative;
+      }`
+    ];
+  }
+
+  render() {
+    const {
+      aware,
+      amf,
+      amfHeaders,
+      viewModel,
+      narrow,
+      noDocs,
+      sourceMode,
+      allowCustom,
+      allowDisableParams,
+      allowHideOptional,
+      readOnly,
+      outlined,
+      legacy,
+      value,
+      noSourceEditor
+    } = this;
+    return html`
+    ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
+    <api-view-model-transformer
+      .amf="${amf}"
+      .shape="${amfHeaders}"
+      .eventsTarget="${this}"
+      ?nodocs="${noDocs}"
+      @view-model-changed="${this._viewModelHandler}"></api-view-model-transformer>
+
     <div class="content">
       <div class="editor-actions">
-        <paper-icon-button class="action-icon copy-icon" icon="arc:content-copy" on-tap="_copyToClipboard" title="Copy headers value to clipboard"></paper-icon-button>
-        <paper-icon-button class="action-icon" icon="arc:code" toggles="" active="{{sourceMode}}" title="Toggle source edit mode"></paper-icon-button>
+        <anypoint-button
+          part="content-action-button, code-content-action-button"
+          class="action-button"
+          data-action="copy"
+          @click="${this._copyToClipboard}"
+          aria-label="Press to copy headers to clipboard"
+          title="Copy example to clipboard">Copy</anypoint-button>
+        ${noSourceEditor ? undefined : html`<anypoint-button
+          aria-label="Press to toggle source edit mode"
+          title="Toggle source edit mode"
+          part="content-action-button, code-content-action-button"
+          class="action-button"
+          data-action="source"
+          toggles
+          .active="${sourceMode}"
+          @active-changed="${this._sourceModeHandler}">Source view</anypoint-button>`}
         <slot name="content-actions"></slot>
       </div>
       <div id="editor">
-        <template is="dom-if" if="[[!sourceMode]]" restamp="true">
-          <api-headers-form model="{{viewModel}}" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" data-headers-panel="" on-value-changed="_editorValueChanged" invalid="{{invalid}}" no-docs="[[noDocs]]" readonly="[[readonly]]"></api-headers-form>
-        </template>
+        ${(!sourceMode || noSourceEditor) ?
+          html`<api-headers-form
+            .model="${viewModel}"
+            ?narrow="${narrow}"
+            ?allowcustom="${allowCustom}"
+            ?allowdisableparams="${allowDisableParams}"
+            ?allowhideoptional="${allowHideOptional}"
+            data-headers-panel
+            ?nodocs="${noDocs}"
+            ?readonly="${readOnly}"
+            ?outlined="${outlined}"
+            ?legacy="${legacy}"
+            @value-changed="${this._editorValueChanged}"
+            @invalid-changed="${this._formEditorInvalidHandler}"
+            @model-changed="${this._formEditorModelHandler}"
+            ></api-headers-form>` :
+          html`<code-mirror
+            mode="http-headers"
+            data-headers-panel
+            ?readonly="${readOnly}"
+            @value-changed="${this._editorValueChanged}"></code-mirror>`}
       </div>
     </div>
-    <clipboard-copy content="[[value]]"></clipboard-copy>
-`;
+    <clipboard-copy .content="${value}"></clipboard-copy>
+    `;
   }
 
-  static get is() {return 'api-headers-editor';}
   static get properties() {
     return {
       /**
        * `raml-aware` scope property to use.
        */
-      aware: String,
-      /**
-       * Generated AMF json/ld model form the API spec.
-       * The element assumes the object of the first array item to be a
-       * type of `"http://raml.org/vocabularies/document#Document`
-       * on AMF vocabulary.
-       *
-       * @type {Object|Array}
-       */
-      amfModel: Object,
+      aware: { type: String },
       /**
        * List of headers defined in AMF model to render.
        */
-      amfHeaders: Array,
+      amfHeaders: { type: Array },
       /**
        * Headers value.
        */
-      value: {
-        type: String,
-        notify: true,
-        observer: '_valueChanged'
-      },
+      value: { type: String },
       /**
-       * Generated view model fore the headers from `amfModel`.
-       * This is automatically set when `amfModel` is set.
+       * Generated view model from the headers from `amf` model.
+       * This is automatically set when `amf` is set.
        */
-      viewModel: Array,
+      viewModel: { type: Array },
       /**
        * Value of a Content-Type header.
        * When this value change then editor update the value for the content type. However,
@@ -166,49 +199,42 @@ class ApiHeadersEditor extends mixinBehaviors(
        *
        * @type {Stirng}
        */
-      contentType: {
-        type: String,
-        notify: true,
-        observer: '_onContentTypeChanged'
-      },
+      contentType: { type: String },
       // When set to true then the source edit mode is enabled
-      sourceMode: {
-        type: Boolean,
-        observer: '_sourceModeChanged'
-      },
-      // Events target for tranformer
-      _transformerTarget: {
-        type: Object,
-        value: function() {
-          return this;
-        }
-      },
-      // Regexp to search for content type value
-      _contentTypeRe: {
-        type: Object,
-        value: function() {
-          return /^[\t\r]*content\-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
-        }
-      },
+      sourceMode: { type: Boolean },
       /**
        * Prohibits rendering of the documentation (the icon and the
        * description).
        * Note, Set is separately for `api-view-model-transformer`
        * component as this only affects "custom" items.
        */
-      noDocs: Boolean,
+      noDocs: { type: Boolean },
       /**
        * When set the editor is in read only mode.
        */
-      readonly: {
-        type: Boolean,
-        observer: '_readonlyChanged'
-      },
+      readOnly: { type: Boolean },
       /**
        * Automatically validates headers agains AMF model when value change.
        * Note, it only works with form editor.
        */
-      autoValidate: Boolean
+      autoValidate: { type: Boolean },
+      /**
+       * Enables Anypoint legacy styling
+       */
+      legacy: { type: Boolean },
+      /**
+       * Enables Material Design outlined style
+       */
+      outlined: { type: Boolean },
+      /**
+       * When set only form editor is available.
+       *
+       * Note, because of dependency, you still have to import CodeMirror
+       * or at lease provide a mock function for registering addons.
+       *
+       * See @advanced-rest-client/code-mirror-hint for used functions.
+       */
+      noSourceEditor: { type: Boolean }
     };
   }
   /**
@@ -217,7 +243,7 @@ class ApiHeadersEditor extends mixinBehaviors(
    */
   get currentPanel() {
     if (!this.shadowRoot) {
-      return;
+      return null;
     }
     const panel = this.shadowRoot.querySelector('code-mirror');
     if (panel) {
@@ -226,17 +252,77 @@ class ApiHeadersEditor extends mixinBehaviors(
     return this.shadowRoot.querySelector('api-headers-form');
   }
 
+  get _cmExtraKeys() {
+    return {
+      'Ctrl-Space': this._cmKeysHandler
+    };
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  set value(value) {
+    const old = this._value;
+    /* istanbul ignore if  */
+    if (old === value) {
+      return;
+    }
+    this._value = value;
+    this.requestUpdate('value', old);
+    this._valueChanged(value);
+    this.dispatchEvent(new CustomEvent('value-changed', {
+      detail: {
+        value
+      }
+    }));
+  }
+
+  get contentType() {
+    return this._contentType;
+  }
+
+  set contentType(value) {
+    const old = this._contentType;
+    /* istanbul ignore if  */
+    if (old === value) {
+      return;
+    }
+    this._contentType = value;
+    this.requestUpdate('contentType', old);
+    this._onContentTypeChanged(value);
+    this.dispatchEvent(new CustomEvent('value-changed', {
+      detail: {
+        value
+      }
+    }));
+  }
+
+  get viewModel() {
+    return this._viewModel;
+  }
+
+  set viewModel(value) {
+    const old = this._viewModel;
+    /* istanbul ignore if  */
+    if (old === value) {
+      return;
+    }
+    this._viewModel = value;
+    this.requestUpdate('viewModel', old);
+  }
   /**
    * @constructor
    */
   constructor() {
     super();
-    this._editorValueChanged = this._editorValueChanged.bind(this);
     this._cmKeysHandler = this._cmKeysHandler.bind(this);
     this._headersChangedHandler = this._headersChangedHandler.bind(this);
     this._headerChangedHandler = this._headerChangedHandler.bind(this);
     this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(this);
     this._headerDeletedHandler = this._headerDeletedHandler.bind(this);
+
+    this.sourceMode = false;
   }
 
   _attachListeners(node) {
@@ -260,21 +346,16 @@ class ApiHeadersEditor extends mixinBehaviors(
    * @param {Boolean} isSource
    */
   _sourceModeChanged(isSource) {
+    if (this.noSourceEditor) {
+      return;
+    }
     if (isSource) {
-      this._attachSourceEditor();
       setTimeout(() => {
         const panel = this.currentPanel;
-        panel.setOption('extraKeys', {
-          'Ctrl-Space': this._cmKeysHandler
-        });
+        panel.setOption('extraKeys', this._cmExtraKeys);
         panel.value = this.modelToValue(this.viewModel);
       }, 50);
     } else {
-      const panel = this.currentPanel;
-      if (panel) {
-        panel.removeEventListener('value-changed', this._editorValueChanged);
-        panel.parentNode.removeChild(panel);
-      }
       this._modelFromValue();
     }
 
@@ -291,31 +372,6 @@ class ApiHeadersEditor extends mixinBehaviors(
     this.dispatchEvent(ev);
   }
 
-  _attachSourceEditor() {
-    const cm = document.createElement('code-mirror');
-    cm.mode = 'http-headers';
-    cm.setAttribute('data-headers-panel', true);
-    cm.addEventListener('value-changed', this._editorValueChanged);
-    if (this.readonly) {
-      cm.readOnly = true;
-    }
-    this.$.editor.appendChild(cm);
-  }
-  /**
-   * Sets current value of `readonly` on the source editor.
-   * @param {Boolean} value
-   */
-  _readonlyChanged(value) {
-    if (!this.sourceMode) {
-      return;
-    }
-    const panel = this.currentPanel;
-    if (!panel) {
-      return;
-    }
-    panel.readOnly = value;
-  }
-
   /**
    * Updates the value when current editor's value change.
    *
@@ -325,7 +381,7 @@ class ApiHeadersEditor extends mixinBehaviors(
     const value = e.detail.value;
     if (value !== this.value) {
       this._innerEditorValueChanged = true;
-      this.set('value', value);
+      this.value = value;
       this._innerEditorValueChanged = false;
     }
   }
@@ -391,6 +447,7 @@ class ApiHeadersEditor extends mixinBehaviors(
     let model = this.viewModel;
     if (!model) {
       model = [];
+      this.viewModel = model;
     }
     const parsedValue = this.filterHeaders(this.headersToJSON(String(value)));
     const tmp = {};
@@ -406,13 +463,13 @@ class ApiHeadersEditor extends mixinBehaviors(
         tmp[item.name] = true;
         if (model[index].value !== item.value) {
           if (model[index].schema.isArray) {
-            this.set(['viewModel', index, 'value'], item.value.split(','));
+            model[index].value = item.value.split(',');
           } else {
-            this.set(['viewModel', index, 'value'], item.value);
+            model[index].value = item.value;
           }
         }
         if (!model[index].schema.enabled) {
-          this.set(['viewModel', index, 'schema', 'enabled'], true);
+          model[index].schema.enabled = true;
         }
       }
     }
@@ -422,21 +479,22 @@ class ApiHeadersEditor extends mixinBehaviors(
         continue;
       }
       if (model[i].schema.isCustom) {
-        this.splice('viewModel', i, 1);
+        model.splice(i, 1);
       } else if (disbleAllowed) {
-        this.set(['viewModel', i, 'schema', 'enabled'], false);
+        model[i].schema.enabled = false;
       } else {
         if (model[i].schema.isArray) {
-          this.set(['viewModel', i, 'value'], []);
+          model[i].value = [];
         } else {
-          this.set(['viewModel', i, 'value'], '');
+          model[i].value = '';
         }
       }
     }
-    if (!this.viewModel || !this.viewModel.length) {
+    if (!model.length) {
       this.viewModel = appendCustom;
     } else {
-      appendCustom.forEach((item) => this.push('viewModel', item));
+      model = [...model, ...appendCustom];
+      this.viewModel = model;
     }
   }
   /**
@@ -475,7 +533,8 @@ class ApiHeadersEditor extends mixinBehaviors(
     if (!data.schema.inputLabel) {
       data.schema.inputLabel = 'Header value';
     }
-    this.$.transformer.buildProperty(data);
+    const node = this.shadowRoot.querySelector('api-view-model-transformer');
+    node.buildProperty(data);
     return data;
   }
 
@@ -502,7 +561,6 @@ class ApiHeadersEditor extends mixinBehaviors(
     }
     const name = e.detail.name;
     if (!name) {
-      console.warn('request-header-changed fired without the name.');
       return;
     }
     const value = e.detail.value;
@@ -535,7 +593,7 @@ class ApiHeadersEditor extends mixinBehaviors(
       return;
     }
     this.__cancelContentTypeNotification = true;
-    this.set('contentType', e.detail.value);
+    this.contentType = e.detail.value;
     this.__cancelContentTypeNotification = false;
   }
   /**
@@ -549,7 +607,6 @@ class ApiHeadersEditor extends mixinBehaviors(
     }
     const name = e.detail.name;
     if (!name) {
-      console.warn('request-header-deleted fired without the name.');
       return;
     }
     const arr = this.headersToJSON(this.value);
@@ -576,8 +633,8 @@ class ApiHeadersEditor extends mixinBehaviors(
     if (!value) {
       value = '';
     }
-    this._contentTypeRe.lastIndex = 0;
-    const matches = this._contentTypeRe.exec(value);
+    contentTypeRe.lastIndex = 0;
+    const matches = contentTypeRe.exec(value);
     let ctValue;
     if (!matches) {
       ctValue = '';
@@ -586,12 +643,12 @@ class ApiHeadersEditor extends mixinBehaviors(
     }
     if (!ctValue) {
       if (this.contentType) {
-        this.set('contentType', undefined);
+        this.contentType = undefined;
       }
     } else {
       ctValue = ctValue.trim();
       if (this.contentType !== ctValue) {
-        this.set('contentType', ctValue);
+        this.contentType = ctValue;
       }
     }
   }
@@ -612,7 +669,7 @@ class ApiHeadersEditor extends mixinBehaviors(
       return;
     }
     if (this._innerEditorValueChanged) {
-      if (this.readonly) {
+      if (this.readOnly) {
         return;
       }
       this.dispatchEvent(new CustomEvent('request-headers-changed', {
@@ -629,7 +686,7 @@ class ApiHeadersEditor extends mixinBehaviors(
   }
 
   _onContentTypeChanged(currentCt) {
-    if (this.readonly) {
+    if (this.readOnly) {
       return;
     }
     if (!currentCt) {
@@ -683,7 +740,7 @@ class ApiHeadersEditor extends mixinBehaviors(
    */
   _setValues(value) {
     this._cacncelChangeEvent = true;
-    this.set('value', value);
+    this.value = value;
     this._cacncelChangeEvent = false;
     if (!this._innerEditorValueChanged && this.sourceMode) {
       const panel = this.currentPanel;
@@ -694,18 +751,22 @@ class ApiHeadersEditor extends mixinBehaviors(
   }
   /**
    * Coppies current response text value to clipboard.
+   * @param {Event} e
    */
-  _copyToClipboard() {
-    const button = this.shadowRoot.querySelector('.copy-icon');
+  _copyToClipboard(e) {
+    const button = e.target;
     const copy = this.shadowRoot.querySelector('clipboard-copy');
     if (copy.copy()) {
-      button.icon = 'arc:done';
+      button.innerText = 'Done';
     } else {
-      button.icon = 'arc:error';
+      button.innerText = 'Error';
     }
-    setTimeout(() => {
-      this._resetCopyButtonState(button);
-    }, 1000);
+    button.disabled = true;
+    if ('part' in button) {
+      button.part.add('content-action-button-disabled');
+      button.part.add('code-content-action-button-disabled');
+    }
+    setTimeout(() => this._resetCopyButtonState(button), 1000);
     const ev = new CustomEvent('send-analytics', {
       detail: {
         type: 'event',
@@ -720,7 +781,12 @@ class ApiHeadersEditor extends mixinBehaviors(
   }
 
   _resetCopyButtonState(button) {
-    button.icon = 'arc:content-copy';
+    button.innerText = 'Copy';
+    button.disabled = false;
+    if ('part' in button) {
+      button.part.remove('content-action-button-disabled');
+      button.part.remove('code-content-action-button-disabled');
+    }
   }
 
   // Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
@@ -742,6 +808,38 @@ class ApiHeadersEditor extends mixinBehaviors(
     const panel = this.currentPanel;
     panel.refresh();
   }
+
+  _apiHandler(e) {
+    this.amf = e.detail.value;
+  }
+
+  _viewModelHandler(e) {
+    const { value } = e.detail;
+    if (value) {
+      setTimeout(() => {
+        this.viewModel = value;
+      });
+    }
+  }
+
+  _sourceModeHandler(e) {
+    if (this.noSourceEditor) {
+      return;
+    }
+    const { value } = e.detail;
+    this.sourceMode = value;
+    this._sourceModeChanged(value);
+  }
+
+  _formEditorInvalidHandler(e) {
+    this.invalid = e.detail.value;
+  }
+
+  _formEditorModelHandler(e) {
+    if (e.detail.value !== this.viewModel) {
+      this.viewModel = e.detail.value;
+    }
+  }
 }
 
-window.customElements.define(ApiHeadersEditor.is, ApiHeadersEditor);
+window.customElements.define('api-headers-editor', ApiHeadersEditor);

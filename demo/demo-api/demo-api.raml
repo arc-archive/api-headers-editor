@@ -14,6 +14,65 @@ traits:
     headers:
       x-trait-header: string
       x-complex: ExampleType
+  Paginated: !include headers.raml
+
+/local-trait-headers:
+  get:
+    is: [Headerable]
+  post:
+    is: [Paginated]
+/external-trait-headers:
+  get:
+    is: [Paginated]
+/traits-combo:
+  get:
+    is: [Headerable, Paginated]
+/nullable:
+  get:
+    headers:
+      x-nullable:
+        type: string | nil
+        description: |
+          This header is required but it can be nil value.
+/standard-headers:
+  get:
+    headers:
+      Accept:
+        type: string
+        default: */*
+      Accept-Encoding:
+        type: string
+        default: gzip, deflate, br
+      Accept-Language:
+        default: en-US,en;q=0.9,pl;q=0.8
+        type: string
+      Connection:
+        type: string
+        default: keep-alive
+      Cookie:
+        type: string
+        default: io=cwHYIbRfVegyuHVBAAAB
+      Host:
+        type: string
+        default: localhost:8000
+      If-None-Match:
+        type: string
+        default: "3ea-zgw72rkL0BSGBEXgj3RxdUya/Ks"
+      Origin:
+        type: string
+        default: http://localhost:8000
+      Referer:
+        type: string
+        default: http://localhost:8000/demo/
+      Sec-Fetch-Mode:
+        type: string
+        default: cors
+      Sec-Fetch-Site:
+        type: string
+        default: same-origin
+      User-Agent:
+        type: string
+        default: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3876.0 Safari/537.36
 /endpoint:
   get:
     is: [Headerable]
@@ -31,7 +90,7 @@ traits:
         example: "x-optional: someHeader"
         default: defaultValue
         displayName: XOptimal
-        pattern: ^[a-zA-Z\W\:]+$
+        pattern: ^[a-zA-Z\W:]+$
         minLength: 4
         maxLength: 30
       x-required:

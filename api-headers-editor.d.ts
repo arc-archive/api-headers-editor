@@ -12,19 +12,15 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {html, css, LitElement} from 'lit-element';
 
-import {IronValidatableBehavior} from '@polymer/iron-validatable-behavior/iron-validatable-behavior.js';
-
-import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import {ValidatableMixin} from '@anypoint-web-components/validatable-mixin/validatable-mixin.js';
 
 import {ApiFormMixin} from '@api-components/api-form-mixin/api-form-mixin.js';
 
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+
 import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 
@@ -55,8 +51,8 @@ declare namespace ApiElements {
    * ```html
    * <api-headers-editor id="editor" allow-disable-params></api-headers-editor>
    * <script>
-   * let data = await getAmfModel();
-   * editor.amfModel = data;
+   * let data = await getamf();
+   * editor.amf = data;
    * data = data[0]['http://raml.org/vocabularies/document#encodes'][0];
    * data = data['http://raml.org/vocabularies/http#endpoint'][0];
    * data = data['http://www.w3.org/ns/hydra/core#supportedOperation'][0];
@@ -80,7 +76,7 @@ declare namespace ApiElements {
    * ## Setting value when model is set
    *
    * Model values has priority over value set on the editor.
-   * If `amfModel` is set and value has been altered programatically there
+   * If `amf` is set and value has been altered programatically there
    * are two possible outcomes:
    *
    * 1) If `allowDisableParams` is set, model values are automatically
@@ -92,22 +88,34 @@ declare namespace ApiElements {
   class ApiHeadersEditor extends
     ArcBehaviors.HeadersParserBehavior(
     ApiFormMixin(
-    ApiFormMixin(
+    ValidatableMixin(
     AmfHelperMixin(
     Object)))) {
-
-    /**
-     * Generated AMF json/ld model form the API spec.
-     * The element assumes the object of the first array item to be a
-     * type of `"http://raml.org/vocabularies/document#Document`
-     * on AMF vocabulary.
-     */
-    amfModel: object|any[]|null;
 
     /**
      * Reference to currently rendered headers editor.
      */
     readonly currentPanel: HTMLElement|null;
+    readonly _cmExtraKeys: any;
+
+    /**
+     * Headers value.
+     */
+    value: string|null|undefined;
+
+    /**
+     * Value of a Content-Type header.
+     * When this value change then editor update the value for the content type. However,
+     * to change a single header value, please, use `request-headers-changed` event with `name`
+     * and `value` properties set on the detail object.
+     */
+    contentType: Stirng|null;
+
+    /**
+     * Generated view model from the headers from `amf` model.
+     * This is automatically set when `amf` is set.
+     */
+    viewModel: any[]|null|undefined;
 
     /**
      * `raml-aware` scope property to use.
@@ -120,38 +128,9 @@ declare namespace ApiElements {
     amfHeaders: any[]|null|undefined;
 
     /**
-     * Headers value.
-     */
-    value: string|null|undefined;
-
-    /**
-     * Generated view model fore the headers from `amfModel`.
-     * This is automatically set when `amfModel` is set.
-     */
-    viewModel: any[]|null|undefined;
-
-    /**
-     * Value of a Content-Type header.
-     * When this value change then editor update the value for the content type. However,
-     * to change a single header value, please, use `request-headers-changed` event with `name`
-     * and `value` properties set on the detail object.
-     */
-    contentType: Stirng|null;
-
-    /**
      * When set to true then the source edit mode is enabled
      */
     sourceMode: boolean|null|undefined;
-
-    /**
-     * Events target for tranformer
-     */
-    _transformerTarget: object|null|undefined;
-
-    /**
-     * Regexp to search for content type value
-     */
-    _contentTypeRe: object|null|undefined;
 
     /**
      * Prohibits rendering of the documentation (the icon and the
@@ -164,7 +143,7 @@ declare namespace ApiElements {
     /**
      * When set the editor is in read only mode.
      */
-    readonly: boolean|null|undefined;
+    readOnly: boolean|null|undefined;
 
     /**
      * Automatically validates headers agains AMF model when value change.
@@ -173,9 +152,25 @@ declare namespace ApiElements {
     autoValidate: boolean|null|undefined;
 
     /**
-     * attribute automatically, which should be used for styling.
+     * Enables Anypoint legacy styling
      */
-    _getValidity(): any;
+    legacy: boolean|null|undefined;
+
+    /**
+     * Enables Material Design outlined style
+     */
+    outlined: boolean|null|undefined;
+
+    /**
+     * When set only form editor is available.
+     *
+     * Note, because of dependency, you still have to import CodeMirror
+     * or at lease provide a mock function for registering addons.
+     *
+     * See @advanced-rest-client/code-mirror-hint for used functions.
+     */
+    noSourceEditor: boolean|null|undefined;
+    render(): any;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
 
@@ -185,12 +180,6 @@ declare namespace ApiElements {
      * Opens desired editr.
      */
     _sourceModeChanged(isSource: Boolean|null): void;
-    _attachSourceEditor(): void;
-
-    /**
-     * Sets current value of `readonly` on the source editor.
-     */
-    _readonlyChanged(value: Boolean|null): void;
 
     /**
      * Updates the value when current editor's value change.
@@ -291,13 +280,23 @@ declare namespace ApiElements {
     /**
      * Coppies current response text value to clipboard.
      */
-    _copyToClipboard(): void;
+    _copyToClipboard(e: Event|null): void;
     _resetCopyButtonState(button: any): void;
+
+    /**
+     * attribute automatically, which should be used for styling.
+     */
+    _getValidity(): any;
 
     /**
      * Refreshes the CodeMirror editor when in `sourceMode`.
      */
     refresh(): void;
+    _apiHandler(e: any): void;
+    _viewModelHandler(e: any): void;
+    _sourceModeHandler(e: any): void;
+    _formEditorInvalidHandler(e: any): void;
+    _formEditorModelHandler(e: any): void;
   }
 }
 
