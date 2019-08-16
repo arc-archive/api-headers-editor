@@ -800,4 +800,88 @@ describe('<api-headers-editor>', function() {
       });
     });
   });
+
+  describe('onvalue', () => {
+    let element;
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Getter returns previously registered handler', () => {
+      assert.isUndefined(element.onvalue);
+      const f = () => {};
+      element.onvalue = f;
+      assert.isTrue(element.onvalue === f);
+    });
+
+    it('Calls registered function', () => {
+      let called = false;
+      const f = () => {
+        called = true;
+      };
+      element.onvalue = f;
+      element.value = 'test';
+      element.onvalue = null;
+      assert.isTrue(called);
+    });
+
+    it('Unregisteres old function', () => {
+      let called1 = false;
+      let called2 = false;
+      const f1 = () => {
+        called1 = true;
+      };
+      const f2 = () => {
+        called2 = true;
+      };
+      element.onvalue = f1;
+      element.onvalue = f2;
+      element.value = 'test';
+      element.onvalue = null;
+      assert.isFalse(called1);
+      assert.isTrue(called2);
+    });
+  });
+
+  describe('oncontenttype', () => {
+    let element;
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Getter returns previously registered handler', () => {
+      assert.isUndefined(element.oncontenttype);
+      const f = () => {};
+      element.oncontenttype = f;
+      assert.isTrue(element.oncontenttype === f);
+    });
+
+    it('Calls registered function', () => {
+      let called = false;
+      const f = () => {
+        called = true;
+      };
+      element.oncontenttype = f;
+      element.contentType = 'application/json';
+      element.oncontenttype = null;
+      assert.isTrue(called);
+    });
+
+    it('Unregisteres old function', () => {
+      let called1 = false;
+      let called2 = false;
+      const f1 = () => {
+        called1 = true;
+      };
+      const f2 = () => {
+        called2 = true;
+      };
+      element.oncontenttype = f1;
+      element.oncontenttype = f2;
+      element.contentType = 'application/json';
+      element.oncontenttype = null;
+      assert.isFalse(called1);
+      assert.isTrue(called2);
+    });
+  });
 });

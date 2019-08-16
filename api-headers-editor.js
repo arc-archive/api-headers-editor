@@ -291,11 +291,6 @@ class ApiHeadersEditor extends
     this._contentType = value;
     this.requestUpdate('contentType', old);
     this._onContentTypeChanged(value);
-    this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: {
-        value
-      }
-    }));
   }
 
   get viewModel() {
@@ -310,6 +305,34 @@ class ApiHeadersEditor extends
     }
     this._viewModel = value;
     this.requestUpdate('viewModel', old);
+  }
+  /**
+   * @return {Function} Previously registered handler for `value-changed` event
+   */
+  get onvalue() {
+    return this['_onvalue-changed'];
+  }
+  /**
+   * Registers a callback function for `value-changed` event
+   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * to clear the listener.
+   */
+  set onvalue(value) {
+    this._registerCallback('value-changed', value);
+  }
+  /**
+   * @return {Function} Previously registered handler for `content-type-changed-changed` event
+   */
+  get oncontenttype() {
+    return this['_oncontent-type-changed'];
+  }
+  /**
+   * Registers a callback function for `content-type-changed-changed` event
+   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * to clear the listener.
+   */
+  set oncontenttype(value) {
+    this._registerCallback('content-type-changed', value);
   }
   /**
    * @constructor
@@ -337,6 +360,23 @@ class ApiHeadersEditor extends
     node.removeEventListener('request-header-changed', this._headerChangedHandler);
     node.removeEventListener('content-type-changed', this._contentTypeChangedHandler);
     node.removeEventListener('request-header-deleted', this._headerDeletedHandler);
+  }
+  /**
+   * Registers an event handler for given type
+   * @param {String} eventType Event type (name)
+   * @param {Function} value The handler to register
+   */
+  _registerCallback(eventType, value) {
+    const key = `_on${eventType}`;
+    if (this[key]) {
+      this.removeEventListener(eventType, this[key]);
+    }
+    if (typeof value !== 'function') {
+      this[key] = null;
+      return;
+    }
+    this[key] = value;
+    this.addEventListener(eventType, value);
   }
   /**
    * Handler for `sourceMode` change.
