@@ -508,3 +508,12 @@
 
 
 
+## 3.0.1 (2019-08-16)
+
+
+### Features
+
+* adding event shorthand function ([2839da6](https://github.com/advanced-rest-client/api-headers-editor/commit/2839da6))
+
+
+
