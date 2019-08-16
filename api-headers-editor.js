@@ -9,9 +9,9 @@ import '@api-components/api-view-model-transformer/api-view-model-transformer.js
 import '@api-components/raml-aware/raml-aware.js';
 import '@api-components/api-headers-form/api-headers-form.js';
 import '@advanced-rest-client/code-mirror/code-mirror.js';
-import '@advanced-rest-client/code-mirror-hint/code-mirror-hint.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
+import '@advanced-rest-client/code-mirror-hint/code-mirror-headers-hint.js';
 
 const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
 /**
@@ -112,7 +112,8 @@ class ApiHeadersEditor extends
       readOnly,
       outlined,
       legacy,
-      value
+      value,
+      noSourceEditor
     } = this;
     return html`
     ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
@@ -132,7 +133,7 @@ class ApiHeadersEditor extends
           @click="${this._copyToClipboard}"
           aria-label="Press to copy headers to clipboard"
           title="Copy example to clipboard">Copy</anypoint-button>
-        <anypoint-button
+        ${noSourceEditor ? undefined : html`<anypoint-button
           aria-label="Press to toggle source edit mode"
           title="Toggle source edit mode"
           part="content-action-button, code-content-action-button"
@@ -140,11 +141,11 @@ class ApiHeadersEditor extends
           data-action="source"
           toggles
           .active="${sourceMode}"
-          @active-changed="${this._sourceModeHandler}">Source view</anypoint-button>
+          @active-changed="${this._sourceModeHandler}">Source view</anypoint-button>`}
         <slot name="content-actions"></slot>
       </div>
       <div id="editor">
-        ${!sourceMode ?
+        ${(!sourceMode || noSourceEditor) ?
           html`<api-headers-form
             .model="${viewModel}"
             ?narrow="${narrow}"
@@ -224,7 +225,16 @@ class ApiHeadersEditor extends
       /**
        * Enables Material Design outlined style
        */
-      outlined: { type: Boolean }
+      outlined: { type: Boolean },
+      /**
+       * When set only form editor is available.
+       *
+       * Note, because of dependency, you still have to import CodeMirror
+       * or at lease provide a mock function for registering addons.
+       *
+       * See @advanced-rest-client/code-mirror-hint for used functions.
+       */
+      noSourceEditor: { type: Boolean }
     };
   }
   /**
@@ -254,6 +264,7 @@ class ApiHeadersEditor extends
 
   set value(value) {
     const old = this._value;
+    /* istanbul ignore if  */
     if (old === value) {
       return;
     }
@@ -273,6 +284,7 @@ class ApiHeadersEditor extends
 
   set contentType(value) {
     const old = this._contentType;
+    /* istanbul ignore if  */
     if (old === value) {
       return;
     }
@@ -292,6 +304,7 @@ class ApiHeadersEditor extends
 
   set viewModel(value) {
     const old = this._viewModel;
+    /* istanbul ignore if  */
     if (old === value) {
       return;
     }
@@ -333,6 +346,9 @@ class ApiHeadersEditor extends
    * @param {Boolean} isSource
    */
   _sourceModeChanged(isSource) {
+    if (this.noSourceEditor) {
+      return;
+    }
     if (isSource) {
       setTimeout(() => {
         const panel = this.currentPanel;
@@ -478,8 +494,8 @@ class ApiHeadersEditor extends
       this.viewModel = appendCustom;
     } else {
       model = [...model, ...appendCustom];
+      this.viewModel = model;
     }
-    this.requestUpdate();
   }
   /**
    * Finds item position in model by name.
@@ -807,6 +823,9 @@ class ApiHeadersEditor extends
   }
 
   _sourceModeHandler(e) {
+    if (this.noSourceEditor) {
+      return;
+    }
     const { value } = e.detail;
     this.sourceMode = value;
     this._sourceModeChanged(value);

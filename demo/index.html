@@ -13,11 +13,9 @@
   Therefore the CM scripts has to be loaded outside the componet.
   -->
   <script src="../node_modules/codemirror/lib/codemirror.js"></script>
-  <script src="../node_modules/codemirror/addon/mode/loadmode.js"></script>
-  <script src="../node_modules/codemirror/mode/meta.js"></script>
-  <script src="../node_modules/@advanced-rest-client/code-mirror-hint/headers-addon.js"></script>
-  <script src="../node_modules/@advanced-rest-client/code-mirror-hint/show-hint.js"></script>
-  <script src="../node_modules/@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script>
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/headers-addon.js"></script> -->
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/show-hint.js"></script> -->
+  <!-- <script src="../node_modules/@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script> -->
 
   <style>
   [role="main"].centered {
@@ -36,6 +34,11 @@
 
   body.styled.dark output {
     background-color: #263238;
+  }
+
+  body.styled {
+    --arc-font-code-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+    --link-color: #00A1DF;
   }
 
   body.styled.dark {
@@ -72,6 +75,13 @@
     --anypoint-icon-button-emphasis-low-color: #fff;
 
     --anypoiont-autocomplete-background-color: #494949;
+
+    --code-mirror-background-color: #37474F;
+    --code-mirror-string-color: #C3E88D;
+    --code-mirror-punctuation-color: #EEFFFF;
+    --code-mirror-atom-color: #F07178;
+    --code-mirror-number-color: #F78C6A;
+    --code-mirror-cursor-color: #009688;
   }
   </style>
 </head>

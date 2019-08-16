@@ -19,7 +19,7 @@ class ApiDemo extends ApiDemoPageBase {
     this.initObservableProperties([
       'noDocs', 'narrow', 'allowDisableParams', 'amfHeaders',
       'allowCustom', 'allowHideOptional', 'readOnly', 'demoOutlined', 'demoLegacy',
-      'headers'
+      'headers', 'noSourceEditor'
     ]);
 
     this.componentName = 'api-headers-editor';
@@ -97,7 +97,8 @@ class ApiDemo extends ApiDemoPageBase {
       demoStates,
       darkThemeActive,
       demoOutlined,
-      demoLegacy
+      demoLegacy,
+      noSourceEditor
     } = this;
     return html`<section class="documentation-section">
       <h2>API model demo</h2>
@@ -127,6 +128,7 @@ class ApiDemo extends ApiDemoPageBase {
             ?readonly="${readOnly}"
             ?outlined="${demoOutlined}"
             ?legacy="${demoLegacy}"
+            ?noSourceEditor="${noSourceEditor}"
             autovalidate></api-headers-editor>
 
           <label slot="options" id="mainOptionsLabel">Options</label>
@@ -168,6 +170,13 @@ class ApiDemo extends ApiDemoPageBase {
           <anypoint-checkbox
             aria-describedby="mainOptionsLabel"
             slot="options"
+            name="noSourceEditor"
+            @change="${this._toggleMainOption}"
+            >No source editor</anypoint-checkbox
+          >
+          <anypoint-checkbox
+            aria-describedby="mainOptionsLabel"
+            slot="options"
             name="readOnly"
             @change="${this._toggleMainOption}"
             >Read only</anypoint-checkbox
@@ -180,6 +189,20 @@ class ApiDemo extends ApiDemoPageBase {
     </section>`;
   }
 
+  _standaloneTemplate() {
+    return html`<section class="documentation-section">
+      <h2>Standalone editor</h2>
+      <p>
+        The headers editor can be used without providing data model.
+      </p>
+
+      <api-headers-editor
+        allowdisableparams
+        allowcustom
+        allowhideoptional></api-headers-editor>
+    </section>`;
+  }
+
   _render() {
     const {
       amf
@@ -188,8 +211,8 @@ class ApiDemo extends ApiDemoPageBase {
       ${this.headerTemplate()}
 
       <demo-element id="helper" .amf="${amf}"></demo-element>
-
       ${this._demoTemplate()}
+      ${this._standaloneTemplate()}
       `, document.querySelector('#demo'));
   }
 }
