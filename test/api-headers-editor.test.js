@@ -884,4 +884,30 @@ describe('<api-headers-editor>', function() {
       assert.isTrue(called2);
     });
   });
+
+  describe('a11y', () => {
+    async function basicFixture() {
+      return (await fixture(`<api-headers-editor></api-headers-editor>`));
+    }
+
+    it('is accessible when empty', async () => {
+      const element = await basicFixture();
+      await assert.isAccessible(element);
+    });
+
+    it('is accessible with value', async () => {
+      const element = await basicFixture();
+      element.value = 'content-type: application/json\naccept: */*\netag: test';
+      await nextFrame();
+      await assert.isAccessible(element);
+    });
+
+    it('is accessible with sourceEditor', async () => {
+      const element = await basicFixture();
+      element.sourceMode = true;
+      element.value = 'content-type: application/json\naccept: */*\netag: test';
+      await nextFrame();
+      await assert.isAccessible(element);
+    });
+  });
 });
