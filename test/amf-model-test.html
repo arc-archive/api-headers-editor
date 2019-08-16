@@ -4,29 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
   <title>api-headers-editor test</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
-  <link rel="import" href="../api-headers-editor.html">
-  <script src="amf-loader.js"></script>
-</head>
 
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../../@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../../../mocha/mocha.js"></script>
+  <script src="../../../chai/chai.js"></script>
+  <script src="../../../wct-mocha/wct-mocha.js"></script>
+
+  <script src="./amf-loader.js"></script>
+</head>
 <body>
+
   <test-fixture id="BasicTestFixture">
     <template>
       <api-headers-editor></api-headers-editor>
     </template>
   </test-fixture>
-  <script>
+
+  <script type="module">
+  import '../api-headers-editor.js';
+  import {ns} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
   /* global AmfLoader */
   suite('AMF model tests', () => {
     function getHeadersModel(element, amfModel) {
       const webApi = element._computeWebApi(amfModel);
       const endpoint = element._computeEndpointByPath(webApi, '/endpoint');
-      const opKey = element._getAmfKey(ApiElements.Amf.ns.w3.hydra.supportedOperation);
+      const opKey = element._getAmfKey(ns.w3.hydra.supportedOperation);
       const ops = element._ensureArray(endpoint[opKey]);
       const expects = element._computeExpects(ops[0]);
-      const hKey = element._getAmfKey(ApiElements.Amf.ns.raml.vocabularies.http + 'header');
+      const hKey = element._getAmfKey(ns.raml.vocabularies.http + 'header');
       return element._ensureArray(expects[hKey]);
     }
 
