@@ -574,7 +574,9 @@ class ApiHeadersEditor extends
       data.schema.inputLabel = 'Header value';
     }
     const node = this.shadowRoot.querySelector('api-view-model-transformer');
-    node.buildProperty(data);
+    if (node) {
+      node.buildProperty(data);
+    }
     return data;
   }
 
