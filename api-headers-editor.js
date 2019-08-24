@@ -118,11 +118,12 @@ class ApiHeadersEditor extends
     return html`
     ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
     <api-view-model-transformer
+      @view-model-changed="${this._viewModelHandler}"
       .amf="${amf}"
       .shape="${amfHeaders}"
       .eventsTarget="${this}"
       ?nodocs="${noDocs}"
-      @view-model-changed="${this._viewModelHandler}"></api-view-model-transformer>
+    ></api-view-model-transformer>
 
     <div class="content">
       <div class="editor-actions">
@@ -855,12 +856,11 @@ class ApiHeadersEditor extends
     this.amf = e.detail.value;
   }
 
-  _viewModelHandler(e) {
+  async _viewModelHandler(e) {
     const { value } = e.detail;
     if (value) {
-      setTimeout(() => {
-        this.viewModel = value;
-      });
+      await this.updateComplete;
+      this.viewModel = value;
     }
   }
 
