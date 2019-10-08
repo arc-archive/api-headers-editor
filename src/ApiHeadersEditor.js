@@ -124,7 +124,7 @@ export class ApiHeadersEditor extends
       allowHideOptional,
       readOnly,
       outlined,
-      legacy,
+      compatibility,
       value,
       noSourceEditor
     } = this;
@@ -170,7 +170,7 @@ export class ApiHeadersEditor extends
             ?nodocs="${noDocs}"
             ?readonly="${readOnly}"
             ?outlined="${outlined}"
-            ?legacy="${legacy}"
+            ?compatibility="${compatibility}"
             @value-changed="${this._editorValueChanged}"
             @invalid-changed="${this._formEditorInvalidHandler}"
             @model-changed="${this._formEditorModelHandler}"
@@ -233,9 +233,9 @@ export class ApiHeadersEditor extends
        */
       autoValidate: { type: Boolean },
       /**
-       * Enables Anypoint legacy styling
+       * Enables compatibility with Anypoint styling
        */
-      legacy: { type: Boolean },
+      compatibility: { type: Boolean },
       /**
        * Enables Material Design outlined style
        */

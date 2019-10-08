@@ -18,12 +18,12 @@ class ApiDemo extends ApiDemoPageBase {
 
     this.initObservableProperties([
       'noDocs', 'narrow', 'allowDisableParams', 'amfHeaders',
-      'allowCustom', 'allowHideOptional', 'readOnly', 'demoOutlined', 'demoLegacy',
+      'allowCustom', 'allowHideOptional', 'readOnly', 'outlined', 'compatibility',
       'headers', 'noSourceEditor'
     ]);
 
     this.componentName = 'api-headers-editor';
-    this.demoStates = ['Filled', 'Outlined', 'Legacy'];
+    this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this._headersHandler = this._headersHandler.bind(this);
     this._mainDemoStateHandler = this._mainDemoStateHandler.bind(this);
     this._toggleMainOption = this._toggleMainOption.bind(this);
@@ -58,20 +58,8 @@ class ApiDemo extends ApiDemoPageBase {
 
   _mainDemoStateHandler(e) {
     const state = e.detail.value;
-    switch (state) {
-      case 0:
-        this.demoOutlined = false;
-        this.demoLegacy = false;
-        break;
-      case 1:
-        this.demoOutlined = true;
-        this.demoLegacy = false;
-        break;
-      case 2:
-        this.demoOutlined = false;
-        this.demoLegacy = true;
-        break;
-    }
+    this.outlined = state === 1;
+    this.compatibility = state === 2;
   }
 
   _toggleMainOption(e) {
@@ -96,8 +84,8 @@ class ApiDemo extends ApiDemoPageBase {
       readOnly,
       demoStates,
       darkThemeActive,
-      demoOutlined,
-      demoLegacy,
+      outlined,
+      compatibility,
       noSourceEditor
     } = this;
     return html`<section class="documentation-section">
@@ -126,8 +114,8 @@ class ApiDemo extends ApiDemoPageBase {
             ?allowhideoptional="${allowHideOptional}"
             ?nodocs="${noDocs}"
             ?readonly="${readOnly}"
-            ?outlined="${demoOutlined}"
-            ?legacy="${demoLegacy}"
+            ?outlined="${outlined}"
+            ?compatibility="${compatibility}"
             ?noSourceEditor="${noSourceEditor}"
             autovalidate></api-headers-editor>
 
