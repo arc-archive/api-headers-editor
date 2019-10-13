@@ -1,0 +1,19 @@
+#%RAML 1.0
+title: ConsoleTest
+
+/test:
+  post:
+    queryParameters:
+      qp1:
+        type: string
+        default: "q1value"
+        example: "q1example"
+
+    headers:
+      h1:
+        type: string
+        example: "h1example"
+        default: "defaultValue"
+    body:
+      application/json:
+        type: object

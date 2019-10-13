@@ -71,6 +71,16 @@ class ApiDemo extends ApiDemoPageBase {
     this.headers = e.detail.value;
   }
 
+  _apiListTemplate() {
+    const items = [
+      'demo-api',
+      'APIC-284',
+    ];
+    return items.map((item) => html`
+    <paper-item data-src="${item}-compact.json">${item} - compact</paper-item>
+    <paper-item data-src="${item}.json">${item}</paper-item>`);
+  }
+
   _demoTemplate() {
     const {
       amf,
