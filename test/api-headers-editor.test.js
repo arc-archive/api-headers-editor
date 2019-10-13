@@ -8,7 +8,7 @@ import {
   AmfLoader
 } from './amf-loader.js';
 import '../api-headers-editor.js';
-import sinon from 'sinon/pkg/sinon-esm.js';
+import * as sinon from 'sinon/pkg/sinon-esm.js';
 
 const hasPartsApi = 'part' in document.createElement('span');
 
@@ -714,10 +714,10 @@ describe('<api-headers-editor>', function() {
     function getHeadersModel(element, amfModel) {
       const webApi = element._computeWebApi(amfModel);
       const endpoint = element._computeEndpointByPath(webApi, '/endpoint');
-      const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
+      const opKey = element._getAmfKey(element.ns.aml.vocabularies.apiContract.supportedOperation);
       const ops = element._ensureArray(endpoint[opKey]);
       const expects = element._computeExpects(ops[0]);
-      const hKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'header');
+      const hKey = element._getAmfKey(element.ns.aml.vocabularies.apiContract.header);
       return element._ensureArray(expects[hKey]);
     }
 

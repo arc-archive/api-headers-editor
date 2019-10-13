@@ -16,9 +16,10 @@ The component works as a stand-alone editor that allows to define headers for HT
 
 **See breaking changes and list of required dependencies at the bottom of this document**
 
-### API components
+## Version compatibility
 
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
+This version only works with AMF model version 2 (AMF parser >= 4.0.0).
+For compatibility with previous model version use `3.x.x` version of the component.
 
 ## Usage
 
@@ -130,3 +131,7 @@ Use your build system to bundle CodeMirror into the build and don't forget to ex
 ```html
 <script src="node_modules/codemirror/lib/codemirror.js"></script>
 ```
+
+### API components
+
+This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
