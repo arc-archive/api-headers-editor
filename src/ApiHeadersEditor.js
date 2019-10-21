@@ -11,7 +11,7 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import { html, LitElement } from 'lit-element';
+import { html, css, LitElement } from 'lit-element';
 import { ValidatableMixin } from '@anypoint-web-components/validatable-mixin/validatable-mixin.js';
 import { ApiFormMixin } from '@api-components/api-form-mixin/api-form-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
@@ -98,6 +98,18 @@ const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
 export class ApiHeadersEditor extends
     ValidatableMixin(ApiFormMixin(EventsTargetMixin(
       HeadersParserMixin(AmfHelperMixin(LitElement))))) {
+
+  get styles() {
+    return [
+      formStyles,
+      css`
+      :host {
+        display: block;
+        position: relative;
+      }`
+    ];
+  }
+
   render() {
     const {
       aware,
@@ -116,13 +128,7 @@ export class ApiHeadersEditor extends
       value,
       noSourceEditor
     } = this;
-    return html`<style>
-${formStyles}
-      :host {
-        display: block;
-        position: relative;
-      }
-</style>
+    return html`<style>${this.styles}</style>
     ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
     <api-view-model-transformer
       @view-model-changed="${this._viewModelHandler}"
