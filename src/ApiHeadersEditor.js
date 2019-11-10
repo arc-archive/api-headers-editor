@@ -99,7 +99,7 @@ export class ApiHeadersEditor extends
     ValidatableMixin(ApiFormMixin(EventsTargetMixin(
       HeadersParserMixin(AmfHelperMixin(LitElement))))) {
 
-  static get styles() {
+  get styles() {
     return [
       formStyles,
       css`
@@ -128,7 +128,7 @@ export class ApiHeadersEditor extends
       value,
       noSourceEditor
     } = this;
-    return html`
+    return html`<style>${this.styles}</style>
     ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
     <api-view-model-transformer
       @view-model-changed="${this._viewModelHandler}"
