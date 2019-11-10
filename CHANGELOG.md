@@ -547,3 +547,18 @@
 
 
 
+## 4.0.1 (2019-11-10)
+
+
+### Bug Fixes
+
+* adding type check when using shado DOM children ([a147604](https://github.com/advanced-rest-client/api-headers-editor/commit/a147604098d8ced1c902c3e83cbf07cd5c7c723c))
+* fixing model initialization when creating element ([826aeed](https://github.com/advanced-rest-client/api-headers-editor/commit/826aeed23c18da30d7f8ce756b044a1969dd87c8))
+
+
+### Features
+
+* adding event shorthand function ([2839da6](https://github.com/advanced-rest-client/api-headers-editor/commit/2839da67d4cf77a8a1a58472837a11b81b2adf7c))
+
+
+
