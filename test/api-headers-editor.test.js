@@ -9,6 +9,7 @@ import {
 } from './amf-loader.js';
 import '../api-headers-editor.js';
 import * as sinon from 'sinon';
+import { ApiViewModel } from '@api-components/api-view-model-transformer';
 
 const hasPartsApi = 'part' in document.createElement('span');
 
@@ -752,8 +753,8 @@ describe('<api-headers-editor>', function() {
 
         let element;
         beforeEach(async () => {
-          const transformer = document.createElement('api-view-model-transformer');
-          transformer.clearCache();
+          const factory = new ApiViewModel();
+          factory.clearCache();
           element = await basicFixture();
           element.amf = amfModel;
           element.amfHeaders = getHeadersModel(element, amfModel);

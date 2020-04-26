@@ -18,7 +18,7 @@ import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/eve
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import formStyles from '@api-components/api-form-mixin/api-form-styles.js';
-import '@api-components/api-view-model-transformer/api-view-model-transformer.js';
+import { ApiViewModel } from '@api-components/api-view-model-transformer';
 import '@api-components/raml-aware/raml-aware.js';
 import '@api-components/api-headers-form/api-headers-form.js';
 import '@advanced-rest-client/code-mirror/code-mirror.js';
@@ -111,8 +111,6 @@ export class ApiHeadersEditor extends
   render() {
     const {
       aware,
-      amf,
-      amfHeaders,
       viewModel,
       narrow,
       noDocs,
@@ -128,13 +126,6 @@ export class ApiHeadersEditor extends
     } = this;
     return html`<style>${this.styles}</style>
     ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
-    <api-view-model-transformer
-      @view-model-changed="${this._viewModelHandler}"
-      .amf="${amf}"
-      .shape="${amfHeaders}"
-      .eventsTarget="${this}"
-      ?nodocs="${noDocs}"
-    ></api-view-model-transformer>
 
     <div class="content">
       <div class="editor-actions">
@@ -316,6 +307,38 @@ export class ApiHeadersEditor extends
     this._viewModel = value;
     this.requestUpdate('viewModel', old);
   }
+
+  get noDocs() {
+    return this._noDocs;
+  }
+
+  set noDocs(value) {
+    const old = this._noDocs;
+    /* istanbul ignore if  */
+    if (old === value) {
+      return;
+    }
+    this._noDocs = value;
+    this.requestUpdate('noDocs', old);
+    this.viewFactory.noDocs = value;
+    if (this.amfHeaders) {
+      this.viewModel = this.viewFactory.computeViewModel(this.amfHeaders);
+    }
+  }
+
+  get amfHeaders() {
+    return this._amfHeaders;
+  }
+
+  set amfHeaders(value) {
+    const old = this._amfHeaders;
+    /* istanbul ignore if  */
+    if (old === value) {
+      return;
+    }
+    this._amfHeaders = value;
+    this.viewModel = this.viewFactory.computeViewModel(value);
+  }
   /**
    * @return {Function} Previously registered handler for `value-changed` event
    */
@@ -356,6 +379,7 @@ export class ApiHeadersEditor extends
     this._headerDeletedHandler = this._headerDeletedHandler.bind(this);
 
     this.sourceMode = false;
+    this.viewFactory = new ApiViewModel();
   }
 
   _attachListeners(node) {
@@ -388,6 +412,11 @@ export class ApiHeadersEditor extends
     this[key] = value;
     this.addEventListener(eventType, value);
   }
+
+  __amfChanged(amf) {
+    this.viewFactory.amf = amf;
+  }
+
   /**
    * Handler for `sourceMode` change.
    *
@@ -863,14 +892,6 @@ export class ApiHeadersEditor extends
 
   _apiHandler(e) {
     this.amf = e.detail.value;
-  }
-
-  async _viewModelHandler(e) {
-    const { value } = e.detail;
-    if (value) {
-      await this.updateComplete;
-      this.viewModel = value;
-    }
   }
 
   _sourceModeHandler(e) {
