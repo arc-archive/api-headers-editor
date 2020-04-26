@@ -1,6 +1,6 @@
 [![Published on NPM](https://img.shields.io/npm/v/@api-components/api-headers-editor.svg)](https://www.npmjs.com/package/@api-components/api-headers-editor)
 
-[![Build Status](https://travis-ci.org/advanced-rest-client/api-headers-editor.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/api-headers-editor)
+[![Build Status](https://travis-ci.com/advanced-rest-client/api-headers-editor.svg)](https://travis-ci.org/advanced-rest-client/api-headers-editor)
 
 # api-headers-editor
 

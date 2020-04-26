@@ -8,7 +8,7 @@ import {
   AmfLoader
 } from './amf-loader.js';
 import '../api-headers-editor.js';
-import * as sinon from 'sinon/pkg/sinon-esm.js';
+import * as sinon from 'sinon';
 
 const hasPartsApi = 'part' in document.createElement('span');
 
@@ -892,14 +892,18 @@ describe('<api-headers-editor>', function() {
 
     it('is accessible when empty', async () => {
       const element = await basicFixture();
-      await assert.isAccessible(element);
+      await assert.isAccessible(element, {
+        ignoredRules: ['color-contrast']
+      });
     });
 
     it('is accessible with value', async () => {
       const element = await basicFixture();
       element.value = 'content-type: application/json\naccept: */*\netag: test';
       await nextFrame();
-      await assert.isAccessible(element);
+      await assert.isAccessible(element, {
+        ignoredRules: ['color-contrast']
+      });
     });
 
     it('is accessible with sourceEditor', async () => {
@@ -907,7 +911,9 @@ describe('<api-headers-editor>', function() {
       element.sourceMode = true;
       element.value = 'content-type: application/json\naccept: */*\netag: test';
       await nextFrame();
-      await assert.isAccessible(element);
+      await assert.isAccessible(element, {
+        ignoredRules: ['color-contrast']
+      });
     });
   });
 });

@@ -56,3 +56,7 @@ $RECYCLE.BIN/
 
 node_modules
 coverage
+
+# AMF models
+/demo/*.json
+!demo/apis.json

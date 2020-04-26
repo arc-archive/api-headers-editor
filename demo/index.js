@@ -1,23 +1,15 @@
-import { html, render } from 'lit-html';
-import { LitElement } from 'lit-element';
-import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
-import '@api-components/api-navigation/api-navigation.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import { html } from 'lit-html';
+import { ApiDemoPage } from '@advanced-rest-client/arc-demo-helper';
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@anypoint-web-components/anypoint-styles/colors.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-
 import '../api-headers-editor.js';
 
-class DemoElement extends AmfHelperMixin(LitElement) {}
-window.customElements.define('demo-element', DemoElement);
-
-class ApiDemo extends ApiDemoPageBase {
+class ApiDemo extends ApiDemoPage {
   constructor() {
     super();
 
     this.initObservableProperties([
-      'noDocs', 'narrow', 'allowDisableParams', 'amfHeaders',
+      'noDocs', 'allowDisableParams', 'amfHeaders',
       'allowCustom', 'allowHideOptional', 'readOnly', 'outlined', 'compatibility',
       'headers', 'noSourceEditor'
     ]);
@@ -27,13 +19,6 @@ class ApiDemo extends ApiDemoPageBase {
     this._headersHandler = this._headersHandler.bind(this);
     this._mainDemoStateHandler = this._mainDemoStateHandler.bind(this);
     this._toggleMainOption = this._toggleMainOption.bind(this);
-  }
-
-  get helper() {
-    if (!this.__helper) {
-      this.__helper = document.getElementById('helper');
-    }
-    return this.__helper;
   }
 
   _navChanged(e) {
@@ -47,11 +32,11 @@ class ApiDemo extends ApiDemoPageBase {
   }
 
   setData(selected) {
-    const webApi = this.helper._computeWebApi(this.amf);
-    const method = this.helper._computeMethodModel(webApi, selected);
-    const expects = this.helper._computeExpects(method);
-    const hKey = this.helper._getAmfKey(this.helper.ns.aml.vocabularies.apiContract.header);
-    const headers = this.helper._ensureArray(expects[hKey]);
+    const webApi = this._computeWebApi(this.amf);
+    const method = this._computeMethodModel(webApi, selected);
+    const expects = this._computeExpects(method);
+    const hKey = this._getAmfKey(this.ns.aml.vocabularies.apiContract.header);
+    const headers = this._ensureArray(expects[hKey]);
     this.amfHeaders = headers;
     this.hasData = true;
   }
@@ -60,11 +45,7 @@ class ApiDemo extends ApiDemoPageBase {
     const state = e.detail.value;
     this.outlined = state === 1;
     this.compatibility = state === 2;
-  }
-
-  _toggleMainOption(e) {
-    const { name, checked } = e.target;
-    this[name] = checked;
+    this._updateCompatibility();
   }
 
   _headersHandler(e) {
@@ -77,8 +58,8 @@ class ApiDemo extends ApiDemoPageBase {
       'APIC-284',
     ];
     return items.map((item) => html`
-    <paper-item data-src="${item}-compact.json">${item} - compact</paper-item>
-    <paper-item data-src="${item}.json">${item}</paper-item>`);
+    <anypoint-item data-src="${item}-compact.json">${item} - compact</anypoint-item>
+    <anypoint-item data-src="${item}.json">${item}</anypoint-item>`);
   }
 
   _demoTemplate() {
@@ -98,98 +79,93 @@ class ApiDemo extends ApiDemoPageBase {
       compatibility,
       noSourceEditor
     } = this;
-    return html`<section class="documentation-section">
-      <h2>API model demo</h2>
+    return html`
+    <section class="documentation-section">
+      <h3>Interactive demo</h3>
       <p>
         This demo lets you preview the API headers form element with various
         configuration options.
       </p>
+      <arc-interactive-demo
+        .states="${demoStates}"
+        @state-chanegd="${this._mainDemoStateHandler}"
+        ?dark="${darkThemeActive}"
+      >
+        <api-headers-editor
+          slot="content"
+          .amf="${amf}"
+          .amfHeaders="${amfHeaders}"
+          @value-changed="${this._headersHandler}"
+          ?narrow="${narrow}"
+          ?allowdisableparams="${allowDisableParams}"
+          ?allowcustom="${allowCustom}"
+          ?allowhideoptional="${allowHideOptional}"
+          ?nodocs="${noDocs}"
+          ?readonly="${readOnly}"
+          ?outlined="${outlined}"
+          ?compatibility="${compatibility}"
+          ?noSourceEditor="${noSourceEditor}"
+          autovalidate></api-headers-editor>
 
-      <section role="main" class="horizontal-section-container centered main">
-        ${this._apiNavigationTemplate()}
-        <div class="demo-container">
-        <arc-interactive-demo
-          .states="${demoStates}"
-          @state-chanegd="${this._mainDemoStateHandler}"
-          ?dark="${darkThemeActive}"
+        <label slot="options" id="mainOptionsLabel">Options</label>
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="narrow"
+          @change="${this._toggleMainOption}"
+          >Narrow</anypoint-checkbox
         >
-          <api-headers-editor
-            slot="content"
-            .amf="${amf}"
-            .amfHeaders="${amfHeaders}"
-            @value-changed="${this._headersHandler}"
-            ?narrow="${narrow}"
-            ?allowdisableparams="${allowDisableParams}"
-            ?allowcustom="${allowCustom}"
-            ?allowhideoptional="${allowHideOptional}"
-            ?nodocs="${noDocs}"
-            ?readonly="${readOnly}"
-            ?outlined="${outlined}"
-            ?compatibility="${compatibility}"
-            ?noSourceEditor="${noSourceEditor}"
-            autovalidate></api-headers-editor>
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowDisableParams"
+          @change="${this._toggleMainOption}"
+          >Allow disable</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowHideOptional"
+          @change="${this._toggleMainOption}"
+          >Allow hide</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowCustom"
+          @change="${this._toggleMainOption}"
+          >Allow custom</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noDocs"
+          @change="${this._toggleMainOption}"
+          >No inline docs</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noSourceEditor"
+          @change="${this._toggleMainOption}"
+          >No source editor</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="readOnly"
+          @change="${this._toggleMainOption}"
+          >Read only</anypoint-checkbox
+        >
+      </arc-interactive-demo>
 
-          <label slot="options" id="mainOptionsLabel">Options</label>
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="narrow"
-            @change="${this._toggleMainOption}"
-            >Narrow</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="allowDisableParams"
-            @change="${this._toggleMainOption}"
-            >Allow disable</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="allowHideOptional"
-            @change="${this._toggleMainOption}"
-            >Allow hide</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="allowCustom"
-            @change="${this._toggleMainOption}"
-            >Allow custom</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="noDocs"
-            @change="${this._toggleMainOption}"
-            >No inline docs</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="noSourceEditor"
-            @change="${this._toggleMainOption}"
-            >No source editor</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            name="readOnly"
-            @change="${this._toggleMainOption}"
-            >Read only</anypoint-checkbox
-          >
-        </arc-interactive-demo>
-
-        <output>${headers}</output>
-        </div>
-      </section>
+      <output>${headers}</output>
     </section>`;
   }
 
   _standaloneTemplate() {
     return html`<section class="documentation-section">
-      <h2>Standalone editor</h2>
+      <h3>Standalone editor</h3>
       <p>
         The headers editor can be used without providing data model.
       </p>
@@ -201,19 +177,13 @@ class ApiDemo extends ApiDemoPageBase {
     </section>`;
   }
 
-  _render() {
-    const {
-      amf
-    } = this;
-    render(html`
-      ${this.headerTemplate()}
-
-      <demo-element id="helper" .amf="${amf}"></demo-element>
-      ${this._demoTemplate()}
-      ${this._standaloneTemplate()}
-      `, document.querySelector('#demo'));
+  contentTemplate() {
+    return html`
+    <h2 class="centered main">API headers editor</h2>
+    ${this._demoTemplate()}
+    ${this._standaloneTemplate()}
+    `;
   }
 }
 const instance = new ApiDemo();
 instance.render();
-window.demoInstance = instance;

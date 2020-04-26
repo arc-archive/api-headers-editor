@@ -86,14 +86,12 @@ const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
  * added to generated values. Or rather new value is added to the existing
  * model as custom values.
  *
- * @customElement
- * @memberof ApiElements
- * @demo demo/simple.html Simple headers editor
- * @demo demo/raml.html With AMF model
- * @appliesMixin ArcBehaviors.HeadersParserBehavior
- * @appliesMixin ApiFormMixin
- * @appliesMixin ValidatableMixin
- * @appliesMixin AmfHelperMixin
+ *
+ * @mixes HeadersParserBehavior
+ * @mixes ApiFormMixin
+ * @mixes ValidatableMixin
+ * @mixes AmfHelperMixin
+ * @extends LitElement
  */
 export class ApiHeadersEditor extends
     ValidatableMixin(ApiFormMixin(EventsTargetMixin(
@@ -210,8 +208,6 @@ export class ApiHeadersEditor extends
        * When this value change then editor update the value for the content type. However,
        * to change a single header value, please, use `request-headers-changed` event with `name`
        * and `value` properties set on the detail object.
-       *
-       * @type {Stirng}
        */
       contentType: { type: String },
       // When set to true then the source edit mode is enabled
