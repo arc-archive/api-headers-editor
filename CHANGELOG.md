@@ -782,3 +782,26 @@
  [8be0500](https://github.com/advanced-rest-client/api-headers-editor/commit/8be0500d5d8d4e58c9810dc817f87ed4d5406e64) by Pawel Psztyc
 
 
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/advanced-rest-client/api-headers-editor/compare/4.0.2...4.1.1) (2020-05-15)
+
+### Build
+
+* bumping version [2793300](https://github.com/advanced-rest-client/api-headers-editor/commit/2793300bf7b18520a098d8e15a5683218a1f8bea) by Pawel
+* bumping version [28c3350](https://github.com/advanced-rest-client/api-headers-editor/commit/28c33502b191f1957ba466108a8caf546b5f4551) by Pawel
+
+
+### Continuous integration
+
+* updating karma file [0f4332a](https://github.com/advanced-rest-client/api-headers-editor/commit/0f4332ac5e89840ebdc48c4af4cbd19df63865e9) by Pawel
+
+
+### Update
+
+* upgrading to open-wc standard [7772be3](https://github.com/advanced-rest-client/api-headers-editor/commit/7772be38426267275397e97477d1b5566ad77b49) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [6b31585](https://github.com/advanced-rest-client/api-headers-editor/commit/6b31585bab896d0cfa83e9cf4a09d3f7b5107872) by Ci agent
+* upgrading headers form [113a996](https://github.com/advanced-rest-client/api-headers-editor/commit/113a9966d3f0b1a2133bea1ecf490f51514b635b) by Pawel
+* upgrading amf view transformer [da3ab22](https://github.com/advanced-rest-client/api-headers-editor/commit/da3ab22a319c3fbe72f004a66781517dc9b2370a) by Pawel
+* bulk upgrade to 2020 [a447d91](https://github.com/advanced-rest-client/api-headers-editor/commit/a447d91ace844853c75075b04eadbf767c0bf9ff) by Pawel
+
+
