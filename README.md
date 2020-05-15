@@ -1,6 +1,6 @@
 [![Published on NPM](https://img.shields.io/npm/v/@api-components/api-headers-editor.svg)](https://www.npmjs.com/package/@api-components/api-headers-editor)
 
-[![Build Status](https://travis-ci.com/advanced-rest-client/api-headers-editor.svg)](https://travis-ci.org/advanced-rest-client/api-headers-editor)
+[![Build Status](https://travis-ci.com/advanced-rest-client/api-headers-editor.svg)](https://travis-ci.com/advanced-rest-client/api-headers-editor)
 
 # api-headers-editor
 
@@ -56,7 +56,7 @@ npm install --save @api-components/api-headers-editor
 import { LitElement, html } from 'lit-element';
 import '@api-components/api-headers-editor/api-headers-editor.js';
 
-class SampleElement extends PolymerElement {
+class SampleElement extends LitElement {
   render() {
     return html`
     <api-headers-editor
@@ -114,11 +114,6 @@ npm start
 npm test
 ```
 
-### API components
-
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
-
-
 ## Breaking Changes in v3
 
 You need to include CodeMirror into the document before importing this element
@@ -131,7 +126,3 @@ Use your build system to bundle CodeMirror into the build and don't forget to ex
 ```html
 <script src="node_modules/codemirror/lib/codemirror.js"></script>
 ```
-
-### API components
-
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)

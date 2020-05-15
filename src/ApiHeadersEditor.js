@@ -12,19 +12,28 @@ License for the specific language governing permissions and limitations under
 the License.
 */
 import { html, css, LitElement } from 'lit-element';
-import { ValidatableMixin } from '@anypoint-web-components/validatable-mixin/validatable-mixin.js';
-import { ApiFormMixin } from '@api-components/api-form-mixin/api-form-mixin.js';
-import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import formStyles from '@api-components/api-form-mixin/api-form-styles.js';
+import { ValidatableMixin } from '@anypoint-web-components/validatable-mixin';
+import { ApiFormMixin } from '@api-components/api-form-mixin';
+import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin';
+import { AmfHelperMixin } from '@api-components/amf-helper-mixin';
 import { ApiViewModel } from '@api-components/api-view-model-transformer';
+import formStyles from '@api-components/api-form-mixin/api-form-styles.js';
+import * as HeadersParser from '@advanced-rest-client/headers-parser-mixin';
 import '@api-components/raml-aware/raml-aware.js';
 import '@api-components/api-headers-form/api-headers-form.js';
 import '@advanced-rest-client/code-mirror/code-mirror.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/code-mirror-hint/code-mirror-headers-hint.js';
+
+/** @typedef {import('@api-components/api-view-model-transformer/src/ApiViewModel').ModelItem} ModelItem */
+/** @typedef {import('@api-components/api-headers-form').ApiHeadersForm} ApiHeadersForm */
+
+/* eslint-disable no-plusplus */
+/* eslint-disable no-continue */
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable class-methods-use-this */
 
 const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
 /**
@@ -41,8 +50,7 @@ const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
  * From the model select `http://raml.org/vocabularies/http#header`
  * node which contains list of headers defined for current object
  * (it can be method, trait, security scheme etc).
- * The model is resolved to internal data model by `api-view-model-transformer`
- * element.
+ * The model is resolved to internal data model by `ApiViewModel` class.
  *
  * If the element is used without AMF model `allowCustom` property must be
  * set or otherwise user won't be able to add new header to the editor.
@@ -86,25 +94,19 @@ const contentTypeRe = /^[\t\r]*content-type[\t\r]*:[\t\r]*([^\n]*)$/gim;
  * added to generated values. Or rather new value is added to the existing
  * model as custom values.
  *
- *
- * @mixes HeadersParserBehavior
- * @mixes ApiFormMixin
- * @mixes ValidatableMixin
- * @mixes AmfHelperMixin
- * @extends LitElement
  */
-export class ApiHeadersEditor extends
-    ValidatableMixin(ApiFormMixin(EventsTargetMixin(
-      HeadersParserMixin(AmfHelperMixin(LitElement))))) {
-
+export class ApiHeadersEditor extends ValidatableMixin(
+  ApiFormMixin(EventsTargetMixin(AmfHelperMixin(LitElement)))
+) {
   get styles() {
     return [
       formStyles,
       css`
-      :host {
-        display: block;
-        position: relative;
-      }`
+        :host {
+          display: block;
+          position: relative;
+        }
+      `,
     ];
   }
 
@@ -122,57 +124,70 @@ export class ApiHeadersEditor extends
       outlined,
       compatibility,
       value,
-      noSourceEditor
+      noSourceEditor,
     } = this;
-    return html`<style>${this.styles}</style>
-    ${aware ? html`<raml-aware @api-changed="${this._apiHandler}" .scope="${aware}"></raml-aware>` : undefined}
+    return html`<style>
+        ${this.styles}
+      </style>
+      ${aware
+        ? html`<raml-aware
+            @api-changed="${this._apiHandler}"
+            .scope="${aware}"
+          ></raml-aware>`
+        : undefined}
 
-    <div class="content">
-      <div class="editor-actions">
-        <anypoint-button
-          part="content-action-button, code-content-action-button"
-          class="action-button"
-          data-action="copy"
-          @click="${this._copyToClipboard}"
-          aria-label="Press to copy headers to clipboard"
-          title="Copy example to clipboard">Copy</anypoint-button>
-        ${noSourceEditor ? undefined : html`<anypoint-button
-          aria-label="Press to toggle source edit mode"
-          title="Toggle source edit mode"
-          part="content-action-button, code-content-action-button"
-          class="action-button"
-          data-action="source"
-          toggles
-          .active="${sourceMode}"
-          @active-changed="${this._sourceModeHandler}">Source view</anypoint-button>`}
-        <slot name="content-actions"></slot>
+      <div class="content">
+        <div class="editor-actions">
+          <anypoint-button
+            part="content-action-button, code-content-action-button"
+            class="action-button"
+            data-action="copy"
+            @click="${this._copyToClipboard}"
+            aria-label="Press to copy headers to clipboard"
+            title="Copy example to clipboard"
+            >Copy</anypoint-button
+          >
+          ${noSourceEditor
+            ? undefined
+            : html`<anypoint-button
+                aria-label="Press to toggle source edit mode"
+                title="Toggle source edit mode"
+                part="content-action-button, code-content-action-button"
+                class="action-button"
+                data-action="source"
+                toggles
+                .active="${sourceMode}"
+                @active-changed="${this._sourceModeHandler}"
+                >Source view</anypoint-button
+              >`}
+          <slot name="content-actions"></slot>
+        </div>
+        <div id="editor">
+          ${!sourceMode || noSourceEditor
+            ? html`<api-headers-form
+                .model="${viewModel}"
+                ?narrow="${narrow}"
+                ?allowcustom="${allowCustom}"
+                ?allowdisableparams="${allowDisableParams}"
+                ?allowhideoptional="${allowHideOptional}"
+                data-headers-panel
+                ?nodocs="${noDocs}"
+                ?readonly="${readOnly}"
+                ?outlined="${outlined}"
+                ?compatibility="${compatibility}"
+                @value-changed="${this._editorValueChanged}"
+                @invalid-changed="${this._formEditorInvalidHandler}"
+                @model-changed="${this._formEditorModelHandler}"
+              ></api-headers-form>`
+            : html`<code-mirror
+                mode="http-headers"
+                data-headers-panel
+                ?readonly="${readOnly}"
+                @value-changed="${this._editorValueChanged}"
+              ></code-mirror>`}
+        </div>
       </div>
-      <div id="editor">
-        ${(!sourceMode || noSourceEditor) ?
-          html`<api-headers-form
-            .model="${viewModel}"
-            ?narrow="${narrow}"
-            ?allowcustom="${allowCustom}"
-            ?allowdisableparams="${allowDisableParams}"
-            ?allowhideoptional="${allowHideOptional}"
-            data-headers-panel
-            ?nodocs="${noDocs}"
-            ?readonly="${readOnly}"
-            ?outlined="${outlined}"
-            ?compatibility="${compatibility}"
-            @value-changed="${this._editorValueChanged}"
-            @invalid-changed="${this._formEditorInvalidHandler}"
-            @model-changed="${this._formEditorModelHandler}"
-            ></api-headers-form>` :
-          html`<code-mirror
-            mode="http-headers"
-            data-headers-panel
-            ?readonly="${readOnly}"
-            @value-changed="${this._editorValueChanged}"></code-mirror>`}
-      </div>
-    </div>
-    <clipboard-copy .content="${value}"></clipboard-copy>
-    `;
+      <clipboard-copy .content="${value}"></clipboard-copy> `;
   }
 
   static get properties() {
@@ -206,8 +221,6 @@ export class ApiHeadersEditor extends
       /**
        * Prohibits rendering of the documentation (the icon and the
        * description).
-       * Note, Set is separately for `api-view-model-transformer`
-       * component as this only affects "custom" items.
        */
       noDocs: { type: Boolean },
       /**
@@ -235,9 +248,10 @@ export class ApiHeadersEditor extends
        *
        * See @advanced-rest-client/code-mirror-hint for used functions.
        */
-      noSourceEditor: { type: Boolean }
+      noSourceEditor: { type: Boolean },
     };
   }
+
   /**
    * Reference to currently rendered headers editor.
    * @return {HTMLElement}
@@ -248,6 +262,7 @@ export class ApiHeadersEditor extends
     }
     const panel = this.shadowRoot.querySelector('code-mirror');
     if (panel) {
+      // @ts-ignore
       return panel;
     }
     return this.shadowRoot.querySelector('api-headers-form');
@@ -255,7 +270,7 @@ export class ApiHeadersEditor extends
 
   get _cmExtraKeys() {
     return {
-      'Ctrl-Space': this._cmKeysHandler
+      'Ctrl-Space': this._cmKeysHandler,
     };
   }
 
@@ -272,11 +287,13 @@ export class ApiHeadersEditor extends
     this._value = value;
     this.requestUpdate('value', old);
     this._valueChanged(value);
-    this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: {
-        value
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('value-changed', {
+        detail: {
+          value,
+        },
+      })
+    );
   }
 
   get contentType() {
@@ -339,66 +356,96 @@ export class ApiHeadersEditor extends
     this._amfHeaders = value;
     this.viewModel = this.viewFactory.computeViewModel(value);
   }
+
   /**
-   * @return {Function} Previously registered handler for `value-changed` event
+   * @return {EventListener} Previously registered handler for `value-changed` event
    */
   get onvalue() {
     return this['_onvalue-changed'];
   }
+
   /**
    * Registers a callback function for `value-changed` event
-   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * @param {EventListener} value A callback to register. Pass `null` or `undefined`
    * to clear the listener.
    */
   set onvalue(value) {
     this._registerCallback('value-changed', value);
   }
+
   /**
-   * @return {Function} Previously registered handler for `content-type-changed-changed` event
+   * @return {EventListener} Previously registered handler for `content-type-changed-changed` event
    */
   get oncontenttype() {
     return this['_oncontent-type-changed'];
   }
+
   /**
    * Registers a callback function for `content-type-changed-changed` event
-   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * @param {EventListener} value A callback to register. Pass `null` or `undefined`
    * to clear the listener.
    */
   set oncontenttype(value) {
     this._registerCallback('content-type-changed', value);
   }
-  /**
-   * @constructor
-   */
+
   constructor() {
     super();
     this._cmKeysHandler = this._cmKeysHandler.bind(this);
     this._headersChangedHandler = this._headersChangedHandler.bind(this);
     this._headerChangedHandler = this._headerChangedHandler.bind(this);
-    this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(this);
+    this._contentTypeChangedHandler = this._contentTypeChangedHandler.bind(
+      this
+    );
     this._headerDeletedHandler = this._headerDeletedHandler.bind(this);
 
     this.sourceMode = false;
+    this.noSourceEditor = false;
+    this.allowDisableParams = false;
+    this.autoValidate = false;
+    this.readOnly = false;
+    this.aware = undefined;
+    this.outlined = false;
+    this.compatibility = false;
     this.viewFactory = new ApiViewModel();
   }
 
   _attachListeners(node) {
-    node.addEventListener('request-headers-changed', this._headersChangedHandler);
+    node.addEventListener(
+      'request-headers-changed',
+      this._headersChangedHandler
+    );
     node.addEventListener('request-header-changed', this._headerChangedHandler);
-    node.addEventListener('content-type-changed', this._contentTypeChangedHandler);
+    node.addEventListener(
+      'content-type-changed',
+      this._contentTypeChangedHandler
+    );
     node.addEventListener('request-header-deleted', this._headerDeletedHandler);
   }
 
   _detachListeners(node) {
-    node.removeEventListener('request-headers-changed', this._headersChangedHandler);
-    node.removeEventListener('request-header-changed', this._headerChangedHandler);
-    node.removeEventListener('content-type-changed', this._contentTypeChangedHandler);
-    node.removeEventListener('request-header-deleted', this._headerDeletedHandler);
+    node.removeEventListener(
+      'request-headers-changed',
+      this._headersChangedHandler
+    );
+    node.removeEventListener(
+      'request-header-changed',
+      this._headerChangedHandler
+    );
+    node.removeEventListener(
+      'content-type-changed',
+      this._contentTypeChangedHandler
+    );
+    node.removeEventListener(
+      'request-header-deleted',
+      this._headerDeletedHandler
+    );
   }
+
   /**
    * Registers an event handler for given type
-   * @param {String} eventType Event type (name)
-   * @param {Function} value The handler to register
+   * @param {string} eventType Event type (name)
+   * @param {EventListener} value The handler to register
    */
   _registerCallback(eventType, value) {
     const key = `_on${eventType}`;
@@ -422,7 +469,7 @@ export class ApiHeadersEditor extends
    *
    * Opens desired editr.
    *
-   * @param {Boolean} isSource
+   * @param {boolean} isSource
    */
   _sourceModeChanged(isSource) {
     if (this.noSourceEditor) {
@@ -431,7 +478,9 @@ export class ApiHeadersEditor extends
     if (isSource) {
       setTimeout(() => {
         const panel = this.currentPanel;
+        // @ts-ignore
         panel.setOption('extraKeys', this._cmExtraKeys);
+        // @ts-ignore
         panel.value = this.modelToValue(this.viewModel);
       }, 50);
     } else {
@@ -443,10 +492,10 @@ export class ApiHeadersEditor extends
         type: 'event',
         category: 'Usage',
         action: 'Click',
-        label: 'Toggle source mode ' + String(isSource),
+        label: `Toggle source mode ${String(isSource)}`,
       },
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(ev);
   }
@@ -457,40 +506,43 @@ export class ApiHeadersEditor extends
    * @param {CustomEvent} e
    */
   _editorValueChanged(e) {
-    const value = e.detail.value;
+    const { value } = e.detail;
     if (value !== this.value) {
       this._innerEditorValueChanged = true;
       this.value = value;
       this._innerEditorValueChanged = false;
     }
   }
+
   /**
    * Creates a headers string from a model.
    *
-   * @param {?Array} model Optional, model to process. If not set it uses
+   * @param {ModelItem[]=} model Optional, model to process. If not set it uses
    * `this.viewModel`
    * @return {String} Generated headers
    */
   modelToValue(model) {
-    if (!model) {
-      model = this.viewModel;
-    }
-    if (!model || !model.length) {
+    const viewModel = model || this.viewModel;
+    if (!viewModel || !viewModel.length) {
       return '';
     }
     const data = [];
     const disbleAllowed = this.allowDisableParams;
-    model.forEach((item) => {
-      if (!item || (disbleAllowed && item.schema && item.schema.enabled === false)) {
+    viewModel.forEach((item) => {
+      if (
+        !item ||
+        (disbleAllowed && item.schema && item.schema.enabled === false)
+      ) {
         return;
       }
       data.push({
         name: item.name,
-        value: item.value
+        value: item.value,
       });
     });
-    return this.headersToString(data);
+    return HeadersParser.toString(data);
   }
+
   /**
    * Code mirror's ctrl+space key handler.
    * Opens headers fill support.
@@ -499,10 +551,12 @@ export class ApiHeadersEditor extends
    */
   _cmKeysHandler(cm) {
     /* global CodeMirror */
+    // @ts-ignore
     CodeMirror.showHint(cm, CodeMirror.hint['http-headers'], {
-      container: this.currentPanel
+      container: this.currentPanel,
     });
   }
+
   /**
    * Called when switching from source view to form view.
    * Updates view model with values defined in text editor.
@@ -512,23 +566,24 @@ export class ApiHeadersEditor extends
    *
    * It does nothing if `value` or `viewModel` is not defined.
    *
-   * @param {?String} value
+   * @param {String=} headersValue
    */
-  _modelFromValue(value) {
-    value = value || this.value;
+  _modelFromValue(headersValue) {
+    let value = headersValue || this.value;
     if (value === undefined) {
       if (!this.model) {
         return;
-      } else {
-        value = '';
       }
+      value = '';
     }
     let model = this.viewModel;
     if (!model) {
       model = [];
       this.viewModel = model;
     }
-    const parsedValue = this.filterHeaders(this.headersToJSON(String(value)));
+    const parsedValue = HeadersParser.filter(
+      HeadersParser.toJSON(String(value))
+    );
     const tmp = {};
     const appendCustom = [];
     const disbleAllowed = this.allowDisableParams;
@@ -542,7 +597,7 @@ export class ApiHeadersEditor extends
         tmp[item.name] = true;
         if (model[index].value !== item.value) {
           if (model[index].schema.isArray) {
-            model[index].value = item.value.split(',');
+            model[index].value = /** @type string */ (item.value).split(',');
           } else {
             model[index].value = item.value;
           }
@@ -561,12 +616,10 @@ export class ApiHeadersEditor extends
         model.splice(i, 1);
       } else if (disbleAllowed) {
         model[i].schema.enabled = false;
+      } else if (model[i].schema.isArray) {
+        model[i].value = [];
       } else {
-        if (model[i].schema.isArray) {
-          model[i].value = [];
-        } else {
-          model[i].value = '';
-        }
+        model[i].value = '';
       }
     }
     if (!model.length) {
@@ -576,29 +629,32 @@ export class ApiHeadersEditor extends
       this.viewModel = model;
     }
   }
+
   /**
    * Finds item position in model by name.
    *
-   * @param {Array} model Model items
-   * @param {String} name Header name to search for
-   * @return {Number} Items position or `-1` if not found.
+   * @param {ModelItem[]} model Model items
+   * @param {string} name Header name to search for
+   * @return {number} Items position or `-1` if not found.
    */
   _findModelIndex(model, name) {
+    const lowerName = String(name).toLowerCase();
     for (let i = 0, len = model.length; i < len; i++) {
-      if (model[i].name === name) {
+      if (String(model[i].name).toLowerCase() === lowerName) {
         return i;
       }
     }
     return -1;
   }
+
   /**
    * Creates a custom header model item.
    *
-   * @param {Object} defaults Default data
-   * @return {Object} View model item
+   * @param {object?} defaults Default data
+   * @return {object} View model item
    */
-  createCustom(defaults) {
-    const data = Object.assign({}, defaults);
+  createCustom(defaults = {}) {
+    let data = { ...defaults };
     if (!data.schema) {
       data.schema = {};
     }
@@ -612,10 +668,8 @@ export class ApiHeadersEditor extends
     if (!data.schema.inputLabel) {
       data.schema.inputLabel = 'Header value';
     }
-    const node = this.shadowRoot.querySelector('api-view-model-transformer');
-    if (node) {
-      node.buildProperty(data);
-    }
+
+    data = this.viewFactory.buildProperty(data);
     return data;
   }
 
@@ -628,9 +682,10 @@ export class ApiHeadersEditor extends
     if (e.composedPath()[0] === this || e.defaultPrevented) {
       return;
     }
-    const value = e.detail.value;
+    const { value } = e.detail;
     this._setValues(value);
   }
+
   /**
    * Handler for the `request-header-changed` event.
    * It updates value for a single header.
@@ -640,12 +695,11 @@ export class ApiHeadersEditor extends
     if (e.composedPath()[0] === this || e.defaultPrevented) {
       return;
     }
-    const name = e.detail.name;
+    const { name, value } = e.detail;
     if (!name) {
       return;
     }
-    const value = e.detail.value;
-    const arr = this.headersToJSON(this.value);
+    const arr = HeadersParser.toJSON(this.value);
     let updated = false;
     for (let i = 0, len = arr.length; i < len; i++) {
       if (arr[i].name.toLowerCase() === name.toLowerCase()) {
@@ -656,13 +710,14 @@ export class ApiHeadersEditor extends
     }
     if (!updated) {
       arr.push({
-        name: name,
-        value: value
+        name,
+        value,
       });
     }
-    const headers = this.headersToString(arr);
+    const headers = HeadersParser.toString(arr);
     this._setValues(headers);
   }
+
   /**
    * Handler for `content-type-changed` event.
    * Uppdates it's value if from external source.
@@ -677,6 +732,7 @@ export class ApiHeadersEditor extends
     this.contentType = e.detail.value;
     this.__cancelContentTypeNotification = false;
   }
+
   /**
    * Handler for `request-header-deleted` custom event.
    * Deletes header from the editor.
@@ -686,11 +742,11 @@ export class ApiHeadersEditor extends
     if (e.defaultPrevented) {
       return;
     }
-    const name = e.detail.name;
+    const { name } = e.detail;
     if (!name) {
       return;
     }
-    const arr = this.headersToJSON(this.value);
+    const arr = HeadersParser.toJSON(this.value);
     let updated = false;
     for (let i = arr.length - 1; i >= 0; i--) {
       if (arr[i].name.toLowerCase() === name.toLowerCase()) {
@@ -702,18 +758,16 @@ export class ApiHeadersEditor extends
     if (!updated) {
       return;
     }
-    const headers = this.headersToString(arr);
+    const headers = HeadersParser.toString(arr);
     this._setValues(headers);
   }
+
   /**
    * Detects and sets content type value from changed headers value.
    *
-   * @param {String} value Headers new value.
+   * @param {string?} value Headers new value.
    */
-  _detectContentType(value) {
-    if (!value) {
-      value = '';
-    }
+  _detectContentType(value = '') {
     contentTypeRe.lastIndex = 0;
     const matches = contentTypeRe.exec(value);
     let ctValue;
@@ -733,6 +787,7 @@ export class ApiHeadersEditor extends
       }
     }
   }
+
   /**
    * Called by CodeMirror editor.
    * When something change n the headers list, detect content type header.
@@ -740,7 +795,7 @@ export class ApiHeadersEditor extends
    */
   _valueChanged(value) {
     if (this.autoValidate) {
-      this.validate();
+      this.validate(this.value);
     }
     this._detectContentType(value);
     if (this._cacncelChangeEvent) {
@@ -753,14 +808,16 @@ export class ApiHeadersEditor extends
       if (this.readOnly) {
         return;
       }
-      this.dispatchEvent(new CustomEvent('request-headers-changed', {
-        detail: {
-          value: value
-        },
-        cancelable: true,
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('request-headers-changed', {
+          detail: {
+            value,
+          },
+          cancelable: true,
+          bubbles: true,
+          composed: true,
+        })
+      );
     } else {
       this._modelFromValue(value);
     }
@@ -774,7 +831,7 @@ export class ApiHeadersEditor extends
       this._notifyContentType('');
       return;
     }
-    const arr = this.headersToJSON(this.value);
+    const arr = HeadersParser.toJSON(this.value);
     let updated = false;
     for (let i = 0, len = arr.length; i < len; i++) {
       if (arr[i].name.toLowerCase() !== 'content-type') {
@@ -789,10 +846,10 @@ export class ApiHeadersEditor extends
     if (!updated) {
       arr.push({
         name: 'Content-Type',
-        value: currentCt
+        value: currentCt,
       });
     }
-    const headers = this.headersToString(arr);
+    const headers = HeadersParser.toString(arr);
     if (!this._innerEditorValueChanged) {
       this._setValues(headers);
       this._modelFromValue(headers);
@@ -806,14 +863,15 @@ export class ApiHeadersEditor extends
     }
     const ev = new CustomEvent('content-type-changed', {
       detail: {
-        value: type
+        value: type,
       },
       cancelable: false,
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(ev);
   }
+
   /**
    * Updates `value` when new value is computed by the editor.
    *
@@ -826,16 +884,18 @@ export class ApiHeadersEditor extends
     if (!this._innerEditorValueChanged && this.sourceMode) {
       const panel = this.currentPanel;
       if (panel) {
+        // @ts-ignore
         panel.value = value;
       }
     }
   }
+
   /**
    * Coppies current response text value to clipboard.
    * @param {Event} e
    */
   _copyToClipboard(e) {
-    const button = e.target;
+    const button = /** @type HTMLButtonElement */ (e.target);
     const copy = this.shadowRoot.querySelector('clipboard-copy');
     if (copy.copy()) {
       button.innerText = 'Done';
@@ -844,7 +904,9 @@ export class ApiHeadersEditor extends
     }
     button.disabled = true;
     if ('part' in button) {
+      // @ts-ignore
       button.part.add('content-action-button-disabled');
+      // @ts-ignore
       button.part.add('code-content-action-button-disabled');
     }
     setTimeout(() => this._resetCopyButtonState(button), 1000);
@@ -856,29 +918,37 @@ export class ApiHeadersEditor extends
         label: 'Headers editor clipboard copy',
       },
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(ev);
   }
 
+  /**
+   * @param {HTMLButtonElement} button
+   */
   _resetCopyButtonState(button) {
     button.innerText = 'Copy';
     button.disabled = false;
     if ('part' in button) {
+      // @ts-ignore
       button.part.remove('content-action-button-disabled');
+      // @ts-ignore
       button.part.remove('code-content-action-button-disabled');
     }
   }
 
-  // Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
+  // Overidden from ValidatableMixin. Will set the `invalid`
   // attribute automatically, which should be used for styling.
   _getValidity() {
     if (this.sourceMode || !this.shadowRoot) {
       return true;
     }
-    const form = this.shadowRoot.querySelector('api-headers-form');
-    return form ? form.validate() : true;
+    const form = /** @type ApiHeadersForm */ (this.shadowRoot.querySelector(
+      'api-headers-form'
+    ));
+    return form ? form.validate(form.value) : true;
   }
+
   /**
    * Refreshes the CodeMirror editor when in `sourceMode`.
    */
@@ -887,6 +957,7 @@ export class ApiHeadersEditor extends
       return;
     }
     const panel = this.currentPanel;
+    // @ts-ignore
     panel.refresh();
   }
 
