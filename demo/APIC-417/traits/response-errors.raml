@@ -1,0 +1,88 @@
+#%RAML 1.0 Trait
+responses: 
+  400:
+    description: Status code and error message will be returned if validation fails.
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "400",
+            "message" : "Bad request",
+            "detail": "Invalid request"
+            }
+          ]}
+  404:
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "404",
+            "message" : "Resource not found",
+            "detail": "Resource not found for requested URI"
+            }]
+          }
+  405:
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "405",
+            "message" : "Method not allowed",
+            "detail": "Method not allowed for requested resource"
+            }]
+          }
+  406:
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "406",
+            "message" : "Not acceptable",
+            "detail": "Request accept headers are not acceptable"
+            }]
+          }
+  415:
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "415",
+            "message" : "Unsupported media type",
+            "detail": "Request format is not supported by the requested resource"
+            }]
+          }
+  500:
+    description: Status code and error message will be returned when the endpoint encounters an unexpected technical error.
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "500",
+            "message" : "Unexpected server error",
+            "detail": "Service encountered an unexpected error while processing the request"
+            }]
+          }
+  501:
+    body: 
+      application/json:
+        type: !include schema-response-errors.json
+        example: |
+          { 
+            "errorInfo": [{
+            "code": "501",
+            "message" : "Not Implemented",
+            "detail": "Service method is not implemented"
+            }]
+          }

@@ -1,0 +1,26 @@
+#%RAML 1.0
+title: Legal System Service v1
+version: 1.0.0
+protocols: [HTTP,HTTPS]
+mediaType: application/json
+traits:
+  response-errors: !include traits/response-errors.raml
+  client-id-required: !include traits/client-credentials.raml
+  content-type-required:
+    headers:
+      content-type:
+        type: string
+        required: true
+/legal:
+  /termsConditionsAccept:
+    description: Determines/Alters a user's status for their terms and condition's acceptance.
+    get:
+      is: [client-id-required, content-type-required, response-errors]
+      headers:
+        webLogonID: 
+          type: string
+          required: true
+      description: Retrieves a user's status on terms and conditions acceptance.
+    post:
+      is: [client-id-required, content-type-required, response-errors]
+      description: Store participant's terms and conditions acceptance.

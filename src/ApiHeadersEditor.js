@@ -303,7 +303,7 @@ export class ApiHeadersEditor extends ValidatableMixin(
   set contentType(value) {
     const old = this._contentType;
     /* istanbul ignore if  */
-    if (old === value) {
+    if (old === value && !this._shouldUpdateHeaders) {
       return;
     }
     this._contentType = value;
@@ -782,9 +782,8 @@ export class ApiHeadersEditor extends ValidatableMixin(
       }
     } else {
       ctValue = ctValue.trim();
-      if (this.contentType !== ctValue) {
-        this.contentType = ctValue;
-      }
+      this._shouldUpdateHeaders = true;
+      this.contentType = ctValue;
     }
   }
 
@@ -825,9 +824,11 @@ export class ApiHeadersEditor extends ValidatableMixin(
 
   _onContentTypeChanged(currentCt) {
     if (this.readOnly) {
+      this._shouldUpdateHeaders = false;
       return;
     }
     if (!currentCt) {
+      this._shouldUpdateHeaders = false;
       this._notifyContentType('');
       return;
     }
@@ -850,10 +851,11 @@ export class ApiHeadersEditor extends ValidatableMixin(
       });
     }
     const headers = HeadersParser.toString(arr);
-    if (!this._innerEditorValueChanged) {
+    if (!this._innerEditorValueChanged || this._shouldUpdateHeaders) {
       this._setValues(headers);
       this._modelFromValue(headers);
     }
+    this._shouldUpdateHeaders = false;
     this._notifyContentType(currentCt);
   }
 
