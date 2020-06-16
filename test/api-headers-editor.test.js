@@ -1,33 +1,26 @@
-import {
-  fixture,
-  assert,
-  nextFrame,
-  aTimeout
-} from '@open-wc/testing';
-import {
-  AmfLoader
-} from './amf-loader.js';
+import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
 import '../api-headers-editor.js';
 import * as sinon from 'sinon';
 import { ApiViewModel } from '@api-components/api-view-model-transformer';
+import { AmfLoader } from './amf-loader.js';
 
 const hasPartsApi = 'part' in document.createElement('span');
 
-describe('<api-headers-editor>', function() {
+describe('<api-headers-editor>', () => {
   async function basicFixture() {
-    return (await fixture(`<api-headers-editor></api-headers-editor>`));
+    return fixture(`<api-headers-editor></api-headers-editor>`);
   }
 
   async function readonlyFixture() {
-    return (await fixture(`<api-headers-editor readonly></api-headers-editor>`));
+    return fixture(`<api-headers-editor readonly></api-headers-editor>`);
   }
 
   async function sourceModeFixture() {
-    return (await fixture(`<api-headers-editor sourcemode></api-headers-editor>`));
+    return fixture(`<api-headers-editor sourcemode></api-headers-editor>`);
   }
 
   async function noSourceModeFixture() {
-    return (await fixture(`<api-headers-editor nosourceeditor></api-headers-editor>`));
+    return fixture(`<api-headers-editor nosourceeditor></api-headers-editor>`);
   }
 
   describe('Basics', () => {
@@ -44,34 +37,37 @@ describe('<api-headers-editor>', function() {
       assert.isFalse(element.sourceMode);
     });
 
-    it('Detects content type', function() {
+    it('Detects content type', () => {
       element.value = 'text:test\ncontent-type:application/test';
-      assert.equal(element.contentType, 'application/test',
-        'contentType equals application/test');
+      assert.equal(
+        element.contentType,
+        'application/test',
+        'contentType equals application/test'
+      );
     });
 
-    it('Handles request-headers-changed event', function() {
+    it('Handles request-headers-changed event', () => {
       const init = {
         detail: {
-          value: 'Authorization: test'
+          value: 'Authorization: test',
         },
         bubbles: true,
-        cancelable: true
+        cancelable: true,
       };
       const event = new CustomEvent('request-headers-changed', init);
       document.dispatchEvent(event);
       assert.equal(element.value, 'Authorization: test');
     });
 
-    it('Don\'t handles canceled request-headers-changed event', function() {
+    it("Don't handles canceled request-headers-changed event", () => {
       const init = {
         detail: {
-          value: 'Authorization: test'
+          value: 'Authorization: test',
         },
         bubbles: true,
-        cancelable: true
+        cancelable: true,
       };
-      document.addEventListener('request-headers-changed', function(e) {
+      document.addEventListener('request-headers-changed', (e) => {
         e.preventDefault();
       });
       const event = new CustomEvent('request-headers-changed', init);
@@ -79,30 +75,30 @@ describe('<api-headers-editor>', function() {
       assert.equal(element.value, undefined);
     });
 
-    it('Handles request-header-changed event', function() {
+    it('Handles request-header-changed event', () => {
       const init = {
         detail: {
           name: 'Authorization',
-          value: 'test'
+          value: 'test',
         },
         bubbles: true,
-        cancelable: true
+        cancelable: true,
       };
       const event = new CustomEvent('request-header-changed', init);
       document.dispatchEvent(event);
       assert.equal(element.value, 'Authorization: test');
     });
 
-    it('Don\'t handles canceled request-header-changed event', function() {
+    it("Don't handles canceled request-header-changed event", () => {
       const init = {
         detail: {
           name: 'Authorization',
-          value: 'test'
+          value: 'test',
         },
         bubbles: true,
-        cancelable: true
+        cancelable: true,
       };
-      document.addEventListener('request-header-changed', function(e) {
+      document.addEventListener('request-header-changed', (e) => {
         e.preventDefault();
       });
       const event = new CustomEvent('request-header-changed', init);
@@ -133,22 +129,24 @@ describe('<api-headers-editor>', function() {
     let element;
     beforeEach(async () => {
       element = await basicFixture();
-      element.viewModel = [{
-        binding: 'header',
-        name: 'x-test',
-        hasDescription: false,
-        required: true,
-        schema: {
-          enabled: true,
-          type: 'string',
-          inputLabel: 'x-string',
-          isEnum: false,
-          isArray: false,
-          isBool: false,
-          inputType: 'text'
+      element.viewModel = [
+        {
+          binding: 'header',
+          name: 'x-test',
+          hasDescription: false,
+          required: true,
+          schema: {
+            enabled: true,
+            type: 'string',
+            inputLabel: 'x-string',
+            isEnum: false,
+            isArray: false,
+            isBool: false,
+            inputType: 'text',
+          },
+          value: '',
         },
-        value: ''
-      }];
+      ];
       await nextFrame();
     });
 
@@ -216,7 +214,10 @@ describe('<api-headers-editor>', function() {
       element.sourceMode = false;
       await nextFrame();
       assert.lengthOf(element.viewModel, 2, 'Model has two items');
-      assert.isTrue(element.viewModel[1].schema.isCustom, 'Second item is custom item');
+      assert.isTrue(
+        element.viewModel[1].schema.isCustom,
+        'Second item is custom item'
+      );
       assert.equal(element.viewModel[1].name, 'x-custom', 'Name is set');
       assert.equal(element.viewModel[1].value, 'value', 'Value is set');
     });
@@ -228,25 +229,27 @@ describe('<api-headers-editor>', function() {
       element = await basicFixture();
     });
 
-    it('Fires content type change event', function(done) {
+    it('Fires content type change event', (done) => {
       const ct = 'application/test';
       element.addEventListener('content-type-changed', function clb(e) {
         element.removeEventListener('content-type-changed', clb);
         assert.equal(e.detail.value, ct);
         done();
       });
-      element.value = 'text:test\ncontent-type:' + ct;
+      element.value = `text:test\ncontent-type:${ct}`;
     });
 
     function fire(type) {
-      window.dispatchEvent(new CustomEvent('content-type-changed', {
-        detail: {
-          value: type
-        },
-        cancelable: false,
-        bubbles: true,
-        composed: true
-      }));
+      window.dispatchEvent(
+        new CustomEvent('content-type-changed', {
+          detail: {
+            value: type,
+          },
+          cancelable: false,
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
 
     it('Updates content type value from the event', () => {
@@ -295,49 +298,57 @@ describe('<api-headers-editor>', function() {
     });
 
     it('Uses "viewModel" when no argument', () => {
-      element.viewModel = [{
-        name: 'x-test',
-        value: 'x-value',
-        schema: {}
-      }];
+      element.viewModel = [
+        {
+          name: 'x-test',
+          value: 'x-value',
+          schema: {},
+        },
+      ];
       const result = element.modelToValue();
       assert.equal(result, 'x-test: x-value');
     });
 
     it('Skips disabled items', () => {
-      element.viewModel = [{
-        name: 'x-test',
-        value: 'x-value',
-        schema: {
-          enabled: false
-        }
-      }];
+      element.viewModel = [
+        {
+          name: 'x-test',
+          value: 'x-value',
+          schema: {
+            enabled: false,
+          },
+        },
+      ];
       element.allowDisableParams = true;
       const result = element.modelToValue();
       assert.equal(result, '');
     });
 
     it('Will not skip disabled item when disabling is not allowed', () => {
-      element.viewModel = [{
-        name: 'x-test',
-        value: 'x-value',
-        schema: {
-          enabled: false
-        }
-      }];
+      element.viewModel = [
+        {
+          name: 'x-test',
+          value: 'x-value',
+          schema: {
+            enabled: false,
+          },
+        },
+      ];
       element.allowDisableParams = false;
       const result = element.modelToValue();
       assert.equal(result, 'x-test: x-value');
     });
 
     it('Allows enabled items', async () => {
-      element.viewModel = [{
-        name: 'x-test',
-        value: 'x-value',
-        schema: {
-          enabled: true
-        }
-      }];
+      element.viewModel = [
+        {
+          name: 'x-test',
+          value: 'x-value',
+          schema: {
+            enabled: true,
+          },
+        },
+      ];
       element.allowDisableParams = true;
       const result = element.modelToValue();
       assert.equal(result, 'x-test: x-value');
@@ -354,7 +365,7 @@ describe('<api-headers-editor>', function() {
 
     it('Opens hints', () => {
       const panel = element.currentPanel;
-      const editor = panel.editor;
+      const { editor } = panel;
       assert.ok(editor, 'Editor property is set');
       element._cmKeysHandler(editor);
       const container = panel.querySelector('code-mirror-hint-container');
@@ -391,8 +402,8 @@ describe('<api-headers-editor>', function() {
     it('Respects existing type property', () => {
       const result = element.createCustom({
         schema: {
-          type: 'integer'
-        }
+          type: 'integer',
+        },
       });
       assert.equal(result.schema.type, 'integer');
     });
@@ -405,8 +416,8 @@ describe('<api-headers-editor>', function() {
     it('Re-enable item', () => {
       const result = element.createCustom({
         schema: {
-          enabled: false
-        }
+          enabled: false,
+        },
       });
       assert.isTrue(result.schema.enabled);
     });
@@ -419,8 +430,8 @@ describe('<api-headers-editor>', function() {
     it('Respects existing type property', () => {
       const result = element.createCustom({
         schema: {
-          inputLabel: 'test-lable'
-        }
+          inputLabel: 'test-lable',
+        },
       });
       assert.equal(result.schema.inputLabel, 'test-lable');
     });
@@ -436,7 +447,7 @@ describe('<api-headers-editor>', function() {
 
     it('Ignores event when dispatched by self', () => {
       element._headerChangedHandler({
-        composedPath: () => [element]
+        composedPath: () => [element],
       });
       assert.equal(element.value, '');
     });
@@ -444,7 +455,7 @@ describe('<api-headers-editor>', function() {
     it('Ignores cancelled event', () => {
       element._headerChangedHandler({
         composedPath: () => [],
-        defaultPrevented: true
+        defaultPrevented: true,
       });
       assert.equal(element.value, '');
     });
@@ -455,8 +466,8 @@ describe('<api-headers-editor>', function() {
         defaultPrevented: false,
         detail: {
           name: '',
-          value: ''
-        }
+          value: '',
+        },
       });
       assert.equal(element.value, '');
     });
@@ -467,8 +478,8 @@ describe('<api-headers-editor>', function() {
         defaultPrevented: false,
         detail: {
           name: 'x-test',
-          value: 'x-value'
-        }
+          value: 'x-value',
+        },
       });
       assert.equal(element.value, 'x-test: x-value');
     });
@@ -480,8 +491,8 @@ describe('<api-headers-editor>', function() {
         defaultPrevented: false,
         detail: {
           name: 'x-test',
-          value: 'x-other'
-        }
+          value: 'x-other',
+        },
       });
       assert.equal(element.value, 'x-test: x-other');
     });
@@ -498,7 +509,7 @@ describe('<api-headers-editor>', function() {
 
     it('Ignores cancelled event', () => {
       element._headerDeletedHandler({
-        defaultPrevented: true
+        defaultPrevented: true,
       });
       assert.equal(element.value, defaultValue);
     });
@@ -507,8 +518,8 @@ describe('<api-headers-editor>', function() {
       element._headerDeletedHandler({
         defaultPrevented: false,
         detail: {
-          name: ''
-        }
+          name: '',
+        },
       });
       assert.equal(element.value, defaultValue);
     });
@@ -517,8 +528,8 @@ describe('<api-headers-editor>', function() {
       element._headerDeletedHandler({
         defaultPrevented: false,
         detail: {
-          name: 'x-header'
-        }
+          name: 'x-header',
+        },
       });
       assert.equal(element.value, '');
     });
@@ -527,8 +538,8 @@ describe('<api-headers-editor>', function() {
       element._headerDeletedHandler({
         defaultPrevented: false,
         detail: {
-          name: 'z-header'
-        }
+          name: 'z-header',
+        },
       });
       assert.equal(element.value, defaultValue);
     });
@@ -557,14 +568,16 @@ describe('<api-headers-editor>', function() {
     });
 
     function fire(type) {
-      window.dispatchEvent(new CustomEvent('content-type-changed', {
-        detail: {
-          value: type
-        },
-        cancelable: false,
-        bubbles: true,
-        composed: true
-      }));
+      window.dispatchEvent(
+        new CustomEvent('content-type-changed', {
+          detail: {
+            value: type,
+          },
+          cancelable: false,
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
 
     it('ignores content-type change', () => {
@@ -573,7 +586,7 @@ describe('<api-headers-editor>', function() {
       assert.isUndefined(element.viewModel);
     });
 
-    it('does not dispatch request-headers-change event', function() {
+    it('does not dispatch request-headers-change event', () => {
       const spy = sinon.spy();
       element.addEventListener('request-headers-changed', spy);
       element._cacncelChangeEvent = false;
@@ -582,7 +595,7 @@ describe('<api-headers-editor>', function() {
       assert.isFalse(spy.called);
     });
 
-    it('passes the flag to form editor', function() {
+    it('passes the flag to form editor', () => {
       const node = element.currentPanel;
       assert.isTrue(node.readOnly);
     });
@@ -651,17 +664,25 @@ describe('<api-headers-editor>', function() {
       });
     });
 
-    (hasPartsApi ? it : it.skip)('Adds content-action-button-disabled to the button', async () => {
-      const button = element.shadowRoot.querySelector('[data-action="copy"]');
-      button.click();
-      assert.isTrue(button.part.contains('content-action-button-disabled'));
-    });
+    (hasPartsApi ? it : it.skip)(
+      'Adds content-action-button-disabled to the button',
+      async () => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.isTrue(button.part.contains('content-action-button-disabled'));
+      }
+    );
 
-    (hasPartsApi ? it : it.skip)('Adds code-content-action-button-disabled to the button', async () => {
-      const button = element.shadowRoot.querySelector('[data-action="copy"]');
-      button.click();
-      assert.isTrue(button.part.contains('code-content-action-button-disabled'));
-    });
+    (hasPartsApi ? it : it.skip)(
+      'Adds code-content-action-button-disabled to the button',
+      async () => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.isTrue(
+          button.part.contains('code-content-action-button-disabled')
+        );
+      }
+    );
   });
 
   describe('_resetCopyButtonState()', () => {
@@ -693,32 +714,43 @@ describe('<api-headers-editor>', function() {
       });
     });
 
-    (hasPartsApi ? it : it.skip)('Removes content-action-button-disabled part from the button', async () => {
-      await aTimeout();
-      const button = element.shadowRoot.querySelector('[data-action="copy"]');
-      button.click();
-      element._resetCopyButtonState(button);
-      assert.isFalse(button.part.contains('content-action-button-disabled'));
-    });
+    (hasPartsApi ? it : it.skip)(
+      'Removes content-action-button-disabled part from the button',
+      async () => {
+        await aTimeout();
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        element._resetCopyButtonState(button);
+        assert.isFalse(button.part.contains('content-action-button-disabled'));
+      }
+    );
 
-    (hasPartsApi ? it : it.skip)('Removes code-content-action-button-disabled part from the button', async () => {
-      await aTimeout();
-      const button = element.shadowRoot.querySelector('[data-action="copy"]');
-      button.click();
-      element._resetCopyButtonState(button);
-      assert.isFalse(button.part.contains('code-content-action-button-disabled'));
-    });
+    (hasPartsApi ? it : it.skip)(
+      'Removes code-content-action-button-disabled part from the button',
+      async () => {
+        await aTimeout();
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        element._resetCopyButtonState(button);
+        assert.isFalse(
+          button.part.contains('code-content-action-button-disabled')
+        );
+      }
+    );
   });
-
 
   describe('AMF model tests', () => {
     function getHeadersModel(element, amfModel) {
       const webApi = element._computeWebApi(amfModel);
       const endpoint = element._computeEndpointByPath(webApi, '/endpoint');
-      const opKey = element._getAmfKey(element.ns.aml.vocabularies.apiContract.supportedOperation);
+      const opKey = element._getAmfKey(
+        element.ns.aml.vocabularies.apiContract.supportedOperation
+      );
       const ops = element._ensureArray(endpoint[opKey]);
       const expects = element._computeExpects(ops[0]);
-      const hKey = element._getAmfKey(element.ns.aml.vocabularies.apiContract.header);
+      const hKey = element._getAmfKey(
+        element.ns.aml.vocabularies.apiContract.header
+      );
       return element._ensureArray(expects[hKey]);
     }
 
@@ -736,7 +768,7 @@ describe('<api-headers-editor>', function() {
 
     [
       ['Full model', false],
-      ['Compact model', true]
+      ['Compact model', true],
     ].forEach((item) => {
       describe(item[0], () => {
         let amfModel;
@@ -778,14 +810,37 @@ describe('<api-headers-editor>', function() {
 
         it('Generates value from the model', (done) => {
           setTimeout(() => {
-            const value = element.value;
-            assert.equal(value.indexOf('ETag'), -1, 'Etag is not present (optional)');
-            assert.notEqual(value.indexOf('Cache-Control'), -1, 'Cache-Control is present');
-            assert.notEqual(value.indexOf('x-string'), -1, 'x-string is present');
-            assert.equal(value.indexOf('x-optional'), -1, 'x-optional is not present (optional)');
-            assert.notEqual(value.indexOf('x-required: default required value'), -1,
-              'x-required is present (dafault value)');
-            assert.notEqual(value.indexOf('x-union: Hello union'), -1, 'x-union is present (value from example)');
+            const { value } = element;
+            assert.equal(
+              value.indexOf('ETag'),
+              -1,
+              'Etag is not present (optional)'
+            );
+            assert.notEqual(
+              value.indexOf('Cache-Control'),
+              -1,
+              'Cache-Control is present'
+            );
+            assert.notEqual(
+              value.indexOf('x-string'),
+              -1,
+              'x-string is present'
+            );
+            assert.equal(
+              value.indexOf('x-optional'),
+              -1,
+              'x-optional is not present (optional)'
+            );
+            assert.notEqual(
+              value.indexOf('x-required: default required value'),
+              -1,
+              'x-required is present (dafault value)'
+            );
+            assert.notEqual(
+              value.indexOf('x-union: Hello union'),
+              -1,
+              'x-union is present (value from example)'
+            );
             done();
           }, 250);
         });
@@ -886,15 +941,82 @@ describe('<api-headers-editor>', function() {
     });
   });
 
-  describe('a11y', () => {
-    async function basicFixture() {
-      return (await fixture(`<api-headers-editor></api-headers-editor>`));
-    }
+  describe('set contentType', () => {
+    let element;
+    let called = false;
+    let f;
 
+    beforeEach(async () => {
+      element = await basicFixture();
+      f = () => {
+        called = true;
+      };
+    });
+
+    it('Updates contentType on new value', () => {
+      element._onContentTypeChanged = f;
+
+      assert.equal(element._contentType, undefined);
+
+      element.contentType = 'application/json';
+      assert.equal(element._contentType, 'application/json');
+      assert.isUndefined(element._shouldUpdateHeaders);
+      assert.isTrue(called);
+    });
+
+    it('Do not update contentType on same value', () => {
+      element._onContentTypeChanged = f;
+
+      assert.equal(element._contentType, undefined);
+      element.contentType = 'application/json';
+      assert.equal(element._contentType, 'application/json');
+      assert.isUndefined(element._shouldUpdateHeaders);
+      assert.isTrue(called);
+
+      called = false;
+
+      element.contentType = 'application/json';
+      assert.equal(element._contentType, 'application/json');
+      assert.isUndefined(element._shouldUpdateHeaders);
+      assert.isFalse(called);
+    });
+
+    it('Updates contentType on same value and _shouldUpdateHeaders enabled', () => {
+      element._onContentTypeChanged = f;
+
+      assert.equal(element._contentType, undefined);
+
+      element.contentType = 'application/json';
+      element._shouldUpdateHeaders = true;
+      assert.equal(element._contentType, 'application/json');
+      assert.isTrue(element._shouldUpdateHeaders);
+      assert.isTrue(called);
+    });
+  });
+
+  describe('_detectContentType', () => {
+    let element;
+
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Undefined contentType when no matches', () => {
+      element._detectContentType('invalid');
+      assert.equal(element._contentType, undefined);
+    });
+
+    it('Set contentType when matches', () => {
+      element._detectContentType('content-type: application/json');
+      assert.equal(element._contentType, 'application/json');
+    });
+  });
+
+  describe('a11y', () => {
     it('is accessible when empty', async () => {
       const element = await basicFixture();
       await assert.isAccessible(element, {
-        ignoredRules: ['color-contrast']
+        ignoredRules: ['color-contrast'],
       });
     });
 
@@ -903,7 +1025,7 @@ describe('<api-headers-editor>', function() {
       element.value = 'content-type: application/json\naccept: */*\netag: test';
       await nextFrame();
       await assert.isAccessible(element, {
-        ignoredRules: ['color-contrast']
+        ignoredRules: ['color-contrast'],
       });
     });
 
@@ -913,7 +1035,7 @@ describe('<api-headers-editor>', function() {
       element.value = 'content-type: application/json\naccept: */*\netag: test';
       await nextFrame();
       await assert.isAccessible(element, {
-        ignoredRules: ['color-contrast']
+        ignoredRules: ['color-contrast'],
       });
     });
   });
