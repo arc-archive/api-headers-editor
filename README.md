@@ -8,6 +8,10 @@ A HTTP headers editor.
 
 It allows to edit headers in  a convenient and accessible form editor and also allows to switch to the source edit view (thanks to CodeMirror).
 
+## Deprecation notice
+
+This element is moved to `api-headers` repository and `@api-components/api-headers` package. This element will be deprecated and archived once the migration finish.
+
 The component works as a stand-alone editor that allows to define headers for HTTP request but also works with generated [AMF model](https://a.ml/) from API spec file.
 
 ```html
