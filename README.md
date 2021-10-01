@@ -1,8 +1,8 @@
-[![Published on NPM](https://img.shields.io/npm/v/@api-components/api-headers-editor.svg)](https://www.npmjs.com/package/@api-components/api-headers-editor)
+# DEPRECATED
 
-[![Build Status](https://travis-ci.com/advanced-rest-client/api-headers-editor.svg)](https://travis-ci.com/advanced-rest-client/api-headers-editor)
+This component is deprecated. The code base has been moved to [api-request](https://github.com/advanced-rest-client/api-request) module.
 
-# api-headers-editor
+--------
 
 A HTTP headers editor.
 
